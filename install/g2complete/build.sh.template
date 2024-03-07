@@ -1,0 +1,12 @@
+#!/bin/bash
+echo '==================== running build.sh ===================='
+#echo '==================== env ===================='
+#env
+#echo '==================== which python ===================='
+#which python
+#python -c 'import sys; print(sys.version); import numpy; print(numpy.__version__)'
+mkdir -p $PREFIX/GSASII
+echo $PATH > $PREFIX/GSASII/conda_G2build_out.log 2>&1
+which svn >> $PREFIX/GSASII/conda_G2build_out.log 2>&1
+svn export https://subversion.xray.aps.anl.gov/pyGSAS/install/bootstrap.py $PREFIX/GSASII/ >> $PREFIX/GSASII/conda_G2build_out.log 2>&1
+python $PREFIX/GSASII/bootstrap.py --binary=**npversion**,**pyversion** >> $PREFIX/GSASII/conda_G2build_out.log 2>&1

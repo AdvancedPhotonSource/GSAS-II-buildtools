@@ -1,0 +1,23 @@
+echo "Finish up GSAS-II installation, version **Version**"
+set "python=%PREFIX%\python.exe"
+set "updatescript=%PREFIX%\GSASII\bootstrap.py"
+REM create bootstrap batch file ================================================
+echo REM Commands to run GSAS-II load/update process > "%PREFIX%\start_G2_bootstrap.bat"
+echo call %PREFIX%\Scripts\activate >> "%PREFIX%\start_G2_bootstrap.bat"
+echo python %PREFIX%\GSASII\bootstrap.py >> "%PREFIX%\start_G2_bootstrap.bat"
+REM constructor fixups: missing empty directories & changed binary files =======
+mkdir %PREFIX%\GSASII\.svn\tmp
+%PREFIX%\GSASII\SVN\svn.exe revert -R %PREFIX%\GSASII\bindist
+
+REM update the GSAS-II package if possible, create shortcuts & byte-compile... 
+call "%PREFIX%\Scripts\Activate"
+REM Now try to update to latest GSAS-II version (will fail if no network)
+"%python%" "%updatescript%" --noinstall
+REM create start GSAS-II batch file, etc.
+"%python%" "%updatescript%" --nonet
+REM create shortcut to start GSAS-II     =======================================
+echo REM Commands to run GSAS-II load/update process > "%PREFIX%\start_GSASII.bat"
+echo call %PREFIX%\Scripts\activate >> "%PREFIX%\start_GSASII.bat"
+echo python %PREFIX%\GSASII\GSASII.py >> "%PREFIX%\start_GSASII.bat"
+set errorlevel=0
+exit 0

@@ -1,0 +1,105 @@
+Q.  How to create a new token?
+=======================================================
+# 3/1/2024 on BHT20
+=======================================================
+
+=== MacOS 64 (BHT20) ============
+cd /Users/toby/G2/install
+cp -p gitstrap.py g2pkg/src 
+source ~/mf311/bin/activate
+conda activate build
+conda build purge
+conda build g2pkg  --output-folder .
+
+anaconda upload noarch/gsas2pkg-*.tar.bz2 -i
+
+* testing
+conda env remove -n g2p   
+conda create -n g2p gsas2pkg=4.0 -c briantoby 
+
+=== Windows
+ conda build g2pkg  -c conda-forge --output-folder c:\tmp
+
+
+NOTE: noarch seems like a good idea, but platform-dependent actions
+don't seem to happen properly
+
+# windows build on virgin Win11 VM 3/2/24
+
+conda create -n build conda-build anaconda-client
+conda activate build
+(copy gitstrap.py & g2pkg to \tmp\install
+cd \tmp\install
+conda build g2pkg  -c conda-forge --output-folder c:\tmp
+anaconda upload c:/tmp/win-64/gsas2pkg-*.tar.bz2 -i
+(account briantoby password soon
+
+# back to MacOS 64
+on BHT20 from ~/G2/install
+
+(build) conda311 install % conda build g2pkg  --output-folder .   
+
+conda convert osx-64/gsas2pkg-*.tar.bz2 -p osx-arm64
+anaconda upload osx*/gsas2pkg-*.tar.bz2 -i
+
+on s11bmbcda
+
+install conda at /tmp/mf3
+source /tmp/mf3/bin/activate
+(base) s11bmbcda:~ toby$ conda create -n build conda-build anaconda-client
+conda activate build
+
+svn co https://subversion.xray.aps.anl.gov/pyGSAS/install ~/G2/install
+cd G2/install/
+
+conda build g2pkg -c conda-forge --output-folder /tmp   # does not work!
+
+conda build g2pkg -c conda-forge --output-folder .
+
+=== Raspberry Pi: wx install from pip
+
+
+
+pi@raspberrypi:~/G2/install $ svn diff g2pkg/meta.yaml 
+Index: g2pkg/meta.yaml
+===================================================================
+--- g2pkg/meta.yaml	(revision 5746)
++++ g2pkg/meta.yaml	(working copy)
+@@ -23,7 +23,7 @@
+     - pillow        # kind of big, perhaps make this optional?
+     - pyopengl
+     - requests
+-    - wxpython>=4.2
++    - wxpython>=4.2 [not linux-aarch64]
+     - git
+     - gitpython
+     - hdf5
+
+source mf3/bin/activate
+conda create -n build conda-build anaconda-client
+anaconda upload ./linux-aarch64/gsas2pkg-4.0.0-0.tar.bz2 -i
+
+conda create -n py311wx python=3.11
+conda activate py311wx
+pip install wxPython # takes ~ 2 hours!
+conda install briantoby::gsas2pkg
+
+
+
+
+
+# run 1/1/21 on BHT20
+conda38
+conda create -n build  conda-build anaconda-client  
+conda activate build
+conda build purge
+cd ~/G2/install
+rm */gsas2pkg*.tar.bz2
+conda build g2pkg  --output-folder .
+conda convert osx-64/gsas2pkg-*.tar.bz2 -p osx-arm64
+anaconda -t  096ALJRYG1d8 upload -u briantoby osx*/gsas2pkg-*.tar.bz2 
+
+
+Build moved to Jenkins gsas2pkg-win64,... Builds need to be on target platform
+
+

@@ -1,0 +1,21 @@
+REM|  This gets run during Build of gsas2complete to put all G2 files into .exe
+REM| 
+REM|  pulls bootstrap.py & svn from GSASII repository and then uses the
+REM|  bootstrap to pull in the current GSAS-II distribution into the build
+REM|  directory
+REM|
+
+if not exist "%PREFIX%\GSASII" (
+    mkdir "%PREFIX%\GSASII"
+    if errorlevel 1 exit 1
+ )
+REM copy %RECIPE_DIR%\src\bootstrap.py %PREFIX%\GSASII\
+svn export https://subversion.xray.aps.anl.gov/pyGSAS/install/bootstrap.py %PREFIX%\GSASII
+if errorlevel 1 exit 1
+REM mkdir %PREFIX%\GSASII\SVN
+REM copy C:\Users\IEUser\SVN\*.* %PREFIX%\GSASII\SVN
+svn export https://subversion.xray.aps.anl.gov/pyGSAS/install/svn/anaconda_win64 %PREFIX%\GSASII\SVN
+if errorlevel 1 exit 1
+REM Install files now
+python %PREFIX%\GSASII\bootstrap.py --noproxy --noinstall --binary=**npversion**,**pyversion**
+if errorlevel 1 exit 1

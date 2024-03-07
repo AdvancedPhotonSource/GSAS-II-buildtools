@@ -1,0 +1,33 @@
+package: 
+  name: gsas2pkg
+  version: "4.0.0"
+
+#source:
+#  path: ./src
+
+about:
+  home: https://subversion.xray.aps.anl.gov/trac/pyGSAS
+
+build:
+  number: 0
+#  noarch: python
+# see https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#architecture-independent-packages
+
+requirements:
+  run:
+    - python=3.11   # to match prebuilt binaries
+    - numpy=1.26    # to match prebuilt binaries
+    - conda
+    - scipy
+    - matplotlib>=3.7
+    - pillow        # kind of big, perhaps make this optional?
+    - pyopengl
+    - requests
+    - wxpython>=4.2
+    - git
+    - gitpython
+    - hdf5
+    - h5py
+    - imageio
+    - pywin32                              [win]
+    #- python.app                           [osx]
