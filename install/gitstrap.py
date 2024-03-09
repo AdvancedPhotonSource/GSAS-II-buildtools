@@ -65,6 +65,10 @@ allBinaries = False        # False: the binaries for only one version of
 
 ProgressCnt = True         # include a progress counter on clone
 
+logfile=None               # name of log file used by this script. If
+                           # None (default), this is set to gitstrap.log
+                           # in the parent directory of where GSAS-II is
+                           # installed. Override this with --log
 
 # option not yet implemented (not sure yet how to handle proxy settings)
                            
@@ -85,7 +89,7 @@ for a in sys.argv[1:]:
         skipDownload = True
     elif '-w' in a.lower():
         WXerror = True
-    elif '-l' in a.lower():
+    elif '-loc' in a.lower():
         bad = False
         try:
             _,pth = a.split('=')
@@ -95,6 +99,22 @@ for a in sys.argv[1:]:
                 print(f'\nError: directory {parent!r} not found.')
                 bad = True
             path2GSAS2 = pth
+        except:
+            bad = True
+        if bad:
+            print(f'Argument {a} is invalid.')
+            help = True
+            break
+    elif '-log' in a.lower():
+        bad = False
+        try:
+            _,pth = a.split('=')
+            pth = os.path.abspath(os.path.expanduser(pth))
+            parent = os.path.dirname(pth)
+            if not os.path.exists(parent):
+                print(f'\nError: directory {parent!r} not found.')
+                bad = True
+            logfile = pth
         except:
             bad = True
         if bad:
@@ -168,6 +188,11 @@ if help:
                   The path will be created if it does not exist, but the 
                   parent of the path must exist.
 
+    --log=file    Specifies the name of the file to use for a log of output 
+                  from this script. Specify a this with a full path. The 
+                  default is gitstrap.log in the parent directory of where 
+                  GSAS-II will be installed.
+
     --ver=depth   overrides the default number of old GSAS-II versions
                   that will be installed (from 500). Changes the space 
                   needed to install GSAS-II.
@@ -211,7 +236,9 @@ try:
 except:
     pass
 print(msg)
-logfile = os.path.normpath(os.path.join(path2GSAS2,'..','gitstrap.log'))
+if not logfile:
+    logfile = os.path.normpath(os.path.join(path2GSAS2,'..','gitstrap.log'))
+print(f'log in {logfile}')
 def logmsg(msg):
     fp = open(logfile,'a')
     fp.write(msg+'\n')

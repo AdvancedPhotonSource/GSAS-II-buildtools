@@ -1,6 +1,11 @@
+# Builds a copy of the GSAS-II package that includes all GSAS-II files
+# including binaries and the git repository
 package: 
   name: gsas2complete
   version: "**Version**"
+
+build:
+  number: 0
 
 #source:
 #  path: ./src
@@ -24,7 +29,4 @@ requirements:
     - imageio
     - git
     - gitpython
-    - hdf5
-    - h5py
-    - imageio
     - pywin32                              [win]
