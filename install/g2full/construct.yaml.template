@@ -11,22 +11,22 @@ conda_default_channels:
 specs:
     - python=**pyversion**
     - numpy=**npversion**
-    - conda
-    - scipy
     - matplotlib=**mplversion**
+    - wxpython=**wxversion**
     - pillow
     - pyopengl
+    - scipy
+    - conda
     - requests
-    - wxpython=**wxversion**
-    - git
-    - gitpython
     - hdf5
     - h5py
     - imageio
+    - git
+    - gitpython
     - pywin32                              [win]
     - C:\g2builds\win-64\gsas2complete-**Version**-0.tar.bz2 [win]
-    - ~/builds/osx-64/gsas2complete-**Version**-0.tar.bz2 [osx]
-    - ~/builds/linux-64/gsas2complete-**Version**-0.tar.bz2 [linux]
+    - /tmp/builds/osx-64/gsas2complete-**Version**-0.tar.bz2 [osx]
+    - /tmp/builds/linux-64/gsas2complete-**Version**-0.tar.bz2 [linux]
 
 #exclude:
 #  - qt                               [not osx]

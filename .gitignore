@@ -1,0 +1,7 @@
+# files created by setgitversion.py
+install/g2complete/bld.bat
+install/g2complete/build.sh
+install/g2complete/meta.yaml
+install/g2full/construct.yaml
+install/g2full/g2postinstall.bat
+install/g2full/g2postinstall.sh
