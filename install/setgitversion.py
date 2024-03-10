@@ -25,7 +25,7 @@ except:
 commit = g2repo.head.commit
 ctim = commit.committed_datetime.strftime('%H:%M %d-%b-%Y')
 commit0 = commit.hexsha
-for i in g2repo.iter_commits('head'): # get a numeric tag for the last commit
+for i in g2repo.iter_commits('HEAD'): # get a numeric tag for the last commit
     tags = [t for t in g2repo.git.tag('--points-at',i).split('\n') if t.isnumeric()]
     print(i,tags)
     if tags:
