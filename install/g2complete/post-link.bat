@@ -1,4 +1,4 @@
-set logfile=\tmp\constructor_postbuild.log
+set logfile=%PREFIX%\g2complete_postlink.log
 echo Preparing to install GSAS-II from GitHub > %logfile%
 REM create bootstrap batch file ================================================
 echo REM Commands to run GSAS-II load/update process > "%PREFIX%\start_G2_bootstrap.bat"

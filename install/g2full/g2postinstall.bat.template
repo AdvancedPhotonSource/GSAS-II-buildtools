@@ -1,11 +1,11 @@
 REM ======================================================================
 echo "Finish up GSAS-II installation, version **Version**"
 REM ======================================================================
-set "python=%PREFIX%\python.exe"
-set "gitstrap=%PREFIX%\gitstrap.py"
-set logfile=\tmp\g2post_out.log
-set gitlog1=\tmp\gitstrap1.log
-set gitlog2=\tmp\gitstrap2.log
+set python=%PREFIX%\python.exe
+set gitstrap=%PREFIX%\gitstrap.py
+set logfile=%PREFIX%\g2post_out.log
+set gitlog1=%PREFIX%\gitstrap1.log
+set gitlog2=%PREFIX%\gitstrap2.log
 REM ======================================================================
 echo %python% %gitstrap% --nocheck --log=$gitlog1 --noshortcut >> $logfile
      %python% %gitstrap% --nocheck --log=$gitlog1 --noshortcut >> $logfile
