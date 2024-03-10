@@ -1,3 +1,6 @@
+.DS_Store
+# created by conda constructor
+gsas2full-*.sh 
 # files created by setgitversion.py
 install/g2complete/bld.bat
 install/g2complete/build.sh
