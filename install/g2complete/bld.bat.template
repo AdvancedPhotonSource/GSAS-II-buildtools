@@ -4,23 +4,30 @@ REM  the gsas2complete tar file so they end up in the windows .exe
 REM  =========================================================================
 REM 
 
-logfile=c:\tmp\bld.log
+set logfile=c:\tmp\constructor_bld.log
 if exist "%PREFIX%\GSASII" (
    exit 1
  )
-echo copy %RECIPE_DIR%\..\gitstrap.py %PREFIX%\ > %logfile%
+echo copy %RECIPE_DIR%\..\gitstrap.py %PREFIX%\ >  %logfile%
      copy %RECIPE_DIR%\..\gitstrap.py %PREFIX%\ >> %logfile%
 if errorlevel 1 exit 1
 
-REM# Install files now
-echo python %PREFIX%\bootstrap.py --nocheck --noshortcut --noprogress --binary=**npversion**,**pyversion** --log=c:/tmp/gitstrap.log >> %logfile%
-     python %PREFIX%\bootstrap.py --nocheck --noshortcut --noprogress --binary=**npversion**,**pyversion** --log=c:/tmp/gitstrap.log >> %logfile%
+REM Install files now
+echo python %PREFIX%\gitstrap.py --nocheck --noshortcut --noprogress --binary=**npversion**,**pyversion** --log=c:/tmp/gitstrap.log >> %logfile%
+     python %PREFIX%\gitstrap.py --nocheck --noshortcut --noprogress --binary=**npversion**,**pyversion** --log=c:/tmp/gitstrap.log >> %logfile%
 if errorlevel 1 exit 1
 
-REM# rename the .git files so they get copied
-echo rename %PREFIX%\GSASII\.git %PREFIX%\GSASII\keep_git >> %logfile%
-     rename %PREFIX%\GSASII\.git %PREFIX%\GSASII\keep_git >> %logfile%
-if errorlevel 1 exit 1
-echo rename %PREFIX%\GSASII\.gitignore %PREFIX%\GSASII\keep.gitignore >> %logfile%
-     rename %PREFIX%\GSASII\.gitignore %PREFIX%\GSASII\keep.gitignore >> %logfile%
-if errorlevel 1 exit 1
+
+REM rename the .git files so they get copied
+cd %PREFIX%\GSASII
+REM echo rename .git keep_git >> %logfile%
+REM      rename .git keep_git >> %logfile%
+REM if errorlevel 1 exit 1
+REM echo rename .gitignore keep.gitignore >> %logfile%
+REM      rename .gitignore keep.gitignore >> %logfile%
+REM if errorlevel 1 exit 1
+
+where tar >> %logfile%
+REM rename not working on Windows. Make a tar so we can put it back later
+echo C:\Windows\System32\tar.exe cvzf git.tgz .git >> %logfile%
+     C:\Windows\System32\tar.exe cvzf git.tgz .git >> %logfile%

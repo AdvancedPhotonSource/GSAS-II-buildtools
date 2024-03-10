@@ -24,7 +24,7 @@ specs:
     - git
     - gitpython
     - pywin32                              [win]
-    - C:\g2builds\win-64\gsas2complete-**Version**-0.tar.bz2 [win]
+    - C:\tmp\builds\win-64\gsas2complete-**Version**-0.tar.bz2 [win]
     - /tmp/builds/osx-64/gsas2complete-**Version**-0.tar.bz2 [osx-64]
     - /tmp/builds/osx-arm64/gsas2complete-**Version**-0.tar.bz2 [osx-arm64]
     - /tmp/builds/linux-64/gsas2complete-**Version**-0.tar.bz2 [linux]

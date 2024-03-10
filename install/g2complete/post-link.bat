@@ -1,6 +1,5 @@
-set logfile=\tmp\conda_G2postbuild.log
+set logfile=\tmp\constructor_postbuild.log
 echo Preparing to install GSAS-II from GitHub > %logfile%
-# create scripts that might be of use for GSAS-II
 REM create bootstrap batch file ================================================
 echo REM Commands to run GSAS-II load/update process > "%PREFIX%\start_G2_bootstrap.bat"
 echo call %PREFIX%\Scripts\activate >> "%PREFIX%\start_G2_bootstrap.bat"
@@ -12,10 +11,16 @@ echo python %PREFIX%\GSASII\GSASII.py >> "%PREFIX%\start_GSASII.bat"
 REM 
 REM ============= Restore the git repository file
 REM 
-echo fit git files >> %logfile%
-echo rename %PREFIX%\GSASII\keep_git %PREFIX%\GSASII\.git >> %logfile%
-     rename %PREFIX%\GSASII\keep_git %PREFIX%\GSASII\.git >> %logfile%
-if errorlevel 1 exit 1
-echo rename %PREFIX%\GSASII\keep.gitignore %PREFIX%\GSASII\.gitignore >> %logfile%
-     rename %PREFIX%\GSASII\keep.gitignore %PREFIX%\GSASII\.gitignore >> %logfile%
-if errorlevel 1 exit 1
+echo fix git files >> %logfile%
+cd %PREFIX%\GSASII
+REM echo rename keep_git .git >> %logfile%
+REM      rename keep_git .git >> %logfile%
+REM if errorlevel 1 exit 1
+REM echo rename keep.gitignore .gitignore >> %logfile%
+REM      rename keep.gitignore .gitignore >> %logfile%
+REM if errorlevel 1 exit 1
+
+echo C:\Windows\System32\tar.exe xzf git.tgz  >> %logfile%
+     C:\Windows\System32\tar.exe xzf git.tgz  >> %logfile%
+
+del git.tgz >> %logfile%
