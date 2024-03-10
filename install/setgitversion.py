@@ -79,7 +79,15 @@ for fil in ('g2complete/meta.yaml','g2complete/build.sh',
     if platform.machine() == 'aarch64' and 'meta' in fil: # Raspberry Pi
         out = out.replace('- wxpython=','# - wxpython=')
         note = 'customized for Raspberry Pi OS'
-        
+    if (platform.machine() == 'arm64' and sys.platform == "darwin"
+            and 'construct' in fil): # MacOS-arm64
+        out = out.replace('- /tmp/builds/osx-64','#- /tmp/builds/osx-64')
+        out = out.replace('[osx-arm64]','[osx]')
+        note = 'customized for MacOS-arm64'
+    elif sys.platform == "darwin" and 'construct' in fil: # MacOS-arm64
+        out = out.replace('- /tmp/builds/osx-arm64','#- /tmp/builds/osx-arm64')
+        out = out.replace('[osx-64]','[osx]')
+        note = 'customized for MacOS-x86-64'
     print('Creating',fil,note)
     fp = open(fil,'w')
     fp.write(out)
