@@ -1,21 +1,26 @@
-REM|  This gets run during Build of gsas2complete to put all G2 files into .exe
-REM| 
-REM|  pulls bootstrap.py & svn from GSASII repository and then uses the
-REM|  bootstrap to pull in the current GSAS-II distribution into the build
-REM|  directory
-REM|
+REM  =========================================================================
+REM  This gets run during Build of gsas2complete to put all G2 files into
+REM  the gsas2complete tar file so they end up in the windows .exe
+REM  =========================================================================
+REM 
 
-if not exist "%PREFIX%\GSASII" (
-    mkdir "%PREFIX%\GSASII"
-    if errorlevel 1 exit 1
+logfile=c:\tmp\bld.log
+if exist "%PREFIX%\GSASII" (
+   exit 1
  )
-REM copy %RECIPE_DIR%\src\bootstrap.py %PREFIX%\GSASII\
-svn export https://subversion.xray.aps.anl.gov/pyGSAS/install/bootstrap.py %PREFIX%\GSASII
+echo copy %RECIPE_DIR%\..\gitstrap.py %PREFIX%\ > %logfile%
+     copy %RECIPE_DIR%\..\gitstrap.py %PREFIX%\ >> %logfile%
 if errorlevel 1 exit 1
-REM mkdir %PREFIX%\GSASII\SVN
-REM copy C:\Users\IEUser\SVN\*.* %PREFIX%\GSASII\SVN
-svn export https://subversion.xray.aps.anl.gov/pyGSAS/install/svn/anaconda_win64 %PREFIX%\GSASII\SVN
+
+REM# Install files now
+echo python %PREFIX%\bootstrap.py --nocheck --noshortcut --noprogress --binary=**npversion**,**pyversion** --log=c:/tmp/gitstrap.log >> %logfile%
+     python %PREFIX%\bootstrap.py --nocheck --noshortcut --noprogress --binary=**npversion**,**pyversion** --log=c:/tmp/gitstrap.log >> %logfile%
 if errorlevel 1 exit 1
-REM Install files now
-python %PREFIX%\GSASII\bootstrap.py --noproxy --noinstall --binary=**npversion**,**pyversion**
+
+REM# rename the .git files so they get copied
+echo rename %PREFIX%\GSASII\.git %PREFIX%\GSASII\keep_git >> %logfile%
+     rename %PREFIX%\GSASII\.git %PREFIX%\GSASII\keep_git >> %logfile%
+if errorlevel 1 exit 1
+echo rename %PREFIX%\GSASII\.gitignore %PREFIX%\GSASII\keep.gitignore >> %logfile%
+     rename %PREFIX%\GSASII\.gitignore %PREFIX%\GSASII\keep.gitignore >> %logfile%
 if errorlevel 1 exit 1
