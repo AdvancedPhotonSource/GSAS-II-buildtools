@@ -1,6 +1,11 @@
 This repo contains files used for building GSAS-II binaries and
 distribution kits from the test git reops found in this organization as well as files for
-download.
+download. 
+
+* gsas2pkg (directory g2pkg) is used to create a conda package that downloads GSAS-II into and 
+  existing conda installation either into the base installation or its own environment. The package 
+  can be founds as briantoby::gsas2pkg. It is available for all supported platforms and appears to be 
+  in reasonable shape.
 
 * gsas2full (directory g2full) creates a standalone installer for GSAS-II, Python and all needed Python 
   packages. Thus it is possible to install GSAS-II from that file even without an internet connection. If one 
