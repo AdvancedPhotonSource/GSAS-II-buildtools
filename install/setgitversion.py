@@ -1,3 +1,8 @@
+# this is used during the gsas2full (& gsas2complete) build process
+# to modify the g2complete & g2full .template files to reflect the
+# versions of Python & packages that should be used for builds. 
+#
+
 import os
 import sys
 import platform
@@ -10,6 +15,7 @@ import platform
 
 if len(sys.argv) < 2:
     G2code = os.path.join(os.path.dirname(__file__),'GSAS2-code')
+    raise Exception('setgitversion broken with only one arg')
 else:
     G2code = os.path.abspath(sys.argv[1])
 if not os.path.exists(G2code):

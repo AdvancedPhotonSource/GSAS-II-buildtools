@@ -5,9 +5,15 @@ from __future__ import division, print_function
 import os, stat, sys, platform, subprocess, datetime
 
 version = "gitstrap.py from March 1, 2024"
-#g2URL = "https://github.com/AdvancedPhotonSource/GSASII-copy.git"
+#g2URL = "https://github.com/AdvancedPhotonSource/GSASII.git"
 g2URL = "https://github.com/GSASII/codetest.git"
 scriptpath = os.path.dirname(os.path.abspath(os.path.expanduser(__file__)))
+# This installs GSAS-II files in a directory called GSAS-II which
+#will be placed as a subdirectory of the location where this script
+#resides, unless overridden by the --loc=path argument
+path2repo = os.path.join(scriptpath,'GSAS-II')
+# The GSAS-II Python files go into a subdirectory of path2repo
+# (default GSAS-II/GSASII) in variable path2GSAS2
 
 # command line argument variables
 reset = False              # True: any locally-made changes to GSAS-II
@@ -75,7 +81,6 @@ logfile=None               # name of log file used by this script. If
 skipProxy = False          # False: the script prompts for for proxy info
                            # Use --noproxy to avoid this
                            
-path2GSAS2 = os.path.join(scriptpath,'GSASII')
 for a in sys.argv[1:]:
     if '-r' in a.lower():
         reset = True
@@ -98,7 +103,7 @@ for a in sys.argv[1:]:
             if not os.path.exists(parent):
                 print(f'\nError: directory {parent!r} not found.')
                 bad = True
-            path2GSAS2 = pth
+            path2repo = pth
         except:
             bad = True
         if bad:
@@ -183,7 +188,7 @@ if help:
     --wxerror     errors are shown in a GUI (wx) window
 
     --loc=path    install to location path rather than a subdirectory named 
-                  GSASII located in the directory where this script is 
+                  GSAS-II located in the directory where this script is 
                   found ({scriptpath}). 
                   The path will be created if it does not exist, but the 
                   parent of the path must exist.
@@ -226,8 +231,12 @@ needed for uniqueness and one dash works the same as two
     # --noproxy     do not ask for proxy information
     # --allbin      load all binary versions (same as --server)
     
+# The GSAS-II Python files go into a subdirectory of path2repo
+# (default GSAS-II/GSASII) 
+path2GSAS2 = os.path.join(path2repo,'GSASII')
+
 now = str(datetime.datetime.now())
-msg = f'\nBootstrapping GSAS-II into {path2GSAS2}\nat {now}\nfrom {g2URL}\n'
+msg = f'\nBootstrapping GSAS-II into {path2repo}\nat {now}\nfrom {g2URL}\n'
 msg += f'\nscript:     {version}'
 msg += f"\nPython:     {sys.version.split()[0]}"
 try:
@@ -237,7 +246,7 @@ except:
     pass
 print(msg)
 if not logfile:
-    logfile = os.path.normpath(os.path.join(path2GSAS2,'..','gitstrap.log'))
+    logfile = os.path.normpath(os.path.join(path2repo,'..','gitstrap.log'))
 print(f'log in {logfile}')
 def logmsg(msg):
     fp = open(logfile,'a')
@@ -252,7 +261,7 @@ def BailOut(msg):
     '''Exit with an error message. Use a GUI to show the error when
     WXerror is True
     '''
-    logmsg('Installation failed with this message:\n{msg}\n')
+    logmsg(f'Installation failed with this message:\n{msg}\n')
     if WXerror:
         print("\nError during bootstrap:")
         print(msg)
@@ -340,7 +349,9 @@ def gitInstallGSASII(repo_URL,repo_path,depth=500,forceupdate=False,verbose=True
         print(msg)
         logmsg(msg)
         if ProgressCnt: progress = gitProgress()
-    git.Repo.clone_from(repo_URL,repo_path,depth=depth,progress=progress)
+#    git.Repo.clone_from(repo_URL,repo_path,depth=depth,progress=progress)
+    git.Repo.clone_from(repo_URL,repo_path,depth=depth,progress=progress,
+                            branch='reorg')   ####### debug ###########
     if verbose:
         logmsg('clone done')
         print('\nclone done')
@@ -400,14 +411,14 @@ if not skipDownload:
         BailOut(msg)
 
 if reset:
-    if gitResetGSASII(path2GSAS2):
+    if gitResetGSASII(path2repo):
         print('git reset performed')
     else:
         print('reset failed')
 
 if not skipDownload:
     try:
-        gitInstallGSASII(g2URL,path2GSAS2,depth=depth) # forceupdate=False
+        gitInstallGSASII(g2URL,path2repo,depth=depth) # forceupdate=False
     except UserWarning:
         print('\n***Unable to update due to changes that have been made locally to GSAS-II files')
         print('If an update must be done from inside this script, use --reset')
@@ -421,7 +432,7 @@ if not skipDownload:
         sys.exit()
         
     # do install of binaries
-    installLoc = os.path.join(os.path.dirname(path2GSAS2),'GSASII-bin')
+    installLoc = os.path.join(path2repo,'GSASII-bin')
     print ('Binary install location', installLoc)
     if allBinaries:
         tarURLs = list(GSASIIpath.getGitBinaryReleases().values())
@@ -433,13 +444,13 @@ if not skipDownload:
             print('no Binary URL found. Aborting installation') 
             if not allBinaries: sys.exit()
         GSASIIpath.InstallGitBinary(tarURL, installLoc, nameByVersion=True)
-        msg = f'Binaries installed from {tarURL}'
+        msg = f'Binaries installed from {tarURL} to {installLoc}\n'
         print(msg)
         logmsg(msg)
     
 if skipShortcut: sys.exit()
 #===========================================================================
-# import all .py files so that .pyc files get created
+# Create all the .pyc files here
 logmsg('Start byte-compile')
 print(f'Byte-compiling all .py files in {path2GSAS2!r}... ',end='')
 import compileall
@@ -453,24 +464,29 @@ def execfile(file):
     with open(file) as source_file:
         exec(source_file.read())
 #===========================================================================
+#===========================================================================
 logmsg('start system-specific install')
-# on Windows, make a batch file with Python and GSAS-II location hard-coded
-if sys.platform.startswith('win') and os.path.exists(
-    os.path.join(path2GSAS2,"makeBat.py")):
-    execfile(os.path.join(path2GSAS2,"makeBat.py"))
-#===========================================================================
-# on a Mac, make an applescript 
-elif sys.platform.startswith('darwin') and os.path.exists(
-         os.path.join(path2GSAS2,"makeMacApp.py")):
-    script = os.path.join(path2GSAS2,"makeMacApp.py")
-    print(f'running {script}')
-    out = subprocess.run([sys.executable,script],cwd=path2GSAS2)
-#===========================================================================
-# On linux, make desktop icon
-elif sys.platform.startswith('linux') and os.path.exists(
-         os.path.join(path2GSAS2,"makeLinux.py")):
-    sys.argv = [os.path.join(path2GSAS2,"makeLinux.py")]
-    print(u'running '+sys.argv[0])
+for k,s in {'win':"makeBat.py", 'darwin':"makeMacApp.py",
+                'linux':"makeLinux.py"}.items():
+    if sys.platform.startswith(k):
+        script = os.path.join(path2GSAS2,'install',s)
+        if not os.path.exists(script):
+            logmsg(f'Platform-specific script {script!r} not found')
+            script = ''
+        break
+else:
+    print(f'Unknown platform {sys.platform}')
+# on a Mac, make an applescript
+if script and sys.platform.startswith('darwin'):
+    logmsg(f'running {script}')
+    G2script = os.path.join(path2GSAS2,'GSASII.py')
+    print([sys.executable,script,G2script],path2GSAS2)
+    out = subprocess.run([sys.executable,script,G2script,],cwd=path2GSAS2)
+# On linux, make andesktop icon & windows make a batch file, with
+# hard-coded paths to Python and GSAS-II
+elif script:
+    sys.argv = [script]
+    logmsg(u'running '+sys.argv[0])
     execfile(sys.argv[0])
 logmsg('system-specific install done')
 #===========================================================================
@@ -518,4 +534,4 @@ if False and not skipDownload and not skipChecks:
         GSASIItested = True    
 #===========================================================================
 #===========================================================================
-logmsg('Installation completed {datetime.datetime.now()}\n')
+logmsg(f'Installation completed {datetime.datetime.now()}\n')
