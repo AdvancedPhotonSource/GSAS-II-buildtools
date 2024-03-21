@@ -458,12 +458,8 @@ compileall.compile_dir(path2GSAS2,quiet=True)
 print('done')
 logmsg('byte-compile done')
 #===========================================================================
+#===========================================================================
 # do platform-dependent stuff
-#===========================================================================
-def execfile(file):
-    with open(file) as source_file:
-        exec(source_file.read())
-#===========================================================================
 #===========================================================================
 logmsg('start system-specific install')
 for k,s in {'win':"makeBat.py", 'darwin':"makeMacApp.py",
@@ -476,18 +472,20 @@ for k,s in {'win':"makeBat.py", 'darwin':"makeMacApp.py",
         break
 else:
     print(f'Unknown platform {sys.platform}')
+G2script = os.path.join(path2GSAS2,'GSASII.py')
 # on a Mac, make an applescript
 if script and sys.platform.startswith('darwin'):
     logmsg(f'running {script}')
-    G2script = os.path.join(path2GSAS2,'GSASII.py')
     print([sys.executable,script,G2script],path2GSAS2)
     out = subprocess.run([sys.executable,script,G2script,],cwd=path2GSAS2)
-# On linux, make andesktop icon & windows make a batch file, with
-# hard-coded paths to Python and GSAS-II
+# On linux, make a desktop icon & on windows make a batch file
+# each has hard-coded paths to Python and GSAS-II
 elif script:
     sys.argv = [script]
     logmsg(u'running '+sys.argv[0])
-    execfile(sys.argv[0])
+    with open(sys.argv[0]) as source_file:
+        exec(source_file.read())
+
 logmsg('system-specific install done')
 #===========================================================================
 #===========================================================================
