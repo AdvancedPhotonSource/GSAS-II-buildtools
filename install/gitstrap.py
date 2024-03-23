@@ -349,9 +349,7 @@ def gitInstallGSASII(repo_URL,repo_path,depth=500,forceupdate=False,verbose=True
         print(msg)
         logmsg(msg)
         if ProgressCnt: progress = gitProgress()
-#    git.Repo.clone_from(repo_URL,repo_path,depth=depth,progress=progress)
-    git.Repo.clone_from(repo_URL,repo_path,depth=depth,progress=progress,
-                            branch='reorg')   ####### debug ###########
+    git.Repo.clone_from(repo_URL,repo_path,depth=depth,progress=progress)
     if verbose:
         logmsg('clone done')
         print('\nclone done')
@@ -435,7 +433,7 @@ if not skipDownload:
     installLoc = os.path.join(path2repo,'GSASII-bin')
     print ('Binary install location', installLoc)
     if allBinaries:
-        tarURLs = list(GSASIIpath.getGitBinaryReleases().values())
+        tarURLs = GSASIIpath.getGitBinaryReleases().values()
     else:
         tarURLs = [GSASIIpath.getGitBinaryLoc(verbose=True,
                         npver=npVersion,pyver=pyVersion)]
