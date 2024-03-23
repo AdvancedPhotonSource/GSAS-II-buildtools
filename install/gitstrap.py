@@ -5,7 +5,7 @@ from __future__ import division, print_function
 import os, stat, sys, platform, subprocess, datetime
 
 version = "gitstrap.py from March 1, 2024"
-#g2URL = "https://github.com/AdvancedPhotonSource/GSASII.git"
+#g2URL = "https://github.com/AdvancedPhotonSource/GSAS-II.git"
 g2URL = "https://github.com/GSASII/codetest.git"
 scriptpath = os.path.dirname(os.path.abspath(os.path.expanduser(__file__)))
 # This installs GSAS-II files in a directory called GSAS-II which
