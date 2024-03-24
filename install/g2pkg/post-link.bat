@@ -1,6 +1,5 @@
 echo Installing GSAS-II from GitHub > "%PREFIX%\G2_bootstrap_out.log"
 copy "%PREFIX%\Scripts\gsas2-install.py" "%PREFIX%\gitstrap.py"
-mkdir "%PREFIX%\GSASII"
 REM ======================================================================
 REM# create bootstrap batch file
 echo REM Commands to run GSAS-II load/update process > "%CONDA_ROOT%\start_G2_bootstrap.bat"

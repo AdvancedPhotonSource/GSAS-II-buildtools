@@ -1,5 +1,4 @@
 #!/bin/bash
-#mkdir -p $PREFIX/GSASII
 #echo "Preparing to install GSAS-II from GitHub"
 echo "Preparing to install GSAS-II from GitHub" > $PREFIX/G2conda_inst.log
 # create scripts that might be of use for GSAS-II

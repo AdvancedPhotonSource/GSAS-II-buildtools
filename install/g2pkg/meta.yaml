@@ -1,6 +1,6 @@
 package: 
   name: gsas2pkg
-  version: "4.0.0"
+  version: "4.1.0"
 
 #source:
 #  path: ./src
