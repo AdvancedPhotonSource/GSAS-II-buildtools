@@ -97,6 +97,9 @@ for fil in ('g2complete/meta.yaml','g2complete/build.sh',
     elif sys.platform == "win32" and 'construct' in fil: # Windows, remove OSX lines
         out = out.replace('- /tmp/builds/osx','#- /tmp/builds/osx')
         note = 'customized for Win-64'
+    elif sys.platform.startswith("linux"):
+        out = out.replace('- /tmp/builds/osx','#- /tmp/builds/osx')
+        note = 'customized for Linux-64'
     print('Creating',fil,note)
     fp = open(fil,'w')
     fp.write(out)

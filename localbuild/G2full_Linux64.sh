@@ -4,17 +4,21 @@
 
 # based on Jenkins config
 #=======================================================================
-#which gfortran
-#find /usr/local -name "libquadmath*dylib" -print
-#find /usr/local -name "libgcc*dylib" -print
+WORKSPACE=/tmp
+gitInstallRepo=git@github.com:GSASII/GSASIIbuildtools.git
+gitInstallRepo=https://github.com/GSASII/GSASIIbuildtools.git
+# do this in advance so the script can be run 
+#rm -rf $WORKSPACE/GSAS2-build
+#mkdir $WORKSPACE/GSAS2-build
+#git clone $gitInstallRepo $WORKSPACE/GSAS2-build --depth 1
+# echo "run this with bash $WORKSPACE/GSAS2-build/install/G2full_Linux64.sh"
+
 condaHome=/tmp/conda311
 WORKSPACE=/tmp
 builds=/tmp/builds
-gitInstallRepo=git@github.com:GSASII/binarytest.git
+
 gitCodeRepo=git@github.com:GSASII/codetest.git
-# needed where ssh does not work
-gitInstallRepo=https://github.com/GSASII/binarytest.git
-gitCodeRepo=https://github.com/GSASII/codetest.git
+gitCodeRepo=https://github.com/GSASII/codetest.git # needed where ssh does not work
 
 pyver=3.11
 numpyver=1.26
@@ -22,7 +26,7 @@ numpyver=1.26
 packages="python=$pyver wxpython numpy=$numpyver scipy matplotlib pyopengl conda anaconda-client constructor conda-build git gitpython requests pillow h5py imageio scons"
 
 
-env=bldpy311     # py 3.11.8 & np 12.6.4
+env=bldg2f     # py 3.11.8 & np 12.6.4
 #sysType=linux-64
 miniforge=https://github.com/conda-forge/miniforge/releases/download/23.11.0-0/Mambaforge-23.11.0-0-Linux-x86_64.sh
 
@@ -82,10 +86,6 @@ echo source $condaHome/bin/activate $env
 if [ "$gitinstall" = "True" ]
 then
     set -x
-    # get the build routines so they can be run
-    rm -rf $WORKSPACE/GSAS2-build
-    mkdir $WORKSPACE/GSAS2-build
-    git clone $gitInstallRepo $WORKSPACE/GSAS2-build --depth 1
     # get the GSAS-II code to get the latest version number etc.
     rm -rf $WORKSPACE/GSAS2-code
     mkdir $WORKSPACE/GSAS2-code
@@ -111,7 +111,7 @@ then
          conda build g2complete --output-folder $builds --numpy $numpyver
     set -x
     #ls -ltR $builds
-    cp $builds/osx-64/gsas* /tmp/  # keep the conda package for debugging
+    #cp $builds/osx-64/gsas* /tmp/  # keep the conda package for debugging
     
     #
     #=========================== Build/upload of g2full installer =============================

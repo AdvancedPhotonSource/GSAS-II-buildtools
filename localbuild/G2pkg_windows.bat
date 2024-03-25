@@ -4,7 +4,7 @@ REM run 3/24/2024
 REM =========================================================================
 cd \tmp\mf3
 Scripts\activate
-conda create -n bldG2pkg python=3.11 git gitpython conda-build anaconda-client
+conda create -y -n bldG2pkg python=3.11 git gitpython conda-build anaconda-client
 conda activate bldG2pkg
 git clone https://github.com/GSASII/GSASIIbuildtools.git \tmp\G2
 cd \tmp\G2\install
