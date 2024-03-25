@@ -5,7 +5,7 @@ REM  =========================================================================
 REM 
 
 set logfile=c:\tmp\constructor_bld.log
-if exist "%PREFIX%\GSASII" (
+if exist "%PREFIX%\GSAS-II" (
    exit 1
  )
 echo copy %RECIPE_DIR%\..\gitstrap.py %PREFIX%\ >  %logfile%
@@ -19,7 +19,7 @@ if errorlevel 1 exit 1
 
 
 REM rename the .git files so they get copied
-cd %PREFIX%\GSASII
+cd %PREFIX%\GSAS-II
 REM echo rename .git keep_git >> %logfile%
 REM      rename .git keep_git >> %logfile%
 REM if errorlevel 1 exit 1

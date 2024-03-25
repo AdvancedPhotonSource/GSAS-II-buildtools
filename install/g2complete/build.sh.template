@@ -18,5 +18,5 @@ which python >> $logfile 2>&1
 echo python $PREFIX/gitstrap.py --nocheck --noshortcut --noprogress --binary=**npversion**,**pyversion** --log=/tmp/gitstrap.log >> $logfile 2>&1
 python $PREFIX/gitstrap.py --nocheck --noshortcut --noprogress --binary=**npversion**,**pyversion** --log=/tmp/gitstrap.log >> $logfile 2>&1
 # rename the .git files so they get copied
-mv -v $PREFIX/GSASII/.git $PREFIX/GSASII/keep_git  >> $logfile 2>&1
-mv -v $PREFIX/GSASII/.gitignore $PREFIX/GSASII/keep.gitignore  >> $logfile 2>&1
+mv -v $PREFIX/GSAS-II/.git $PREFIX/GSAS-II/keep_git  >> $logfile 2>&1
+mv -v $PREFIX/GSAS-II/.gitignore $PREFIX/GSAS-II/keep.gitignore  >> $logfile 2>&1

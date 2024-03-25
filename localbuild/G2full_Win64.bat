@@ -1,13 +1,16 @@
-REM =======================================================================
-REM this creates the gsas2full self-installer for Windows from a git repository.REM =======================================================================
+REM ============================================================================
+REM this creates the gsas2full self-installer for Windows from a git repository.
+REM ============================================================================
+REM run manually on 1/24/2024 on BHT20 Windows 11 VM
 c:
 set WORKSPACE=\tmp
-set condaHome=%WORKSPACE%\conda311
+set condaHome=%WORKSPACE%\mf3
 set builds=%WORKSPACE%\builds
 mkdir %builds%
 REM set gitInstallRepo=git@github.com:GSASII/binarytest.git
 REM set gitCodeRepo=git@github.com:GSASII/codetest.git
-set gitInstallRepo=https://github.com/GSASII/binarytest.git
+REM N.B. problem with conda ssh, use https:
+set gitInstallRepo=https://github.com/GSASII/GSASIIbuildtools.git
 set gitCodeRepo=https://github.com/GSASII/codetest.git
 
 set pyver=3.11
@@ -40,11 +43,12 @@ if defined install (
    start /wait "" %WORKSPACE%\mambaforge.exe /InstallationType=JustMe /RegisterPython=0 /S /D=%condaHome%
    call %condaHome%\Scripts\activate
    echo Starting 2nd conda install, please wait
-   call conda create -n %env% -y %packages% -y
+   call conda create -n %env% -y %packages% -y -c conda-forge
    call conda env list
    )
 
-call %condaHome%\Scripts\activate %env%
+call %condaHome%\Scripts\activate
+call conda activate %env%
 echo on
 
 REM ================ Install GSAS-II repos

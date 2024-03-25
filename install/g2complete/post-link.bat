@@ -7,12 +7,12 @@ echo python %PREFIX%\gitstrap.py >> "%PREFIX%\start_G2_bootstrap.bat"
 REM create shortcut to start GSAS-II     =======================================
 echo REM Commands to run GSAS-II load/update process > "%PREFIX%\start_GSASII.bat"
 echo call %PREFIX%\Scripts\activate >> "%PREFIX%\start_GSASII.bat"
-echo python %PREFIX%\GSASII\GSASII.py >> "%PREFIX%\start_GSASII.bat"
+echo python %PREFIX%\GSAS-II\GSASII\GSASII.py >> "%PREFIX%\start_GSASII.bat"
 REM 
 REM ============= Restore the git repository file
 REM 
 echo fix git files >> %logfile%
-cd %PREFIX%\GSASII
+cd %PREFIX%\GSAS-II
 REM echo rename keep_git .git >> %logfile%
 REM      rename keep_git .git >> %logfile%
 REM if errorlevel 1 exit 1

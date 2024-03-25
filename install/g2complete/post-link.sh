@@ -1,6 +1,5 @@
 #!/bin/bash
 logfile=/tmp/conda_G2postbuild.log
-#mkdir -p $PREFIX/GSASII
 echo Preparing to install GSAS-II from GitHub > $logfile
 # create scripts that might be of use for GSAS-II
 # create bootstrap script
@@ -14,5 +13,5 @@ echo Preparing to install GSAS-II from GitHub > $logfile
 #
 # install and run the bootstrap
 echo fit git files >> $logfile
-mv -v $PREFIX/GSASII/keep_git $PREFIX/GSASII/.git >> $logfile 2>&1
-mv -v $PREFIX/GSASII/keep.gitignore $PREFIX/GSASII/.gitignore >> $logfile 2>&1
+mv -v $PREFIX/GSAS-II/keep_git $PREFIX/GSAS-II/.git >> $logfile 2>&1
+mv -v $PREFIX/GSAS-II/keep.gitignore $PREFIX/GSAS-II/.gitignore >> $logfile 2>&1

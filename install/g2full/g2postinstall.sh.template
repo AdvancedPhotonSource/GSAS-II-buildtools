@@ -16,7 +16,7 @@ echo $PREFIX/bin/python $PREFIX/gitstrap.py --nocheck --log=$gitlog2 --nodownloa
 # create shortcut to start GSAS-II     =======================================================
 echo "# Commands to start GSAS-II" > $PREFIX/start_GSASII.sh
 echo "source $PREFIX/bin/activate" >> $PREFIX/start_GSASII.sh
-echo "python $PREFIX/GSASII/GSASII.py" >> $PREFIX/start_GSASII.sh
+echo "python $PREFIX/GSAS-II/GSASII.py" >> $PREFIX/start_GSASII.sh
 echo "GSAS-II installer, version **Version** completed"
 # create shortcut to bootstrap script =======================================================
 echo "# Commands to run GSAS-II load/update process" > $PREFIX/start_G2_bootstrap.sh

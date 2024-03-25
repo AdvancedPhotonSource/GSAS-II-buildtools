@@ -20,7 +20,9 @@ reset = False              # True: any locally-made changes to GSAS-II
                            # files are reverted to the distribution
                            # versions; the files are updated to the
                            # current version (Reset mode). Default is False.
-                           # Use --reset to invoke reset mode.
+                           # Use --reset to invoke Reset mode.
+                           # Note that skipShortcut is also set when --reset
+                           # is used
 
 skipChecks = False         # False: checks are made that required Python
                            # packages are present.
@@ -84,6 +86,7 @@ skipProxy = False          # False: the script prompts for for proxy info
 for a in sys.argv[1:]:
     if '-r' in a.lower():
         reset = True
+        skipShortcut = True
     elif '-nop' in a.lower():
         ProgressCnt = False
     elif '-nos' in a.lower():
@@ -218,6 +221,10 @@ if help:
                   Turns on --nocheck. 
 
     --noprogress  omit the progress counter when downloading GSAS-II files 
+
+    --reset       Removes any locally-changed GSAS-II files and updates to 
+                  the latest GSAS-II version. Useful when GSAS-II will not 
+                  start. --noshortcut is set when --reset is used. 
 
     --help        shows this message
 
@@ -446,7 +453,6 @@ if not skipDownload:
         print(msg)
         logmsg(msg)
     
-if skipShortcut: sys.exit()
 #===========================================================================
 # Create all the .pyc files here
 logmsg('Start byte-compile')
@@ -459,6 +465,7 @@ logmsg('byte-compile done')
 #===========================================================================
 # do platform-dependent stuff
 #===========================================================================
+if skipShortcut: sys.exit()
 logmsg('start system-specific install')
 for k,s in {'win':"makeBat.py", 'darwin':"makeMacApp.py",
                 'linux':"makeLinux.py"}.items():
