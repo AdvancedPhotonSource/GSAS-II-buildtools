@@ -15,7 +15,7 @@ conda build g2pkg  -c conda-forge --output-folder /tmp/build --numpy 1.26
 conda build purge
 anaconda upload /tmp/build/linux-64/gsas2pkg-*.tar.bz2 -i -u briantoby
 
-REM =========================================================================
-REM test install (separate window)
+# =========================================================================
+# test install (separate window)
 \tmp\mf3\Scripts\activate
 conda create -n g2pkg briantoby::gsas2pkg
