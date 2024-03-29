@@ -82,6 +82,7 @@ for fil in ('g2complete/meta.yaml','g2complete/build.sh',
     out = out.replace('**wxversion**',wxversion)
     out = out.replace('**mplversion**',mplversion)
     if sys.platform == "darwin": out.replace('#MACOnly#','')
+    os = ''
     if platform.machine() == 'aarch64' and 'meta' in fil: # Raspberry Pi
         out = out.replace('- wxpython=','# - wxpython=')
         note = 'customized for Raspberry Pi OS'
@@ -97,6 +98,7 @@ for fil in ('g2complete/meta.yaml','g2complete/build.sh',
     elif sys.platform.startswith("linux"):
         os = "linux-64"
         note = 'customized for Linux-64'
+    if os: out = out.replace('**OS**',os)
     print('Creating',fil,note)
     fp = open(fil,'w')
     fp.write(out)
