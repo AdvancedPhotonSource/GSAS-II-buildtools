@@ -1,5 +1,7 @@
 REM ============================================================================
 REM this creates the gsas2full self-installer for Windows from a git repository.
+REM download this file with 
+REM curl -L -O https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/raw/main/localbuild/G2full_Win64.bat
 REM ============================================================================
 REM run manually on 1/24/2024 on BHT20 Windows 11 VM
 c:
@@ -7,11 +9,8 @@ set WORKSPACE=\tmp
 set condaHome=%WORKSPACE%\mf3
 set builds=%WORKSPACE%\builds
 mkdir %builds%
-REM set gitInstallRepo=git@github.com:GSASII/binarytest.git
-REM set gitCodeRepo=git@github.com:GSASII/codetest.git
-REM N.B. problem with conda ssh, use https:
-set gitInstallRepo=https://github.com/GSASII/GSASIIbuildtools.git
-set gitCodeRepo=https://github.com/GSASII/codetest.git
+set gitInstallRepo=https://github.com/AdvancedPhotonSource/GSAS-II-buildtools.git
+set gitCodeRepo=https://github.com/AdvancedPhotonSource/GSAS-II.git
 
 set pyver=3.11
 set numpyver=1.26

@@ -10,7 +10,7 @@ cd \tmp\mf3
 Scripts\activate
 REM conda create -y -n bldG2pkg python=3.11 git gitpython conda-build anaconda-client
 conda activate bldG2pkg
-git clone https://github.com/GSASII/GSASIIbuildtools.git \tmp\G2
+git clone https://github.com/AdvancedPhotonSource/GSAS-II-buildtools.git \tmp\G2
 cd \tmp\G2\install
 conda build purge
 conda build g2pkg  -c conda-forge --output-folder c:\tmp\build --numpy 1.26

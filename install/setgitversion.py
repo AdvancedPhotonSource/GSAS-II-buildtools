@@ -87,18 +87,15 @@ for fil in ('g2complete/meta.yaml','g2complete/build.sh',
         note = 'customized for Raspberry Pi OS'
     elif (platform.machine() == 'arm64' and sys.platform == "darwin"
             and 'construct' in fil): # MacOS-arm64
-        out = out.replace('- /tmp/builds/osx-64','#- /tmp/builds/osx-64')
-        out = out.replace('[osx-arm64]','[osx]')
+        os = "osx-arm64"
         note = 'customized for MacOS-arm64'
     elif sys.platform == "darwin" and 'construct' in fil: # MacOS-arm64
-        out = out.replace('- /tmp/builds/osx-arm64','#- /tmp/builds/osx-arm64')
-        out = out.replace('[osx-64]','[osx]')
+        os = "osx-64"
         note = 'customized for MacOS-x86-64'
-    elif sys.platform == "win32" and 'construct' in fil: # Windows, remove OSX lines
-        out = out.replace('- /tmp/builds/osx','#- /tmp/builds/osx')
-        note = 'customized for Win-64'
+#    elif sys.platform == "win32" and 'construct' in fil: # Windows, remove OSX lines
+#        note = 'customized for Win-64'
     elif sys.platform.startswith("linux"):
-        out = out.replace('- /tmp/builds/osx','#- /tmp/builds/osx')
+        os = "linux-64"
         note = 'customized for Linux-64'
     print('Creating',fil,note)
     fp = open(fil,'w')

@@ -1,12 +1,15 @@
 #=======================================================================
 # this creates the gsas2full self-installer for Linux using a git
 # repository. 
-
-# based on Jenkins config
+#
+# download this file with 
+# (cd /tmp; curl -L -O https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/raw/main/localbuild/G2full_Linux64.sh)
 #=======================================================================
 WORKSPACE=/tmp
-gitInstallRepo=git@github.com:GSASII/GSASIIbuildtools.git
-gitInstallRepo=https://github.com/GSASII/GSASIIbuildtools.git
+#gitInstallRepo=git@github.com:AdvancedPhotonSource/GSAS-II-buildtools.git
+#gitCodeRepo=git@github.com:AdvancedPhotonSource/GSAS-II.git
+gitInstallRepo=https://github.com/AdvancedPhotonSource/GSAS-II-buildtools.git
+gitCodeRepo=https://github.com/AdvancedPhotonSource/GSAS-II.git
 # do this in advance so the script can be run 
 #rm -rf $WORKSPACE/GSAS2-build
 #mkdir $WORKSPACE/GSAS2-build
@@ -16,9 +19,6 @@ gitInstallRepo=https://github.com/GSASII/GSASIIbuildtools.git
 condaHome=/tmp/conda311
 WORKSPACE=/tmp
 builds=/tmp/builds
-
-gitCodeRepo=git@github.com:GSASII/codetest.git
-gitCodeRepo=https://github.com/GSASII/codetest.git # needed where ssh does not work
 
 pyver=3.11
 numpyver=1.26

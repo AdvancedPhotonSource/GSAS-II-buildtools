@@ -1,17 +1,17 @@
 #=======================================================================
 # this creates the gsas2full self-installer for Mac using a git
 # repository. 
-
-# based on Jenkins config
+#
+# download this file with 
+# (cd /tmp; curl -L -O https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/raw/main/localbuild/G2full_Mac64.sh)
 #=======================================================================
-#which gfortran
-#find /usr/local -name "libquadmath*dylib" -print
-#find /usr/local -name "libgcc*dylib" -print
+rm -rf /tmp/conda311 /tmp/builds /tmp/GSAS2-build
+
 condaHome=/tmp/conda311
 WORKSPACE=/tmp
 builds=/tmp/builds
-gitInstallRepo=git@github.com:GSASII/binarytest.git
-gitCodeRepo=git@github.com:GSASII/codetest.git
+gitInstallRepo=git@github.com:AdvancedPhotonSource/GSAS-II-buildtools.git
+gitCodeRepo=git@github.com:AdvancedPhotonSource/GSAS-II.git
 
 pyver=3.11
 numpyver=1.26
@@ -23,8 +23,8 @@ env=bldpy311     # py 3.11.8 & np 12.6.4
 #sysType=osx-64
 miniforge=https://github.com/conda-forge/miniforge/releases/download/23.11.0-0/Mambaforge-23.11.0-0-MacOSX-x86_64.sh
 
-#install=True
-install=False
+install=True
+#install=False
 
 dryrun=False
 #dryrun=True
@@ -42,7 +42,7 @@ then
 	if [ ! -e "/tmp/Miniconda3-latest.sh" ]; then
 	    curl -L $miniforge -o /tmp/Miniconda3-latest.sh
 	else
-	    echo "skip miniconda download"
+	    echo "skipping miniconda download"
 	fi
 	if [ ! -d "$condaHome" ]; then
 	    bash /tmp/Miniconda3-latest.sh -b -p $condaHome
@@ -120,18 +120,19 @@ then
     echo `pwd`
     ls -l *.sh
     mv -v *.sh ../   # put into $WORKSPACE/GSAS2-build
+    open ..
 	#ls -l *.*
 fi
 
 exit
 
-if [ "$upload" = "True" ]
-then
-	echo upload build
-	# copy to "Latest" and upload
-	#cp gsas2full-*-MacOSX-x86_64.sh gsas2full-Latest-MacOSX-x86_64.sh
-	# copy to https://subversion.xray.aps.anl.gov/admin_pyGSAS/downloads/gsas2full-*-MacOSX-x86_64.sh
-	scp ../gsas2full-*.sh svnpgsas@s11bmbcda.xray.aps.anl.gov:/home/joule/SVN/subversion/pyGSAS/downloads/
-	#echo files found at https://subversion.xray.aps.anl.gov/admin_pyGSAS/downloads/gsas2full-*-MacOSX-x86_64.sh
-	#ssh svnpgsas@s11bmbcda.xray.aps.anl.gov ls -lt /home/joule/SVN/subversion/pyGSAS/downloads/gsas2full-*-MacOSX-*.sh
-fi
+# if [ "$upload" = "True" ]
+# then
+# 	echo upload build
+# 	# copy to "Latest" and upload
+# 	#cp gsas2full-*-MacOSX-x86_64.sh gsas2full-Latest-MacOSX-x86_64.sh
+# 	# copy to https://subversion.xray.aps.anl.gov/admin_pyGSAS/downloads/gsas2full-*-MacOSX-x86_64.sh
+# 	scp ../gsas2full-*.sh svnpgsas@s11bmbcda.xray.aps.anl.gov:/home/joule/SVN/subversion/pyGSAS/downloads/
+# 	#echo files found at https://subversion.xray.aps.anl.gov/admin_pyGSAS/downloads/gsas2full-*-MacOSX-x86_64.sh
+# 	#ssh svnpgsas@s11bmbcda.xray.aps.anl.gov ls -lt /home/joule/SVN/subversion/pyGSAS/downloads/gsas2full-*-MacOSX-*.sh
+# fi
