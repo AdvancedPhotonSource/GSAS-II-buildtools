@@ -18,15 +18,14 @@ set numpyver=1.26
 set packages=python=%pyver% wxpython numpy=%numpyver% scipy matplotlib pyopengl conda anaconda-client constructor conda-build git gitpython requests pillow h5py imageio scons pywin32
 
 set env=bldpy311
-REM # py 3.11.8 & np 12.6.4
-set sysType=win-64
-set miniforge=https://github.com/conda-forge/miniforge/releases/download/23.11.0-0/Mambaforge-23.11.0-0-Windows-x86_64.exe
+REM # py 3.11.8 & np 1.26.4
+set miniforge=https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Windows-x86_64.exe
 REM https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Windows-x86_64.exe 
 
 REM options to skip over sections, if already done
 
 set install=
-REM set install=True
+set install=True
 
 set gitinstall=
 set gitinstall=True

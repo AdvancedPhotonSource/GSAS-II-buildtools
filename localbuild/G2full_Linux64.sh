@@ -10,11 +10,6 @@ WORKSPACE=/tmp
 #gitCodeRepo=git@github.com:AdvancedPhotonSource/GSAS-II.git
 gitInstallRepo=https://github.com/AdvancedPhotonSource/GSAS-II-buildtools.git
 gitCodeRepo=https://github.com/AdvancedPhotonSource/GSAS-II.git
-# do this in advance so the script can be run 
-#rm -rf $WORKSPACE/GSAS2-build
-#mkdir $WORKSPACE/GSAS2-build
-#git clone $gitInstallRepo $WORKSPACE/GSAS2-build --depth 1
-# echo "run this with bash $WORKSPACE/GSAS2-build/install/G2full_Linux64.sh"
 
 condaHome=/tmp/conda311
 WORKSPACE=/tmp
@@ -25,10 +20,8 @@ numpyver=1.26
 
 packages="python=$pyver wxpython numpy=$numpyver scipy matplotlib pyopengl conda anaconda-client constructor conda-build git gitpython requests pillow h5py imageio scons"
 
-
-env=bldg2f     # py 3.11.8 & np 12.6.4
-#sysType=linux-64
-miniforge=https://github.com/conda-forge/miniforge/releases/download/23.11.0-0/Mambaforge-23.11.0-0-Linux-x86_64.sh
+env=bldg2f     # py 3.11.8 & np 1.26.4
+miniforge=https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
 
 install=True
 #install=False

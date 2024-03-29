@@ -18,12 +18,9 @@ numpyver=1.26
 
 packages="python=$pyver wxpython numpy=$numpyver scipy matplotlib pyopengl conda anaconda-client constructor conda-build git gitpython requests pillow h5py imageio scons"
 
-
-env=bldpy311     # py 3.11.8 & np 12.6.4
-sysType=arm64
-miniforge=https://github.com/conda-forge/miniforge/releases/download/23.11.0-0/Mambaforge-MacOSX-$systype.sh
-#miniforge=https://github.com/conda-forge/miniforge/releases/download/24.1.2-0/Mambaforge-MacOSX-arm64.sh
+env=bldpy311     # py 3.11.8 & np 1.26.4
 miniforge=https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-MacOSX-arm64.sh
+
 install=True
 #install=False
 
@@ -40,7 +37,7 @@ upload=False
 #========== conda stuff
 if [ "$install" = "True" ]
 then
-        if [ ! -e "/tmp/Miniconda3-latest.sh" ]; then
+	if [ ! -e "/tmp/Miniconda3-latest.sh" ]; then
 	    echo Downloading 
 	    curl -L $miniforge -o /tmp/Miniconda3-latest.sh
 	else
@@ -107,10 +104,7 @@ then
          conda build purge
     echo conda build g2complete --output-folder $builds --numpy $numpyver
          conda build g2complete --output-folder $builds --numpy $numpyver
-    set -x
-    #ls -ltR $builds
-    #cp $builds/osx-$systype/gsas* /tmp/  # keep the conda package for debugging
-    
+    set -x    
     #
     #=========================== Build/upload of g2full installer =============================
     #
