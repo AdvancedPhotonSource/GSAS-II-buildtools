@@ -6,21 +6,21 @@
 # (cd /tmp; curl -L -O https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/raw/main/localbuild/G2full_Linux64.sh)
 #=======================================================================
 WORKSPACE=/tmp
+rm -rf $WORKSPACE/conda311 $WORKSPACE/builds $WORKSPACE/GSAS2-build $WORKSPACE/GSAS2-code
+
+condaHome=/tmp/conda311
+builds=/tmp/builds
 #gitInstallRepo=git@github.com:AdvancedPhotonSource/GSAS-II-buildtools.git
 #gitCodeRepo=git@github.com:AdvancedPhotonSource/GSAS-II.git
 gitInstallRepo=https://github.com/AdvancedPhotonSource/GSAS-II-buildtools.git
 gitCodeRepo=https://github.com/AdvancedPhotonSource/GSAS-II.git
-
-condaHome=/tmp/conda311
-WORKSPACE=/tmp
-builds=/tmp/builds
 
 pyver=3.11
 numpyver=1.26
 
 packages="python=$pyver wxpython numpy=$numpyver scipy matplotlib pyopengl conda anaconda-client constructor conda-build git gitpython requests pillow h5py imageio scons"
 
-env=bldg2f     # py 3.11.8 & np 1.26.4
+env=bldpy311     # py 3.11.8 & np 1.26.4
 miniforge=https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
 
 install=True
@@ -40,11 +40,13 @@ upload=False
 if [ "$install" = "True" ]
 then
 	if [ ! -e "/tmp/Miniconda3-latest.sh" ]; then
+	    echo Downloading 
 	    curl -L $miniforge -o /tmp/Miniconda3-latest.sh
 	else
-	    echo "skip miniconda download"
+	    echo "skipping miniconda download"
 	fi
 	if [ ! -d "$condaHome" ]; then
+	    echo creating conda installation 
 	    bash /tmp/Miniconda3-latest.sh -b -p $condaHome
 	else
 	    echo "skip miniconda install"
@@ -79,6 +81,10 @@ echo source $condaHome/bin/activate $env
 if [ "$gitinstall" = "True" ]
 then
     set -x
+    # get the build routines so they can be run
+    rm -rf $WORKSPACE/GSAS2-build
+    mkdir $WORKSPACE/GSAS2-build
+    git clone $gitInstallRepo $WORKSPACE/GSAS2-build --depth 1
     # get the GSAS-II code to get the latest version number etc.
     rm -rf $WORKSPACE/GSAS2-code
     mkdir $WORKSPACE/GSAS2-code
@@ -92,7 +98,6 @@ then
     echo python `pwd`/setgitversion.py $WORKSPACE/GSAS2-code
     python setgitversion.py $WORKSPACE/GSAS2-code
 
-    
     mkdir -p $builds
     rm -rf $builds/*
     set +x
@@ -103,9 +108,6 @@ then
     echo conda build g2complete --output-folder $builds --numpy $numpyver
          conda build g2complete --output-folder $builds --numpy $numpyver
     set -x
-    #ls -ltR $builds
-    #cp $builds/osx-64/gsas* /tmp/  # keep the conda package for debugging
-    
     #
     #=========================== Build/upload of g2full installer =============================
     #
@@ -123,14 +125,13 @@ fi
 
 exit
 
-if [ "$upload" = "True" ]
-then
-	echo upload build
-	# copy to "Latest" and upload
-	#cp gsas2full-*-MacOSX-x86_64.sh gsas2full-Latest-MacOSX-x86_64.sh
-	# copy to https://subversion.xray.aps.anl.gov/admin_pyGSAS/downloads/gsas2full-*-MacOSX-x86_64.sh
-	scp ../gsas2full-*.sh svnpgsas@s11bmbcda.xray.aps.anl.gov:/home/joule/SVN/subversion/pyGSAS/downloads/
-	#echo files found at https://subversion.xray.aps.anl.gov/admin_pyGSAS/downloads/gsas2full-*-MacOSX-x86_64.sh
-	#ssh svnpgsas@s11bmbcda.xray.aps.anl.gov ls -lt /home/joule/SVN/subversion/pyGSAS/downloads/gsas2full-*-MacOSX-*.sh
-fi
-
+# if [ "$upload" = "True" ]
+# then
+# 	echo upload build
+# 	# copy to "Latest" and upload
+# 	#cp gsas2full-*-MacOSX-x86_64.sh gsas2full-Latest-MacOSX-x86_64.sh
+# 	# copy to https://subversion.xray.aps.anl.gov/admin_pyGSAS/downloads/gsas2full-*-MacOSX-x86_64.sh
+# 	scp ../gsas2full-*.sh svnpgsas@s11bmbcda.xray.aps.anl.gov:/home/joule/SVN/subversion/pyGSAS/downloads/
+# 	#echo files found at https://subversion.xray.aps.anl.gov/admin_pyGSAS/downloads/gsas2full-*-MacOSX-x86_64.sh
+# 	#ssh svnpgsas@s11bmbcda.xray.aps.anl.gov ls -lt /home/joule/SVN/subversion/pyGSAS/downloads/gsas2full-*-MacOSX-*.sh
+# fi

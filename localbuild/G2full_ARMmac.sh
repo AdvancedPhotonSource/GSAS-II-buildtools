@@ -5,10 +5,10 @@
 # download this file with 
 # (cd /tmp; curl -L -O https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/raw/main/localbuild/G2full_ARMmac.sh)
 #=======================================================================
-rm -rf /tmp/conda311 /tmp/builds /tmp/GSAS2-build
+WORKSPACE=/tmp
+rm -rf $WORKSPACE/conda311 $WORKSPACE/builds $WORKSPACE/GSAS2-build $WORKSPACE/GSAS2-code
 
 condaHome=/tmp/conda311
-WORKSPACE=/tmp
 builds=/tmp/builds
 gitInstallRepo=git@github.com:AdvancedPhotonSource/GSAS-II-buildtools.git
 gitCodeRepo=git@github.com:AdvancedPhotonSource/GSAS-II.git

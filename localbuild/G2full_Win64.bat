@@ -4,6 +4,9 @@ REM download this file with
 REM curl -L -O https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/raw/main/localbuild/G2full_Win64.bat
 REM ============================================================================
 REM run manually on 1/24/2024 on BHT20 Windows 11 VM
+REM ran mostly by script 1/2024, as above 
+REM   (command line args did not work on mambaforge.exe)
+echo on
 c:
 set WORKSPACE=\tmp
 set condaHome=%WORKSPACE%\mf3
