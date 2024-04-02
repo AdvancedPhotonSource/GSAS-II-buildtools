@@ -11,7 +11,7 @@ build:
 #  path: ./src
 
 about:
-  home: https://subversion.xray.aps.anl.gov/trac/pyGSAS
+  home: https://advancedphotonsource.github.io/GSAS-II-tutorials
 
 requirements:
   run:

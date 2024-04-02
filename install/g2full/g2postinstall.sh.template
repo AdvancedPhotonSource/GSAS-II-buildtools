@@ -8,11 +8,12 @@ echo "Finish up GSAS-II installation, version **Version**"
 # update the GSAS-II package if possible, create shortcuts & byte-compile... ================
 echo "launching bootstrap process"
 # try to update to latest GSAS-II version (will fail if no network)
-echo $PREFIX/bin/python $PREFIX/gitstrap.py --nocheck --log=$gitlog1 --noshortcut >> $logfile 2>&1
-     $PREFIX/bin/python $PREFIX/gitstrap.py --nocheck --log=$gitlog1 --noshortcut >> $logfile 2>&1
+source $PREFIX/bin/activate
+echo python $PREFIX/gitstrap.py --nocheck --log=$gitlog1 --noshortcut >> $logfile 2>&1
+     python $PREFIX/gitstrap.py --nocheck --log=$gitlog1 --noshortcut >> $logfile 2>&1
 # finish installation
-echo $PREFIX/bin/python $PREFIX/gitstrap.py --nocheck --log=$gitlog2 --nodownload >> $logfile 2>&1
-     $PREFIX/bin/python $PREFIX/gitstrap.py --nocheck --log=$gitlog2 --nodownload >> $logfile 2>&1
+echo python $PREFIX/gitstrap.py --nocheck --log=$gitlog2 --nodownload >> $logfile 2>&1
+     python $PREFIX/gitstrap.py --nocheck --log=$gitlog2 --nodownload >> $logfile 2>&1
 # create shortcut to start GSAS-II     =======================================================
 echo "# Commands to start GSAS-II" > $PREFIX/start_GSASII.sh
 echo "source $PREFIX/bin/activate" >> $PREFIX/start_GSASII.sh
