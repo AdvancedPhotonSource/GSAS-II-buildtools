@@ -18,7 +18,7 @@ numpyver=1.26
 packages="python=$pyver wxpython numpy=$numpyver scipy matplotlib pyopengl conda anaconda-client constructor conda-build git gitpython requests pillow h5py imageio scons"
 
 env=bldpy311     # py 3.11.8 & np 1.26.4
-miniforge=https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge-MacOSX-arm64.sh
+miniforge=https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh
 
 install=True
 #install=False
@@ -75,7 +75,7 @@ then
     # create a workaround environment to avoid the buggy newer constructor versions
     conda create --name workaround --clone $env
     source $condaHome/bin/activate workaround
-    conda install -y constructor=3.3
+    conda install -y constructor=3.6
     source $condaHome/bin/activate $env
 fi
 
@@ -117,10 +117,10 @@ then
     source $condaHome/bin/activate workaround
     # Build the self-installer
     rm -f *.sh
-    constructor g2full
+    #constructor g2full
     # March 2024: mamba solver has a bug, fixed in new version TBA
     # but not in 3.7.0, following command is a work-around
-    #CONDA_SOLVER=classic constructor g2full
+    CONDA_SOLVER=classic constructor g2full
     set -x
     echo `pwd`
     ls -l *.sh

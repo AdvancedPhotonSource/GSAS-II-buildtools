@@ -3,7 +3,7 @@
 # repository. 
 #
 # download this file with 
-# (cd /tmp; curl -L -O https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/raw/main/localbuild/G2full_Linux64.sh)
+# curl -L https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/raw/main/localbuild/G2full_Linux64.sh > build_g2full.sh
 #=======================================================================
 WORKSPACE=/tmp
 condaHome=/tmp/conda311
@@ -21,7 +21,7 @@ numpyver=1.26
 packages="python=$pyver wxpython numpy=$numpyver scipy matplotlib pyopengl conda anaconda-client constructor conda-build git gitpython requests pillow h5py imageio scons"
 
 env=bldpy311     # py 3.11.8 & np 1.26.4
-miniforge=https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge-Linux-x86_64.sh
+miniforge=https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
 
 install=True
 #install=False
@@ -42,7 +42,7 @@ then
     rm -rf $condaHome
     if [ ! -e "/tmp/Miniforge-latest.sh" ]; then
 	echo Downloading 
-	curl -L $miniforge -o /tmp/Miniforge-latest.sh
+	curl -L $miniforge > /tmp/Miniforge-latest.sh
     else
 	echo "skipping miniconda download"
     fi
@@ -81,7 +81,6 @@ then
     conda install -y constructor=3.3
     source $condaHome/bin/activate $env
 fi
-
 #=========================== Build of g2complete package ==================================
 #
 #=============================
@@ -110,10 +109,8 @@ then
 
     rm -rf $builds
     mkdir -p $builds
-    set +x
     echo conda build g2complete --output-folder $builds --numpy $numpyver
          conda build g2complete --output-folder $builds --numpy $numpyver
-    set -x
     #
     #=========================== Build/upload of g2full installer =============================
     #

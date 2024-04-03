@@ -18,7 +18,7 @@ numpyver=1.26
 packages="python=$pyver wxpython numpy=$numpyver scipy matplotlib pyopengl conda anaconda-client constructor conda-build git gitpython requests pillow h5py imageio scons"
 
 env=bldpy311     # py 3.11.8 & np 1.26.4
-miniforge=https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge-MacOSX-x86_64.sh
+miniforge=https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-x86_64.sh
 
 install=True
 #install=False
