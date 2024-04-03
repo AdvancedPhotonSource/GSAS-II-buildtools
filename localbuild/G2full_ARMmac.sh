@@ -6,10 +6,9 @@
 # (cd /tmp; curl -L -O https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/raw/main/localbuild/G2full_ARMmac.sh)
 #=======================================================================
 WORKSPACE=/tmp
-rm -rf $WORKSPACE/conda311 $WORKSPACE/builds $WORKSPACE/GSAS2-build $WORKSPACE/GSAS2-code
-
 condaHome=/tmp/conda311
-builds=/tmp/builds
+builds=~/build  # this must match what is in the g2full/construct.yaml file
+
 gitInstallRepo=git@github.com:AdvancedPhotonSource/GSAS-II-buildtools.git
 gitCodeRepo=git@github.com:AdvancedPhotonSource/GSAS-II.git
 
@@ -19,7 +18,7 @@ numpyver=1.26
 packages="python=$pyver wxpython numpy=$numpyver scipy matplotlib pyopengl conda anaconda-client constructor conda-build git gitpython requests pillow h5py imageio scons"
 
 env=bldpy311     # py 3.11.8 & np 1.26.4
-miniforge=https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-MacOSX-arm64.sh
+miniforge=https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge-MacOSX-arm64.sh
 
 install=True
 #install=False
@@ -37,19 +36,20 @@ upload=False
 #========== conda stuff
 if [ "$install" = "True" ]
 then
-	if [ ! -e "/tmp/Miniconda3-latest.sh" ]; then
-	    echo Downloading 
-	    curl -L $miniforge -o /tmp/Miniconda3-latest.sh
-	else
-	    echo "skipping miniconda download"
-	fi
-	if [ ! -d "$condaHome" ]; then
-	    echo creating conda installation 
-	    bash /tmp/Miniconda3-latest.sh -b -p $condaHome
-	else
-	    echo "skip miniconda install"
-	fi
-	#rm /tmp/Miniconda3-latest.sh
+    rm -rf $condaHome
+    if [ ! -e "/tmp/Miniforge-latest.sh" ]; then
+	echo Downloading 
+	curl -L $miniforge -o /tmp/Miniforge-latest.sh
+    else
+	echo "skipping miniconda download"
+    fi
+    if [ ! -d "$condaHome" ]; then
+	echo creating conda installation 
+	bash /tmp/Miniforge-latest.sh -b -p $condaHome
+    else
+	echo "skip miniconda install"
+    fi
+    #rm /tmp/Miniforge-latest.sh
 fi
 
 echo source $condaHome/bin/activate
@@ -69,6 +69,15 @@ fi
 set +x
 echo source $condaHome/bin/activate $env
      source $condaHome/bin/activate $env
+
+if [ "$install" = "True" ]
+then
+    # create a workaround environment to avoid the buggy newer constructor versions
+    conda create --name workaround --clone $env
+    source $condaHome/bin/activate workaround
+    conda install -y constructor=3.3
+    source $condaHome/bin/activate $env
+fi
 
 #=========================== Build of g2complete package ==================================
 #
@@ -96,28 +105,28 @@ then
     echo python `pwd`/setgitversion.py $WORKSPACE/GSAS2-code
     python setgitversion.py $WORKSPACE/GSAS2-code
 
-    
+    rm -rf $builds
     mkdir -p $builds
-    rm -rf $builds/*
     set +x
-    echo conda build purge
-         conda build purge
     echo conda build g2complete --output-folder $builds --numpy $numpyver
          conda build g2complete --output-folder $builds --numpy $numpyver
     set -x    
     #
     #=========================== Build/upload of g2full installer =============================
     #
+    source $condaHome/bin/activate workaround
     # Build the self-installer
     rm -f *.sh
-    # constructor g2full
-    # March 2024, mamba solver has a problem, fixed in a newer version
-    CONDA_SOLVER=classic constructor g2full
+    constructor g2full
+    # March 2024: mamba solver has a bug, fixed in new version TBA
+    # but not in 3.7.0, following command is a work-around
+    #CONDA_SOLVER=classic constructor g2full
     set -x
     echo `pwd`
     ls -l *.sh
-    mv -v *.sh ../   # put into $WORKSPACE/GSAS2-build
-    open ..
+    mv -v *.sh $WORKSPACE   # put into $WORKSPACE
+    open $WORKSPACE
+    rm -rf $builds
 	#ls -l *.*
 fi
 

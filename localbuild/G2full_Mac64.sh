@@ -7,7 +7,6 @@
 #=======================================================================
 WORKSPACE=/tmp
 condaHome=/tmp/conda311
-rm -rf $condaHome
 builds=~/build  # this must match what is in the g2full/construct.yaml file
 
 gitInstallRepo=git@github.com:AdvancedPhotonSource/GSAS-II-buildtools.git
@@ -37,19 +36,20 @@ upload=False
 #========== conda stuff
 if [ "$install" = "True" ]
 then
-	if [ ! -e "/tmp/Miniforge-latest.sh" ]; then
-	    echo Downloading 
-	    curl -L $miniforge -o /tmp/Miniforge-latest.sh
-	else
-	    echo "skipping miniconda download"
-	fi
-	if [ ! -d "$condaHome" ]; then
-	    echo creating conda installation 
-	    bash /tmp/Miniforge-latest.sh -b -p $condaHome
-	else
-	    echo "skip miniconda install"
-	fi
-	#rm /tmp/Miniforge-latest.sh
+    rm -rf $condaHome
+    if [ ! -e "/tmp/Miniforge-latest.sh" ]; then
+	echo Downloading 
+	curl -L $miniforge -o /tmp/Miniforge-latest.sh
+    else
+	echo "skipping miniconda download"
+    fi
+    if [ ! -d "$condaHome" ]; then
+	echo creating conda installation 
+	bash /tmp/Miniforge-latest.sh -b -p $condaHome
+    else
+	echo "skip miniconda install"
+    fi
+    #rm /tmp/Miniforge-latest.sh
 fi
 
 echo source $condaHome/bin/activate
@@ -64,18 +64,21 @@ fi
 if [ "$install" = "True" ]
 then
 	conda create -y -n $env $packages
-	conda create --name workaround --clone $env
 fi
 
 set +x
 echo source $condaHome/bin/activate $env
      source $condaHome/bin/activate $env
 
-# create a workaround environment to avoid the buggy newer constructor versions
-conda create --name workaround --clone $env
-source $condaHome/bin/activate workaround
-conda install -y constructor=3.3
-     
+if [ "$install" = "True" ]
+then
+    # create a workaround environment to avoid the buggy newer constructor versions
+    conda create --name workaround --clone $env
+    source $condaHome/bin/activate workaround
+    conda install -y constructor=3.3
+    source $condaHome/bin/activate $env
+fi
+
 #=========================== Build of g2complete package ==================================
 #
 #=============================
@@ -107,21 +110,22 @@ then
     set +x
     echo conda build g2complete --output-folder $builds --numpy $numpyver
          conda build g2complete --output-folder $builds --numpy $numpyver
-    set -x    
+    set -x
     #
     #=========================== Build/upload of g2full installer =============================
     #
+    source $condaHome/bin/activate workaround
     # Build the self-installer
     rm -f *.sh
-    # constructor g2full
+    constructor g2full
     # March 2024: mamba solver has a bug, fixed in new version TBA
     # but not in 3.7.0, following command is a work-around
-    CONDA_SOLVER=classic constructor g2full
+    #CONDA_SOLVER=classic constructor g2full
     set -x
     echo `pwd`
     ls -l *.sh
-    mv -v *.sh ../   # put into $WORKSPACE/GSAS2-build
-    open ..
+    mv -v *.sh $WORKSPACE   # put into $WORKSPACE
+    open $WORKSPACE
     rm -rf $builds
 	#ls -l *.*
 fi
