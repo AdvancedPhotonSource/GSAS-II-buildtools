@@ -64,12 +64,18 @@ fi
 if [ "$install" = "True" ]
 then
 	conda create -y -n $env $packages
+	conda create --name workaround --clone $env
 fi
 
 set +x
 echo source $condaHome/bin/activate $env
      source $condaHome/bin/activate $env
 
+# create a workaround environment to avoid the buggy newer constructor versions
+conda create --name workaround --clone $env
+source $condaHome/bin/activate workaround
+conda install -y constructor=3.3
+     
 #=========================== Build of g2complete package ==================================
 #
 #=============================

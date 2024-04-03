@@ -480,8 +480,7 @@ G2script = os.path.join(path2GSAS2,'GSASII.py')
 # on a Mac, make an applescript
 if script and sys.platform.startswith('darwin'):
     logmsg(f'running {script}')
-    print([sys.executable,script,G2script],path2GSAS2)
-    out = subprocess.run([sys.executable,script,G2script,],cwd=path2GSAS2)
+    out = subprocess.run([sys.executable,script],cwd=path2GSAS2)
 # On linux, make a desktop icon & on windows make a batch file
 # each has hard-coded paths to Python and GSAS-II
 elif script:
