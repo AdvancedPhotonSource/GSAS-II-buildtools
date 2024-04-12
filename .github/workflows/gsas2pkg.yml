@@ -39,7 +39,7 @@ jobs:
 #          conda config --set anaconda_upload yes
       - name: build conda package
         run: |
-	  env
+          env
           cd install
           conda build g2pkg -c conda-forge --numpy 1.26 --output-folder $HOME/build
           anaconda upload $HOME/build/linux-64/gsas2pkg-*.tar.bz2 -i -u briantoby -t ${{ secrets.ANACONDA_TOKEN }}
