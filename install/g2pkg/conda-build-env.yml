@@ -1,0 +1,6 @@
+name: conda-build-env
+channels:
+  - conda-forge
+dependencies:
+  - anaconda-client
+  - conda-build

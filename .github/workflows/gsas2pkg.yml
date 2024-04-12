@@ -14,11 +14,16 @@ name: build gsas2pkg
 #on: [push, pull_request, workflow_dispatch]
 #on: [push, workflow_dispatch]  # why build on pull request?
 on: [workflow_dispatch]
-# run this if any of the following change: 
+# run on all platforms this if any of the following change: 
 #    install/gitstrap.py
-#    install/g2pkg/build.sh
 #    install/g2pkg/meta.yaml
+# for mac/linux:
+#    install/g2pkg/build.sh
 #    install/g2pkg/post-link.sh
+# for windows:
+#    install/g2pkg/post-link.bat
+#    install/g2pkg/bld.bat
+
 
 #strategy:
 #    matrix:
@@ -27,22 +32,35 @@ on: [workflow_dispatch]
 
 jobs:
   build:
-#    runs-on: ubuntu-latest
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
+#    runs-on: macos-latest
     steps:    
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.11'
+#      - name: Set up Python 3.11
+#        uses: actions/setup-python@v3
+#        with:
+#          python-version: '3.11'
 #      - name: Add conda to system path
 #        run: |
 #          # $CONDA is an environment variable pointing to the root of the miniconda directory
 #          echo $CONDA/bin >> $GITHUB_PATH
-      - name: Install conda packages
+#      - name: Install conda packages
+#        run: |
+#          conda install -y conda-build anaconda-client
+
+      - name: Set up conda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: build
+          environment-file: install/conda-build-env.yml
+          python-version: 3.11
+          miniforge-version: latest
+#          auto-activate-base: false
+      - shell: bash -l {0}
         run: |
-          conda install -y conda-build anaconda-client
+          conda info
+          conda list
 
       - name: build conda package and upload
         run: |
@@ -50,8 +68,9 @@ jobs:
           conda build g2pkg -c conda-forge --numpy 1.26 --output-folder ../build
           if [ "$RUNNER_OS" == "macOS" ]; then
              conda convert ../build/osx-64/gsas2pkg-*.tar.bz2 -p osx-arm64 -o ../build
-             ls -ltR ../build
+             #ls -ltR ../build
           fi 
-          ls -ltR ../build/*/*.tar.bz2
+          #ls -ltR ../build/*/*.tar.bz2
           anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ../build/*/*.tar.bz2 --user briantoby --force
-        shell: bash
+        shell: bash -l {0}
+#        shell: bash
