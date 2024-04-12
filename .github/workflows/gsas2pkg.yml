@@ -1,16 +1,24 @@
-# Build the gsas2pkg conda package 
+# Build the gsas2pkg conda package on Mac (Intel) & Linux
 #
-# login to https://anaconda.org/briantoby/settings/access to create an API token
-# with "Allow read access to the API site" & "Allow write access to the API site"
-# add the key as a Repository secret named ANACONDA_TOKEN using
-# Settings/Secrets.../Actions 
+# Prerequisite: login to https://anaconda.org/briantoby/settings/access to 
+#   create an API token with "Allow read access to the API site" & "Allow 
+#   write access to the API site".
+# Then add the key as a Repository secret named ANACONDA_TOKEN using
+#   the Settings/Secrets.../Actions 
 
-# 
+# TODO: could we build the Raspberry Pi-64 with Conda convert? (N.B. must use pip
+#    for wxpython rather than conda)
+#
 name: build gsas2pkg
 
 #on: [push, pull_request, workflow_dispatch]
 #on: [push, workflow_dispatch]  # why build on pull request?
 on: [workflow_dispatch]
+# run this if any of the following change: 
+#    install/gitstrap.py
+#    install/g2pkg/build.sh
+#    install/g2pkg/meta.yaml
+#    install/g2pkg/post-link.sh
 
 #strategy:
 #    matrix:
@@ -28,10 +36,10 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: '3.11'
-      - name: Add conda to system path
-        run: |
-          # $CONDA is an environment variable pointing to the root of the miniconda directory
-          echo $CONDA/bin >> $GITHUB_PATH
+#      - name: Add conda to system path
+#        run: |
+#          # $CONDA is an environment variable pointing to the root of the miniconda directory
+#          echo $CONDA/bin >> $GITHUB_PATH
       - name: Install conda packages
         run: |
           conda install -y conda-build anaconda-client
