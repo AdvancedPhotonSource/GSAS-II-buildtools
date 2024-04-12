@@ -26,6 +26,6 @@ chmod +x $resetScript
 startScript=$PREFIX/bin/gsasII.sh
 echo "# Commands to start GSAS-II" > $startScript
 echo "source $CONDA_ROOT/bin/activate $CONDA_DEFAULT_ENV" >> $startScript
-echo "$PREFIX/bin/python $PREFIX/GSASII.py \$*" >> $startScript
+echo "$PREFIX/bin/python $PREFIX/GSAS-II/GSASII/GSASII.py \$*" >> $startScript
 chmod +x $startScript
 #============================================================================
