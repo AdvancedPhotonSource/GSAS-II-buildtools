@@ -30,6 +30,6 @@ jobs:
 
       - name: build conda package
         run: |
-	  cd install
+          cd install
           conda build g2pkg -c conda-forge --numpy 1.26
       
