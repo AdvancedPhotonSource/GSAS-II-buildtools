@@ -27,37 +27,28 @@ on: [workflow_dispatch]
 jobs:
   build:
     name: gsas2pkg build on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+#    runs-on: ${{ matrix.os }}
 #    runs-on: windows-latest
 #    runs-on: ubuntu-latest
-#    runs-on: macos-latest
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: macos-latest
+#    strategy:
+#      matrix:
+#        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-#      - name: Set up Python 3.11
-#        uses: actions/setup-python@v3
-#        with:
-#          python-version: '3.11'
-#      - name: Add conda to system path
-#        run: |
-#          # $CONDA is an environment variable pointing to the root of the miniconda directory
-#          echo $CONDA/bin >> $GITHUB_PATH
-#      - name: Install conda packages
-#        run: |
-#          conda install -y conda-build anaconda-client
 
       - name: Set up conda
-        uses: conda-incubator/setup-miniconda@v2
+        #uses: conda-incubator/setup-miniconda@v2
+        uses: conda-incubator/setup-miniconda@0301788 # v3.0.3 (using hash to protect secrets)
         with:
           activate-environment: build
           environment-file: install/g2pkg/conda-build-env.yml
           python-version: 3.11
           miniforge-version: latest
-#          auto-activate-base: false
-#      - shell: bash -l {0}
+
+#      - name: diagnostics
+#        shell: bash -l {0}
 #        run: |
 #          conda info
 #          conda list

@@ -1,19 +1,31 @@
 #!/bin/bash
-#echo "Preparing to install GSAS-II from GitHub"
 echo "Preparing to install GSAS-II from GitHub" > $PREFIX/G2conda_inst.log
-# create scripts that might be of use for GSAS-II
-# create bootstrap script
-echo "# Commands to run GSAS-II load/update process" > $CONDA_ROOT/start_G2_bootstrap.sh
-echo "source $CONDA_ROOT/bin/activate $CONDA_DEFAULT_ENV" >> $CONDA_ROOT/start_G2_bootstrap.sh
-echo "$PREFIX/bin/python $PREFIX/gitstrap.py" >> $CONDA_ROOT/start_G2_bootstrap.sh
-# create start script
-echo "# Commands to start GSAS-II" > $CONDA_ROOT/start_GSASII.sh
-echo "source $CONDA_ROOT/bin/activate $CONDA_DEFAULT_ENV" >> $CONDA_ROOT/start_GSASII.sh
-echo "$PREFIX/bin/python $PREFIX/GSASII.py" >> $CONDA_ROOT/start_GSASII.sh
+#============================================================================
+#============================================================================
 # install and run the bootstrap
 echo "running GSAS-II installer" >> $PREFIX/G2conda_inst.log 2>&1
 mv $PREFIX/bin/gsas2-install.py $PREFIX/gitstrap.py >> $PREFIX/G2conda_inst.log 2>&1
+# debug stuff
 echo $CONDA_ROOT/bin/python  >> $PREFIX/G2conda_inst.log 2>&1
 echo $PREFIX/bin/python  >> $PREFIX/G2conda_inst.log 2>&1
 echo `which python`  >> $PREFIX/G2conda_inst.log 2>&1
+# launch the GSAS-II installer script
 $PREFIX/bin/python $PREFIX/gitstrap.py >> $PREFIX/G2conda_inst.log 2>&1
+#============================================================================
+#============================================================================
+# create scripts that might be of use for GSAS-II
+#============================================================================
+# create bootstrap-reset script
+resetScript=$PREFIX/bin/reset-gsasII.sh
+echo "# Commands to run GSAS-II load/update process" > $resetScript
+echo "source $CONDA_ROOT/bin/activate $CONDA_DEFAULT_ENV" >>  $resetScript
+echo "$PREFIX/bin/python $PREFIX/gitstrap.py --reset" >>  $resetScript
+chmod +x $resetScript
+#============================================================================
+# create start script
+startScript=$PREFIX/bin/gsasII.sh
+echo "# Commands to start GSAS-II" > $startScript
+echo "source $CONDA_ROOT/bin/activate $CONDA_DEFAULT_ENV" >> $startScript
+echo "$PREFIX/bin/python $PREFIX/GSASII.py \$*" >> $startScript
+chmod +x $startScript
+#============================================================================
