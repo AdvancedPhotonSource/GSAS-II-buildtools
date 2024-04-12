@@ -24,17 +24,16 @@ on: [workflow_dispatch]
 #    install/g2pkg/post-link.bat
 #    install/g2pkg/bld.bat
 
-
-#strategy:
-#    matrix:
-#        os: [ubuntu-latest, windows-latest, macos-latest]
-
-
 jobs:
   build:
-    runs-on: windows-latest
+    name: gsas2pkg build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+#    runs-on: windows-latest
 #    runs-on: ubuntu-latest
 #    runs-on: macos-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -58,12 +57,13 @@ jobs:
           python-version: 3.11
           miniforge-version: latest
 #          auto-activate-base: false
-      - shell: bash -l {0}
-        run: |
-          conda info
-          conda list
+#      - shell: bash -l {0}
+#        run: |
+#          conda info
+#          conda list
 
       - name: build conda package and upload
+        shell: bash -l {0}
         run: |
           cd install
           conda build g2pkg -c conda-forge --numpy 1.26 --output-folder ../build
@@ -73,5 +73,3 @@ jobs:
           fi 
           #ls -ltR ../build/*/*.tar.bz2
           anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ../build/*/*.tar.bz2 --user briantoby --force
-        shell: bash -l {0}
-#        shell: bash
