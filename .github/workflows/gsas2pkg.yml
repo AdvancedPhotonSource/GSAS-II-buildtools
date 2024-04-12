@@ -1,0 +1,68 @@
+# Build the gsas2pkg conda package on Mac (Intel) & Linux
+#
+# Prerequisite: login to https://anaconda.org/briantoby/settings/access to 
+#   create an API token with "Allow read access to the API site" & "Allow 
+#   write access to the API site".
+# Then add the key as a Repository secret named ANACONDA_TOKEN using
+#   the Settings/Secrets.../Actions 
+
+# TODO: could we build the Raspberry Pi-64 with Conda convert? (N.B. must use pip
+#    for wxpython rather than conda)
+#
+name: build gsas2pkg
+
+#on: [push, pull_request, workflow_dispatch]
+#on: [push, workflow_dispatch]  # why build on pull request?
+on: [workflow_dispatch]
+# run on all platforms this if any of the following change: 
+#    install/gitstrap.py
+#    install/g2pkg/meta.yaml
+# for mac/linux:
+#    install/g2pkg/build.sh
+#    install/g2pkg/post-link.sh
+# for windows:
+#    install/g2pkg/post-link.bat
+#    install/g2pkg/bld.bat
+
+jobs:
+  build:
+    name: gsas2pkg build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+#    runs-on: windows-latest
+#    runs-on: ubuntu-latest
+#    runs-on: macos-latest
+    strategy:
+      matrix:
+#        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [macos-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up conda
+        #uses: conda-incubator/setup-miniconda@v2
+        uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 
+                                               # (using hash to protect secrets)
+        with:
+          activate-environment: build
+          environment-file: install/g2pkg/conda-build-env.yml
+          python-version: 3.11
+          miniforge-version: latest
+
+#      - name: diagnostics
+#        shell: bash -l {0}
+#        run: |
+#          conda info
+#          conda list
+
+      - name: build conda package and upload
+        shell: bash -l {0}
+        run: |
+          cd install
+          conda build g2pkg -c conda-forge --numpy 1.26 --output-folder ../build
+          if [ "$RUNNER_OS" == "macOS" ]; then
+             conda convert ../build/osx-64/gsas2pkg-*.tar.bz2 -p osx-arm64 -o ../build
+             #ls -ltR ../build
+          fi 
+          #ls -ltR ../build/*/*.tar.bz2
+          anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ../build/*/*.tar.bz2 --user briantoby --force
