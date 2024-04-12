@@ -12,13 +12,15 @@ name: build gsas2pkg
 #on: [push, workflow_dispatch]  # why build on pull request?
 on: [workflow_dispatch]
 
-#permissions:
-#  contents: write
-#  id-token: write
+#strategy:
+#    matrix:
+#        os: [ubuntu-latest, windows-latest, macos-latest]
+
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+#    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:    
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,10 +39,9 @@ jobs:
       - name: build conda package and upload
         run: |
           cd install
-          #dist=`conda build g2pkg -c conda-forge --numpy 1.26 --output --output-folder ../build`
           conda build g2pkg -c conda-forge --numpy 1.26 --output-folder ../build
-          ls -ltR ../build
-          #echo $dist
-          #ls -lt $dist
-          #anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload $dist --user briantoby --force
+          if [ "$RUNNER_OS" == "macOS" ]; then
+             conda convert ../build/osx-64/gsas2pkg-*.tar.bz2 -p osx-arm64
+          fi 
           anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ../build/*/*.tar.bz2 --user briantoby --force
+        shell: bash
