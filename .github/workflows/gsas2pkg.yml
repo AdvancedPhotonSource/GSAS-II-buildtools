@@ -1,4 +1,10 @@
 # Build the gsas2pkg conda package 
+#
+# login to https://anaconda.org/briantoby/settings/access to create an API token
+# with "Allow read access to the API site" & "Allow write access to the API site"
+# add the key as a Repository secret named ANACONDA_TOKEN using
+# Settings/Secrets.../Actions 
+
 # 
 name: build gsas2pkg
 
@@ -28,6 +34,9 @@ jobs:
         run: |
           conda install -y conda-build anaconda-client
 
+      - name: configure for anaconda upload
+        run: |
+          conda config --set anaconda_upload yes
       - name: build conda package
         run: |
           cd install
