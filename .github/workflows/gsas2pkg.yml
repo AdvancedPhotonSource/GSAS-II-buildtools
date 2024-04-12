@@ -37,5 +37,8 @@ jobs:
       - name: build conda package and upload
         run: |
           cd install
-          dist=`conda build g2pkg -c conda-forge --numpy 1.26 --output`
+          dist=`conda build g2pkg -c conda-forge --numpy 1.26 --output --output-folder $HOME/build`
+	  echo $dist
+	  ls -lt $dist
+	  ls -ltR $HOME/build
           anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload $dist --user briantoby --force
