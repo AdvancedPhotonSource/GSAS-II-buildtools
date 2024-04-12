@@ -26,7 +26,7 @@ jobs:
           echo $CONDA/bin >> $GITHUB_PATH
       - name: Install conda packages
         run: |
-          create -y install conda-build anaconda-client
+          conda create -y install conda-build anaconda-client
 
       - name: build conda package
         run: |
