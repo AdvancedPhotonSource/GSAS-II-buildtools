@@ -43,4 +43,4 @@ jobs:
           #echo $dist
           #ls -lt $dist
           #anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload $dist --user briantoby --force
-          anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ../build/*/*.tar.gz --user briantoby --force
+          anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ../build/*/*.tar.bz2 --user briantoby --force
