@@ -34,19 +34,8 @@ jobs:
         run: |
           conda install -y conda-build anaconda-client
 
-#      - name: configure for anaconda upload
-#        run: |
-#          conda config --set anaconda_upload yes
-      - name: build conda package
+      - name: build conda package and upload
         run: |
-          env
           cd install
-          conda build g2pkg -c conda-forge --numpy 1.26 --output-folder $HOME/build
-          anaconda upload $HOME/build/linux-64/gsas2pkg-*.tar.bz2 -i -u briantoby -t ${{ secrets.ANACONDA_TOKEN }}
-      
-#      - name: publish-to-conda
-#        uses: fcakyon/conda-publish-action@v1.3
-#        with:
-#          subdir: 'install'
-#          anacondatoken: ${{ secrets.ANACONDA_TOKEN }}
-#          platforms: 'linux'
+          dist=`conda build g2pkg -c conda-forge --numpy 1.26 --output`
+          anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload $dist -user briantoby --force
