@@ -11,8 +11,8 @@
 #
 name: build gsas2pkg
 
-#on: [push, pull_request, workflow_dispatch]
-#on: [push, workflow_dispatch]  # why build on pull request?
+#on: [push, pull_request, workflow_dispatch]   # why build on pull request?
+#on: [push, workflow_dispatch]
 on: [workflow_dispatch]
 # run on all platforms this if any of the following change: 
 #    install/gitstrap.py
@@ -28,13 +28,10 @@ jobs:
   build:
     name: gsas2pkg build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-#    runs-on: windows-latest
-#    runs-on: ubuntu-latest
-#    runs-on: macos-latest
     strategy:
       matrix:
-#        os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+#        os: [macos-latest]   # testing
     steps:
       - name: Checkout
         uses: actions/checkout@v4

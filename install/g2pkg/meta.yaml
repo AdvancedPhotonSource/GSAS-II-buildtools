@@ -1,17 +1,14 @@
 package: 
   name: gsas2pkg
-  version: "4.0.1"
-
-#source:
-#  path: ./src
+  version: "5.1.0"
 
 about:
   home: https://advancedphotonsource.github.io/GSAS-II-tutorials
 
 build:
   number: 0
-#  noarch: python
-# see https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#architecture-independent-packages
+#  noarch: python # can't use this, alas. See
+#  https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#architecture-independent-packages
 
 requirements:
   run:
@@ -30,4 +27,3 @@ requirements:
     - h5py
     - imageio
     - pywin32                              [win]
-    #- python.app                           [osx]
