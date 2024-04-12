@@ -1,0 +1,34 @@
+# Build the gsas2pkg conda package 
+# 
+name: build gsas2pkg
+
+#on: [push, pull_request, workflow_dispatch]
+#on: [push, workflow_dispatch]  # why build on pull request?
+on: [workflow_dispatch]
+
+#permissions:
+#  contents: write
+#  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:    
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.11'
+      - name: Add conda to system path
+        run: |
+          # $CONDA is an environment variable pointing to the root of the miniconda directory
+          echo $CONDA/bin >> $GITHUB_PATH
+      - name: Install conda packages
+        run: |
+          create -y install conda-build anaconda-client
+
+      - name: build conda package
+        run: |
+          conda build g2pkg -c conda-forge --numpy 1.26
+      
