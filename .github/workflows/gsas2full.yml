@@ -1,0 +1,42 @@
+# Build the gsas2full self installer starting with Linux
+#
+#conda package on Mac (Intel) & Linux
+#
+name: build gsas2full
+
+#on: [push, pull_request, workflow_dispatch]   # why build on pull request?
+#on: [push, workflow_dispatch]
+on: [workflow_dispatch]
+# run on all platforms this if any of the following change: 
+#    install/gitstrap.py
+#    install/g2complete
+#    install/g2full
+
+jobs:
+  build:
+    name: gsas2full build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+#        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest]
+#        os: [macos-latest]   # testing
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up conda
+        #uses: conda-incubator/setup-miniconda@v2
+        uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 
+                                               # (using hash to protect secrets)
+        with:
+          activate-environment: build
+          environment-file: install/g2complete/conda-build-env.yml
+          python-version: 3.11
+          miniforge-version: latest
+
+      - name: diagnostics
+        shell: bash -l {0}
+        run: |
+          conda info
+          conda list
