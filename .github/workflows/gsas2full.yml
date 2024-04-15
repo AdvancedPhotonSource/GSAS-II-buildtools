@@ -45,7 +45,7 @@ jobs:
           python setgitversion.py ../_gsas2
           conda build g2complete --output-folder ~/build
           ls -l ~/build
-          ls -l ~/build/*/*.tar.gz
+          ls -l ~/build/*/*.tar.*
           constructor g2full
           ls -lt *.sh
           
