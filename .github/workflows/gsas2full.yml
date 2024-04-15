@@ -25,13 +25,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
-#      - name: right place for build?
-#        shell: bash -l {0}
-#        run: |
-#          cd install
-#          ls -l
-#          exit 1
-
       - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
         #uses: conda-incubator/setup-miniconda@v2
         uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
@@ -50,12 +43,23 @@ jobs:
         run: |
           cd install
           python setgitversion.py ../_gsas2
-          conda build g2complete --output-folder ../_builds
+          conda build g2complete --output-folder ~/build
+          ls -l ~/build
+          ls -l ~/build/*/*.tar.gz
+          constructor g2full
+          ls -lt *.sh
           
 #      - name: diagnostics
 #        shell: bash -l {0}
 #        run: |
 #          conda info
 #          conda list
+#      - name: right place for build?
+#        shell: bash -l {0}
+#        run: |
+#          cd install
+#          ls -l
+#          exit 1
+
 
 
