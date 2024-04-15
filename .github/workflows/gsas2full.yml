@@ -24,6 +24,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        
+      - name: right place for build?
+        shell: bash -l {0}
+        run: |
+          cd install
+          ls -l
+          exit 1
 
       - name: Set up conda
         #uses: conda-incubator/setup-miniconda@v2
@@ -35,8 +42,10 @@ jobs:
           python-version: 3.11
           miniforge-version: latest
 
-      - name: diagnostics
-        shell: bash -l {0}
-        run: |
-          conda info
-          conda list
+#      - name: diagnostics
+#        shell: bash -l {0}
+#        run: |
+#          conda info
+#          conda list
+
+
