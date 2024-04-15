@@ -24,8 +24,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        
       - name: Revert to old conda/sonstructor and then back to latest
         shell: bash -l {0}
+        run: |
           conda install constructor=3.3
           conda search 
           conda install constructor=3.7
@@ -40,6 +42,7 @@ jobs:
 
       # get the GSAS-II sources
       - name: Get GSAS-II
+        shell: bash -l {0}
         run: |
           git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2          
 
