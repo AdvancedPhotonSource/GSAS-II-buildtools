@@ -24,7 +24,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+      - name: Revert to old conda/sonstructor and then back to latest
+        shell: bash -l {0}
+          conda install constructor=3.3
+          conda search 
+          conda install constructor=3.7
+          
       - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
         #uses: conda-incubator/setup-miniconda@v2
         uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
@@ -46,7 +51,7 @@ jobs:
           conda build g2complete --output-folder ~/build
           ls -l ~/build
           ls -l ~/build/*/*.tar.*
-          constructor g2full
+          CONDA_SOLVER=classic constructor g2full   # can't use mamba in constructor 3.7
           ls -lt *.sh
           
 #      - name: diagnostics
