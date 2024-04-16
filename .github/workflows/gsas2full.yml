@@ -63,6 +63,13 @@ jobs:
           CONDA_SOLVER=classic constructor g2full   # can't use mamba in constructor 3.7
           ls -lt *.sh
           
+      - name: Upload artifact  # creates zip file with website contents
+        uses: actions/upload-pages-artifact@v3
+        with:
+            path: install
+            name: constructor
+            retention-days: 1
+          
 #      - name: diagnostics
 #        shell: bash -l {0}
 #        run: |
