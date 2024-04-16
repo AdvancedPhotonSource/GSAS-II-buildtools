@@ -33,8 +33,14 @@ jobs:
           environment-file: install/g2complete/conda-build-env.yml
           miniforge-version: latest
 
-      # get the GSAS-II sources
-      - name: Get GSAS-II
+      - name: install to old conda/constructor and then back to latest
+        shell: bash -l {0}
+        run: |
+          conda create -n construct constructor=3.3 python=3.10 -y
+          conda activate construct
+          conda install constructor=3.7 -y
+          
+      - name: Get GSAS-II sources
         shell: bash -l {0}
         run: |
           git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2          
@@ -47,13 +53,6 @@ jobs:
           conda build g2complete --output-folder ~/build
           ls -l ~/build
           ls -l ~/build/*/*.tar.*
-
-      - name: Revert to old conda/constructor and then back to latest
-        shell: bash -l {0}
-        run: |
-          conda create -n construct constructor=3.3 python=3.10
-          conda activate construct
-          conda update constructor=3.7
           
       - name: create conda gsas2full installer
         shell: bash -l {0}
