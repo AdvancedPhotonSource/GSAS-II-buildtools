@@ -18,10 +18,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-#        os: [ubuntu-latest, windows-latest, macos-latest]
+#        os: [ubuntu-latest, windows-latest, macos-latest, macos-14]
 #
 #        os: [ubuntu-latest]  # worked
-        os: [macos-latest]   # testing
+#        os: [macos-latest]   # running
+        os: [macos-macos-14]   # testing
     steps:
       - name: Checkout
         uses: actions/checkout@v4
