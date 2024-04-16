@@ -54,7 +54,8 @@ jobs:
         run: |
           cd install
           python setgitversion.py ../_gsas2
-          conda build g2complete --output-folder ~/build
+#          conda build g2complete --output-folder ~/build
+          conda build g2complete --output-folder C:/tmp/builds
           ls -l ~/build
           ls -l ~/build/*/*.tar.*
           
