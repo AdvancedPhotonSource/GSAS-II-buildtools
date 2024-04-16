@@ -22,7 +22,7 @@ jobs:
 #
 #        os: [ubuntu-latest]  # worked
 #        os: [macos-latest]   # running
-        os: [macos-macos-14]   # testing
+        os: [macos-14]   # testing
     steps:
       - name: Checkout
         uses: actions/checkout@v4
