@@ -1,4 +1,4 @@
-# Build the gsas2full self installer with Linux, MacOS-intel
+# Build the gsas2full self installer with Linux, MacOS-intel/ARM
 #
 #conda package on Mac (Intel) & Linux
 #
@@ -21,8 +21,10 @@ jobs:
 #        os: [ubuntu-latest, windows-latest, macos-latest, macos-14]
 #
 #        os: [ubuntu-latest]  # worked
-#        os: [macos-latest]   # running
-        os: [macos-14]   # testing
+#        os: [macos-latest]   # worked (intel)
+#        os: [macos-14]   # worked (M1)
+        os: [windows-latest]   # worked (M1)
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
