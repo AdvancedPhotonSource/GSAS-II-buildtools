@@ -1,6 +1,6 @@
 This repo contains files used for building GSAS-II binaries and
 distribution kits from the test git reops found in this organization as well as files for
-download. 
+download. For downloads, look here: https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest
 
 * gsas2pkg (directory g2pkg) is used to create a conda package that downloads GSAS-II into and 
   existing conda installation either into the base installation or its own environment. The package 
