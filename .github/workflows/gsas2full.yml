@@ -19,11 +19,12 @@ jobs:
     strategy:
       matrix:
 #        os: [ubuntu-latest, windows-latest, macos-latest, macos-14]
+         os: [ubuntu-latest, windows-latest]
 #
 #        os: [ubuntu-latest]  # worked
 #        os: [macos-latest]   # worked (intel)
 #        os: [macos-14]   # worked (M1)
-        os: [windows-latest]   # worked (M1)
+#        os: [windows-latest]   # worked (M1)
 
     steps:
       - name: Checkout
@@ -54,37 +55,29 @@ jobs:
         run: |
           cd install
           python setgitversion.py ../_gsas2
-          #conda build g2complete --output-folder ~/build
-          #ls -l ~/build
-          #ls -l ~/build/*/*.tar.*
-          conda build g2complete --output-folder C:/tmp/builds
-          
+          if [ "$RUNNER_OS" == "windows" ]; then
+             conda build g2complete --output-folder C:/tmp/builds
+          else
+             conda build g2complete --output-folder ~/build
+          fi
+
       - name: create conda gsas2full installer
         shell: bash -l {0}
         run: |
           cd install
           conda activate construct
           CONDA_SOLVER=classic constructor g2full   # can't use mamba in constructor 3.7
-          #ls -lt *.sh
-          
-      - name: Upload artifact  # creates zip file with website contents
+          if [ "$RUNNER_OS" == "windows" ]; then
+             dir *.exe
+          else
+             ls -lt *.sh
+          fi
+
+      # for testing, upload the .sh/.exe file created here
+      - name: Upload artifact  # creates zip file with directory contents
         uses: actions/upload-pages-artifact@v3
         with:
             path: install
             name: constructor
             retention-days: 1
-          
-#      - name: diagnostics
-#        shell: bash -l {0}
-#        run: |
-#          conda info
-#          conda list
-#      - name: right place for build?
-#        shell: bash -l {0}
-#        run: |
-#          cd install
-#          ls -l
-#          exit 1
-
-
-
+    
