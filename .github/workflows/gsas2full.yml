@@ -55,7 +55,7 @@ jobs:
         run: |
           cd install
           python setgitversion.py ../_gsas2
-          if [ "$RUNNER_OS" == "windows" ]; then
+          if [ "$RUNNER_OS" == "Windows" ]; then
              conda build g2complete --output-folder C:/tmp/builds
           else
              conda build g2complete --output-folder ~/build
@@ -67,7 +67,7 @@ jobs:
           cd install
           conda activate construct
           CONDA_SOLVER=classic constructor g2full   # can't use mamba in constructor 3.7
-          if [ "$RUNNER_OS" == "windows" ]; then
+          if [ "$RUNNER_OS" == "Windows" ]; then
              dir *.exe
           else
              ls -lt *.sh
