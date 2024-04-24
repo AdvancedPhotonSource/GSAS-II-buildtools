@@ -3,6 +3,7 @@ version: **Version**
 #install_in_dependency_order: True
 
 channels:
+  - **gsas2complete-loc**
   - https://conda.anaconda.org/conda-forge
 
 conda_default_channels:
@@ -24,7 +25,6 @@ specs:
     - git
     - gitpython
     - pywin32                              [win]
-    #- C:\tmp\builds\win-64\gsas2complete-**Version**-0.tar.bz2 [win]
     - gsas2complete
 
 #exclude:
