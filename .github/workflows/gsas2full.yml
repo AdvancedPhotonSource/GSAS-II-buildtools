@@ -19,9 +19,9 @@ jobs:
     strategy:
       matrix:
 #        os: [ubuntu-latest, windows-latest, macos-latest, macos-14]
-         os: [ubuntu-latest, windows-latest]
+#         os: [ubuntu-latest, windows-latest]
 #
-#        os: [ubuntu-latest]  # worked
+        os: [ubuntu-latest]
 #        os: [macos-latest]   # worked (intel)
 #        os: [macos-14]   # worked (M1)
 #        os: [windows-latest]   # worked (M1)
@@ -41,9 +41,9 @@ jobs:
       - name: install to old conda/constructor and then back to latest
         shell: bash -l {0}
         run: |
-          conda create -n construct constructor=3.3 python=3.10 -y
+          conda create -n construct constructor -y
           conda activate construct
-          conda install constructor=3.7 -y
+          #conda install constructor=3.7 -y
           
       - name: Get GSAS-II sources
         shell: bash -l {0}
@@ -66,11 +66,21 @@ jobs:
         run: |
           cd install
           conda activate construct
-          CONDA_SOLVER=classic constructor g2full   # can't use mamba in constructor 3.7
           if [ "$RUNNER_OS" == "Windows" ]; then
+            CONDA_SOLVER=classic constructor g2full -c C:/tmp/builds  # can't use mamba in constructor 3.7
              dir *.exe
           else
+            CONDA_SOLVER=classic constructor g2full -c ~/build  # can't use mamba in constructor 3.7
              ls -lt *.sh
+          fi
+ 
+      - name: Test the g2full installer
+        shell: bash -l {0}
+        run: |
+          if [ "$RUNNER_OS" != "Windows" ]; then
+            rm -rf ~/build
+            ls -lt install/*.sh
+            bash `ls install/*.sh` -b -p ~/testinstall
           fi
 
       # for testing, upload the .sh/.exe file created here
