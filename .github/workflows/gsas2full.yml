@@ -22,9 +22,9 @@ jobs:
 #         os: [ubuntu-latest, windows-latest]
 #
 #        os: [ubuntu-latest]
-        os: [macos-latest]   # worked (intel)
+#        os: [macos-latest]   # worked (intel)
 #        os: [macos-14]   # worked (M1)
-#        os: [windows-latest]   # worked (M1)
+        os: [windows-latest]
 
     steps:
       - name: Checkout
