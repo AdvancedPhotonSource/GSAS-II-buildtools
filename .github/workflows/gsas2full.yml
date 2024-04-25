@@ -30,14 +30,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Test use of ls/dir
-        shell: bash -l {0}
-        run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-             dir install
-          else
-             ls -lt install
-          fi
+#      - name: Test use of ls/dir
+#        shell: bash -l {0}
+#        run: |
+#          if [ "$RUNNER_OS" == "Windows" ]; then
+#             dir install
+#          else
+#             ls -lt install
+#          fi
 
       - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
         #uses: conda-incubator/setup-miniconda@v2
@@ -81,7 +81,7 @@ jobs:
         shell: bash -l {0}
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
-             dir install\*.exe
+             dir install
           else
              ls -lt install/*.sh
              #rm -rf ~/build
