@@ -23,8 +23,8 @@ jobs:
 #
 #        os: [ubuntu-latest]
 #        os: [macos-latest]   # worked (intel)
-        os: [macos-14, windows-latest]   # worked (M1)
-#        os: [windows-latest]
+#        os: [macos-14]   # worked (M1)
+        os: [windows-latest]
 
     steps:
       - name: Checkout
@@ -68,20 +68,22 @@ jobs:
           cd install
           #conda activate construct
           CONDA_SOLVER=classic constructor g2full   # can't use mamba in constructor 3.7
-          if [ "$RUNNER_OS" == "Windows" ]; then
-             dir *.exe
-          else
-             ls -lt *.sh
-          fi
+          # if [ "$RUNNER_OS" == "Windows" ]; then
+          #    dir *.exe
+          # else
+          #    ls -lt *.sh
+          # fi
  
-      # - name: Test the g2full installer
-      #   shell: bash -l {0}
-      #   run: |
-      #     if [ "$RUNNER_OS" != "Windows" ]; then
-      #       rm -rf ~/build
-      #       ls -lt install/*.sh
-      #       bash `ls install/*.sh` -b -p ~/testinstall
-      #     fi
+      - name: Test the g2full installer
+        shell: bash -l {0}
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            dir install\*.exe
+          else
+            ls -lt install/*.sh
+#            rm -rf ~/build
+#            bash `ls install/*.sh` -b -p ~/testinstall
+          fi
 
       # for testing, upload the .sh/.exe file created here
       - name: Upload artifact  # creates zip file with directory contents
