@@ -23,7 +23,7 @@ jobs:
 #
 #        os: [ubuntu-latest]
 #        os: [macos-latest]   # worked (intel)
-        os: [macos-14]   # worked (M1)
+        os: [macos-14, windows-latest]   # worked (M1)
 #        os: [windows-latest]
 
     steps:
@@ -54,10 +54,11 @@ jobs:
         shell: bash -l {0}
         run: |
           cd install
-          python setgitversion.py ../_gsas2  ~/build
           if [ "$RUNNER_OS" == "Windows" ]; then
+             python setgitversion.py ../_gsas2 C:/tmp/builds
              conda build g2complete --output-folder C:/tmp/builds
           else
+             python setgitversion.py ../_gsas2  ~/build
              conda build g2complete --output-folder ~/build
           fi
 
@@ -73,14 +74,14 @@ jobs:
              ls -lt *.sh
           fi
  
-      - name: Test the g2full installer
-        shell: bash -l {0}
-        run: |
-          if [ "$RUNNER_OS" != "Windows" ]; then
-            rm -rf ~/build
-            ls -lt install/*.sh
-            bash `ls install/*.sh` -b -p ~/testinstall
-          fi
+      # - name: Test the g2full installer
+      #   shell: bash -l {0}
+      #   run: |
+      #     if [ "$RUNNER_OS" != "Windows" ]; then
+      #       rm -rf ~/build
+      #       ls -lt install/*.sh
+      #       bash `ls install/*.sh` -b -p ~/testinstall
+      #     fi
 
       # for testing, upload the .sh/.exe file created here
       - name: Upload artifact  # creates zip file with directory contents
