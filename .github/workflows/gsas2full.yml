@@ -23,8 +23,8 @@ jobs:
 #
 #        os: [ubuntu-latest]
 #        os: [macos-latest]   # worked (intel)
-#        os: [macos-14]   # worked (M1)
-        os: [windows-latest]
+        os: [macos-14]   # worked (M1)
+#        os: [windows-latest]
 
     steps:
       - name: Checkout
@@ -38,12 +38,12 @@ jobs:
           environment-file: install/g2complete/conda-build-env.yml
           miniforge-version: latest
 
-      - name: install to old conda/constructor and then back to latest
-        shell: bash -l {0}
-        run: |
-          conda create -n construct constructor -y
-          conda activate construct
-          #conda install constructor=3.7 -y
+#      - name: install to old conda/constructor and then back to latest
+#        shell: bash -l {0}
+#        run: |
+#          conda create -n construct constructor -y
+#          conda activate construct
+#          #conda install constructor=3.7 -y
           
       - name: Get GSAS-II sources
         shell: bash -l {0}
