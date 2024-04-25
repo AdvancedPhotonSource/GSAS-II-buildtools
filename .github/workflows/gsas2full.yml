@@ -66,13 +66,13 @@ jobs:
         shell: bash -l {0}
         run: |
           cd install
-          #conda activate construct
+#          conda activate construct
           CONDA_SOLVER=classic constructor g2full   # can't use mamba in constructor 3.7
-          # if [ "$RUNNER_OS" == "Windows" ]; then
-          #    dir *.exe
-          # else
-          #    ls -lt *.sh
-          # fi
+#          if [ "$RUNNER_OS" == "Windows" ]; then
+#             dir *.exe
+#          else
+#             ls -lt *.sh
+#          fi
  
       - name: Test the g2full installer
         shell: bash -l {0}
