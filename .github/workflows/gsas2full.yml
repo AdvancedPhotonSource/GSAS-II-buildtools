@@ -29,7 +29,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-                  
+	
+      - name: Test use of ls/dir
+        shell: bash -l {0}
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+             dir install
+          else
+             ls -lt install
+          fi
+
       - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
         #uses: conda-incubator/setup-miniconda@v2
         uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
