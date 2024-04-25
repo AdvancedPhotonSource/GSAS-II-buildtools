@@ -68,25 +68,14 @@ jobs:
           cd install
           CONDA_SOLVER=classic constructor g2full   # can't use mamba in constructor 3.7
 
-      - name: Test use of ls/dir
-        shell: bash -l {0}
-        run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-             dir install
-          else
-             ls -lt install
-          fi
-
       - name: Test the g2full installer
         shell: bash -l {0}
         run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-             dir install\*.exe
-          else
+          if [ "$RUNNER_OS" != "Windows" ]; then
              ls -lt install/*.sh
+             #rm -rf ~/build
+             #bash `ls install/*.sh` -b -p ~/testinstall
           fi
-#             #rm -rf ~/build
-#             #bash `ls install/*.sh` -b -p ~/testinstall
 
       # for testing, upload the .sh/.exe file created here
       - name: Upload artifact  # creates zip file with directory contents
