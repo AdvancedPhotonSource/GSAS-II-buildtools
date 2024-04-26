@@ -1,0 +1,19 @@
+name: conda-build-env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - wxpython
+  - numpy=1.26
+  - scipy
+  - matplotlib
+  - pyopengl
+  - conda
+  - constructor
+  - conda-build
+  - git 
+  - gitpython
+  - requests
+  - pillow
+  - h5py
+  - imageio

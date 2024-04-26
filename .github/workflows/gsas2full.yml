@@ -1,0 +1,87 @@
+# Build the gsas2full self installer with Linux, MacOS-intel/ARM
+#
+#conda package on Mac (Intel) & Linux
+#
+name: build gsas2full
+
+#on: [push, pull_request, workflow_dispatch]   # why build on pull request?
+#on: [push, workflow_dispatch]
+on: [workflow_dispatch]
+# run on all platforms this if any of the following change: 
+#    install/gitstrap.py
+#    install/g2complete
+#    install/g2full
+
+jobs:
+  build:
+    name: gsas2full build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+#        os: [ubuntu-latest, windows-latest, macos-latest, macos-14]
+#         os: [ubuntu-latest, windows-latest]
+#
+#        os: [ubuntu-latest]
+#        os: [macos-latest]   # worked (intel)
+#        os: [macos-14]   # worked (M1)
+        os: [windows-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
+        #uses: conda-incubator/setup-miniconda@v2
+        uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
+        with:
+          activate-environment: build
+          environment-file: install/g2complete/conda-build-env.yml
+          miniforge-version: latest
+
+#      - name: install to old conda/constructor and then back to latest
+#        shell: bash -l {0}
+#        run: |
+#          conda create -n construct constructor -y
+#          conda activate construct
+#          #conda install constructor=3.7 -y
+          
+      - name: Get GSAS-II sources
+        shell: bash -l {0}
+        run: |
+          git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2          
+
+      - name: create conda gsas2complete package
+        shell: bash -l {0}
+        run: |
+          cd install
+          if [ "$RUNNER_OS" == "Windows" ]; then
+             python setgitversion.py ../_gsas2 C:/tmp/builds
+             conda build g2complete --output-folder C:/tmp/builds
+          else
+             python setgitversion.py ../_gsas2  ~/build
+             conda build g2complete --output-folder ~/build
+          fi
+
+      - name: create conda gsas2full installer
+        shell: bash -l {0}
+        run: |
+          cd install
+          CONDA_SOLVER=classic constructor g2full   # can't use mamba in constructor 3.7
+
+      - name: Test the g2full installer
+        shell: bash -l {0}
+        run: |
+          if [ "$RUNNER_OS" != "Windows" ]; then
+             ls -lt install/*.sh
+             #rm -rf ~/build
+             #bash `ls install/*.sh` -b -p ~/testinstall
+          fi
+
+      # for testing, upload the .sh/.exe file created here
+      - name: Upload artifact  # creates zip file with directory contents
+        uses: actions/upload-pages-artifact@v3
+        with:
+            path: install
+            name: constructor
+            retention-days: 1
+    

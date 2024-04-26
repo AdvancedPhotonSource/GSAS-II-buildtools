@@ -13,11 +13,12 @@ import wx
 import matplotlib as mpl
 import platform
 
-if len(sys.argv) < 2:
+if len(sys.argv) < 3:
     G2code = os.path.join(os.path.dirname(__file__),'GSAS2-code')
     raise Exception('setgitversion broken with only one arg')
 else:
     G2code = os.path.abspath(sys.argv[1])
+    G2buildLoc = os.path.abspath(sys.argv[2])
 if not os.path.exists(G2code):
     print(f'Path to GSAS-II code {G2code} not found')
     sys.exit()
@@ -46,11 +47,12 @@ wxversion = wx.__version__
 mplversion = mpl.__version__[:mpl.__version__.find('.',2)]
 pyversion = platform.python_version()
 if pyversion.find('.',2) > 0: pyversion = pyversion[:pyversion.find('.',2)]
-print ('GSAS-II version   {}'.format(G2version))
-print ('python version is {}'.format(pyversion))
-print ('numpy version is  {}'.format(npversion))
-print ('wx version is     {}'.format(wxversion))
-print ('MPL version is    {}'.format(mplversion))
+print (f'GSAS-II version   {G2version}')
+print (f'python version is {pyversion}')
+print (f'numpy version is  {npversion}')
+print (f'wx version is     {wxversion}')
+print (f'MPL version is    {mplversion}')
+print (f'g2complete in     {G2buildLoc}')
 
 for fil in ('g2complete/meta.yaml','g2complete/build.sh',
                 'g2complete/bld.bat',
@@ -60,11 +62,13 @@ for fil in ('g2complete/meta.yaml','g2complete/build.sh',
                 ):
     try:
         note = ''
-        if platform.machine() == 'aarch64' and os.path.exists(fil+'.Pitemplate'): # Raspberry Pi
-            fp = open(fil+'.Pitemplate','r')
-        else:
-            fp = open(fil+'.template','r')
+#        if platform.machine() == 'aarch64' and os.path.exists(fil+'.Pitemplate'): # Raspberry Pi
+#            fp = open(fil+'.Pitemplate','r')
+#        else:
+#            fp = open(fil+'.template','r')
+        fp = open(fil+'.template','r')
         out = fp.read().replace('**Version**',G2version)
+        
         fp.close()
     except FileNotFoundError:
         print('Skipping ',fil)
@@ -77,6 +81,7 @@ for fil in ('g2complete/meta.yaml','g2complete/build.sh',
         if 'linux-64' in out:
             print('changing for 32-bit linux')
             out = out.replace('linux-64','linux-32')
+    out = out.replace('**gsas2complete-loc**',G2buildLoc)
     out = out.replace('**pyversion**',pyversion)
     out = out.replace('**npversion**',npversion)
     out = out.replace('**wxversion**',wxversion)
