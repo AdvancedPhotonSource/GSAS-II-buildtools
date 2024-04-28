@@ -75,11 +75,11 @@ jobs:
 #             #bash `ls install/*.sh` -b -p ~/testinstall
 #          fi
 
-#      # for testing, upload the .sh/.exe file created here
-#      - name: Upload artifact  # creates zip file with directory contents
-#        uses: actions/upload-pages-artifact@v3
-#        with:
-#            path: install
-#            name: constructor
-#            retention-days: 1
+      # for testing, upload the .sh/.exe file created here
+      - name: Upload artifact  # creates zip file with directory contents
+        uses: actions/upload-pages-artifact@v3
+        with:
+            path: install
+            name: constructor
+            retention-days: 1
     
