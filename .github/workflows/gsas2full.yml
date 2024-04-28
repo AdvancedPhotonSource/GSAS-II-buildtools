@@ -1,16 +1,19 @@
-# Build the gsas2full self installer with Linux, MacOS-intel/ARM
-#
-#conda package on Mac (Intel) & Linux
+# Build the gsas2full self-installer for all supported platforms
 #
 name: build gsas2full
 
 #on: [push, pull_request, workflow_dispatch]   # why build on pull request?
 #on: [push, workflow_dispatch]
 on: [workflow_dispatch]
-# run on all platforms this if any of the following change: 
+
+# Triggers for needing to run this would be if there are changes to any
+# of these files: 
 #    install/gitstrap.py
-#    install/g2complete
-#    install/g2full
+#    install/g2complete/*
+#    install/g2full/*
+#    https://github.com/AdvancedPhotonSource/GSAS-II/tree/master/GSASII/**
+# but I am not sure we need to rebuild that often. Perhaps should just rebuild only on
+# creation of a new tag # in AdvancedPhotonSource/GSAS-II
 
 jobs:
   build:
@@ -19,12 +22,7 @@ jobs:
     strategy:
       matrix:
 #        os: [ubuntu-latest, windows-latest, macos-latest, macos-14]
-#         os: [ubuntu-latest, windows-latest]
-#
-#        os: [ubuntu-latest]
-#        os: [macos-latest]   # worked (intel)
-#        os: [macos-14]   # worked (M1)
-        os: [windows-latest]
+        os: [macos-14]
 
     steps:
       - name: Checkout
@@ -38,13 +36,6 @@ jobs:
           environment-file: install/g2complete/conda-build-env.yml
           miniforge-version: latest
 
-#      - name: install to old conda/constructor and then back to latest
-#        shell: bash -l {0}
-#        run: |
-#          conda create -n construct constructor -y
-#          conda activate construct
-#          #conda install constructor=3.7 -y
-          
       - name: Get GSAS-II sources
         shell: bash -l {0}
         run: |
@@ -68,20 +59,27 @@ jobs:
           cd install
           CONDA_SOLVER=classic constructor g2full   # can't use mamba in constructor 3.7
 
-      - name: Test the g2full installer
-        shell: bash -l {0}
-        run: |
-          if [ "$RUNNER_OS" != "Windows" ]; then
-             ls -lt install/*.sh
-             #rm -rf ~/build
-             #bash `ls install/*.sh` -b -p ~/testinstall
-          fi
+# Now have a gsas2full-####-<platform>.sh or gsas2full-####-<platform>.exe file in
+# install. That file should get uploaded to the Assets area here:
+#    https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest
+# It should also be copied to replace file gsas2full-Latest-<platform>.*
 
-      # for testing, upload the .sh/.exe file created here
-      - name: Upload artifact  # creates zip file with directory contents
-        uses: actions/upload-pages-artifact@v3
-        with:
-            path: install
-            name: constructor
-            retention-days: 1
+# outtakes: 
+
+#      - name: Test the g2full installer
+#        shell: bash -l {0}
+#        run: |
+#          if [ "$RUNNER_OS" != "Windows" ]; then
+#             ls -lt install/*.sh
+#             #rm -rf ~/build
+#             #bash `ls install/*.sh` -b -p ~/testinstall
+#          fi
+
+#      # for testing, upload the .sh/.exe file created here
+#      - name: Upload artifact  # creates zip file with directory contents
+#        uses: actions/upload-pages-artifact@v3
+#        with:
+#            path: install
+#            name: constructor
+#            retention-days: 1
     

@@ -6,23 +6,24 @@
 # Then add the key as a Repository secret named ANACONDA_TOKEN using
 #   the Settings/Secrets.../Actions 
 
-# TODO: could we build the Raspberry Pi-64 with Conda convert? (N.B. must use pip
-#    for wxpython rather than conda)
+# TODO: could we build the Raspberry Pi-64 with Conda convert? (N.B. 
+#    must use pip install for wxpython rather than conda)
 #
 name: build gsas2pkg
 
-#on: [push, pull_request, workflow_dispatch]   # why build on pull request?
-#on: [push, workflow_dispatch]
-on: [workflow_dispatch]
-# run on all platforms this if any of the following change: 
-#    install/gitstrap.py
-#    install/g2pkg/meta.yaml
-# for mac/linux:
-#    install/g2pkg/build.sh
-#    install/g2pkg/post-link.sh
-# for windows:
-#    install/g2pkg/post-link.bat
-#    install/g2pkg/bld.bat
+on:
+  workflow_dispatch:   # nice for debugging
+  push:
+    branches: [ "master" ]
+    paths:                  # want this to run only when files in
+                            # g2pkg or gitstrap.py changes
+      - install/gitstrap.py    
+      - install/g2pkg/*
+  pull_request:             # When is this triggered? Do I need this? 
+    branches: [ "master" ]
+    paths:
+      - install/gitstrap.py    
+      - install/g2pkg/*
 
 jobs:
   build:
@@ -31,7 +32,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-#        os: [macos-latest]   # testing
+#        os: [macos-latest]   # single-platform testing
     steps:
       - name: Checkout
         uses: actions/checkout@v4
