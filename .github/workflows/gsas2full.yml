@@ -2,18 +2,22 @@
 #
 name: build gsas2full
 
-#on: [push, pull_request, workflow_dispatch]   # why build on pull request?
-#on: [push, workflow_dispatch]
-on: [workflow_dispatch]
-
+permissions:
+  contents: write
+  
 # Triggers for needing to run this would be if there are changes to any
 # of these files: 
 #    install/gitstrap.py
 #    install/g2complete/*
 #    install/g2full/*
 #    https://github.com/AdvancedPhotonSource/GSAS-II/tree/master/GSASII/**
-# but I am not sure we need to rebuild that often. Perhaps should just rebuild only on
-# creation of a new tag # in AdvancedPhotonSource/GSAS-II
+# Better might be to rebuild only with creation of a new tag # in
+# AdvancedPhotonSource/GSAS-II
+# 
+# For now will build only manually via workflow_dispatch
+
+#on: [push, workflow_dispatch]
+on: [workflow_dispatch]
 
 jobs:
   build:
@@ -59,6 +63,38 @@ jobs:
           cd install
           CONDA_SOLVER=classic constructor g2full   # can't use mamba in constructor 3.7
 
+# Now have a gsas2full-####-<platform>.sh or gsas2full-####-<platform>.exe 
+# file in install. 
+      - name: duplicate Unix
+        shell: bash -l {0}
+        if: matrix.os != 'windows-latest'
+        run: |
+          pwd
+          cd install
+          pwd
+          cp -v *.sh `ls gsas2full-*.sh | sed -e s/-[0-9]*-/-Latest-/`
+  
+      - name: duplicate Windows
+        shell: bash -l {0}
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd install
+          copy *.exe gsas2full-Latest-Windows-x86_64.exe 
+
+# Now have above and gsas2full-Latest-<platform>.sh or gsas2full-Latest-<platform>.exe 
+# file in install. 
+      - name: Release Unix
+        uses: softprops/action-gh-release@v2
+        if: matrix.os != 'windows-latest'
+        with:
+          files: install/*.sh
+
+      - name: Release Windows
+        uses: softprops/action-gh-release@v2
+        if: matrix.os == 'windows-latest'
+        with:
+          files: install/*.exe
+ 
 # Now have a gsas2full-####-<platform>.sh or gsas2full-####-<platform>.exe file in
 # install. That file should get uploaded to the Assets area here:
 #    https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest
@@ -75,11 +111,11 @@ jobs:
 #             #bash `ls install/*.sh` -b -p ~/testinstall
 #          fi
 
-      # for testing, upload the .sh/.exe file created here
-      - name: Upload artifact  # creates zip file with directory contents
-        uses: actions/upload-pages-artifact@v3
-        with:
-            path: install
-            name: constructor
-            retention-days: 1
+#      # for testing, upload the .sh/.exe file created here
+#      - name: Upload artifact  # creates zip file with directory contents
+#        uses: actions/upload-pages-artifact@v3
+#        with:
+#            path: install
+#            name: constructor
+#            retention-days: 1
     

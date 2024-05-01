@@ -14,14 +14,9 @@ name: build gsas2pkg
 on:
   workflow_dispatch:   # nice for debugging
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
     paths:                  # want this to run only when files in
                             # g2pkg or gitstrap.py changes
-      - install/gitstrap.py    
-      - install/g2pkg/*
-  pull_request:             # When is this triggered? Do I need this? 
-    branches: [ "master" ]
-    paths:
       - install/gitstrap.py    
       - install/g2pkg/*
 
@@ -31,8 +26,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-#        os: [macos-latest]   # single-platform testing
+#        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [macos-latest]   # single-platform testing
     steps:
       - name: Checkout
         uses: actions/checkout@v4
