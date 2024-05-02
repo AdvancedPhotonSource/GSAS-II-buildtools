@@ -98,11 +98,8 @@ jobs:
           cp -v *.sh `ls gsas2full-*.sh | sed -e s/-[0-9]*-/-Latest-/`
   
       - name: duplicate Windows
-        shell: bash -l {0}
         if: matrix.os == 'windows-latest'
-        run: |
-          cd install
-          cp *.exe gsas2full-Latest-Windows-x86_64.exe 
+        run: copy install/*.exe install/gsas2full-Latest-Windows-x86_64.exe 
 
 # Now have above and gsas2full-Latest-<platform>.sh or gsas2full-Latest-<platform>.exe 
 # file in install. 
