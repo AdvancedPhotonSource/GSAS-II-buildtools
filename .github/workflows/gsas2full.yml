@@ -61,6 +61,8 @@ jobs:
 
       - name: show build logs
         if: failure()
+        shell: bash -l {0}
+        run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
              echo *** install/meta.yaml
              type install/meta.yaml
