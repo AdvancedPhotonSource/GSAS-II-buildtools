@@ -1,3 +1,7 @@
+# this is used to create the conda environment used to build
+# the gsas2pkg conda package (requires conda-build) and upload
+# it to anaconda.org (requires anaconda-client).
+#
 name: conda-build-env
 channels:
   - conda-forge
