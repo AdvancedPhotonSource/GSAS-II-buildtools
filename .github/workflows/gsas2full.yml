@@ -102,7 +102,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           cd install
-          copy *.exe gsas2full-Latest-Windows-x86_64.exe 
+          cp *.exe gsas2full-Latest-Windows-x86_64.exe 
 
 # Now have above and gsas2full-Latest-<platform>.sh or gsas2full-Latest-<platform>.exe 
 # file in install. 
