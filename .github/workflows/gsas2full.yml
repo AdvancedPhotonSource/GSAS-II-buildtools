@@ -64,18 +64,18 @@ jobs:
         shell: bash -l {0}
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
-             echo *** install/meta.yaml
-             type install/meta.yaml
-             echo *** showing c:\tmp\constructor_bld.log
+             echo Show install/g2complete/meta.yaml
+             type install/g2complete/meta.yaml
+             echo Show showing c:\tmp\constructor_bld.log
              type c:/tmp/constructor_bld.log
-             echo *** showing c:\tmp\gitstrap.log
+             echo Show showing c:\tmp\gitstrap.log
              type c:/tmp/gitstrap.log
           else
-             echo *** install/meta.yaml
-             cat install/meta.yaml
-             echo *** contents of /tmp/conda_G2build_out.log
+             echo Show install/g2complete/meta.yaml
+             cat install/g2complete/meta.yaml
+             echo Show contents of /tmp/conda_G2build_out.log
              cat /tmp/conda_G2build_out.log
-             echo *** contents of /tmp/gitstrap.log
+             echo Show contents of /tmp/gitstrap.log
              cat /tmp/gitstrap.log
           fi
 
