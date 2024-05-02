@@ -25,17 +25,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-#        os: [ubuntu-latest, windows-latest, macos-latest, macos-14]
+#        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
 #        os: [macos-14]
 #        os: [windows-latest]
-        os: [macos-latest]
+        os: [macos-13]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
-        #uses: conda-incubator/setup-miniconda@v2
+        #uses: conda-incubator/setup-miniconda@v3.0.3
         uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
         with:
           activate-environment: build
@@ -107,7 +107,7 @@ jobs:
         if: matrix.os != 'windows-latest'
         with:
           files: install/*.sh
-          tag_name: latest
+          tag_name: v1.0.1
 
       - name: Release on Windows
         uses: softprops/action-gh-release@v2
