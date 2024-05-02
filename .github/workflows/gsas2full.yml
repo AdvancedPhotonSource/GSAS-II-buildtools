@@ -110,12 +110,14 @@ jobs:
         if: matrix.os != 'windows-latest'
         with:
           files: install/*.sh
+          tag_name: latest
 
       - name: Release Windows
         uses: softprops/action-gh-release@v2
         if: matrix.os == 'windows-latest'
         with:
           files: install/*.exe
+          tag_name: latest
  
 # Now have a gsas2full-####-<platform>.sh or gsas2full-####-<platform>.exe file in
 # install. That file should get uploaded to the Assets area here:
