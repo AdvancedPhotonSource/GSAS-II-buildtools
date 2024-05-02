@@ -27,7 +27,8 @@ jobs:
       matrix:
 #        os: [ubuntu-latest, windows-latest, macos-latest, macos-14]
 #        os: [macos-14]
-        os: [windows-latest]
+#        os: [windows-latest]
+        os: [macos-latest]
 
     steps:
       - name: Checkout
@@ -92,10 +93,8 @@ jobs:
         shell: bash -l {0}
         if: matrix.os != 'windows-latest'
         run: |
-          pwd
           cd install
-          pwd
-          cp -v *.sh `ls gsas2full-*.sh | sed -e s/-[0-9]*-/-Latest-/`
+#          cp -v *.sh `ls gsas2full-*.sh | sed -e s/-[0-9]*-/-Latest-/`
   
       - name: duplicate Windows
         if: matrix.os == 'windows-latest'
@@ -103,14 +102,14 @@ jobs:
 
 # Now have above and gsas2full-Latest-<platform>.sh or gsas2full-Latest-<platform>.exe 
 # file in install. 
-      - name: Release Unix
+      - name: Release on Unix
         uses: softprops/action-gh-release@v2
         if: matrix.os != 'windows-latest'
         with:
           files: install/*.sh
           tag_name: latest
 
-      - name: Release Windows
+      - name: Release on Windows
         uses: softprops/action-gh-release@v2
         if: matrix.os == 'windows-latest'
         with:
