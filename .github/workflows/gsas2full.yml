@@ -50,11 +50,31 @@ jobs:
         run: |
           cd install
           if [ "$RUNNER_OS" == "Windows" ]; then
+             echo "Windows build"
              python setgitversion.py ../_gsas2 C:/tmp/builds
              conda build g2complete --output-folder C:/tmp/builds
           else
+             echo "Unix build"
              python setgitversion.py ../_gsas2  ~/build
              conda build g2complete --output-folder ~/build
+          fi
+
+      - name: show build logs
+        if: failure()
+          if [ "$RUNNER_OS" == "Windows" ]; then
+             echo *** install/meta.yaml
+             type install/meta.yaml
+             echo *** showing c:\tmp\constructor_bld.log
+             type c:/tmp/constructor_bld.log
+             echo *** showing c:\tmp\gitstrap.log
+             type c:/tmp/gitstrap.log
+          else
+             echo *** install/meta.yaml
+             cat install/meta.yaml
+             echo *** contents of /tmp/conda_G2build_out.log
+             cat /tmp/conda_G2build_out.log
+             echo *** contents of /tmp/gitstrap.log
+             cat /tmp/gitstrap.log
           fi
 
       - name: create conda gsas2full installer
