@@ -26,8 +26,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-#        os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [macos-latest]   # single-platform testing
+        os: [ubuntu-latest, windows-latest, macos-latest]
+#        os: [macos-latest]   # single-platform testing
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,11 +42,12 @@ jobs:
           python-version: 3.11
           miniforge-version: latest
 
-#      - name: diagnostics
-#        shell: bash -l {0}
-#        run: |
-#          conda info
-#          conda list
+      - name: failure diagnostics
+        if: failure()
+        shell: bash -l {0}
+        run: |
+          conda info
+          conda list
 
       - name: build conda package and upload
         shell: bash -l {0}
