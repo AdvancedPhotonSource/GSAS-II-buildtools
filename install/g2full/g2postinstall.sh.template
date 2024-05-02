@@ -14,13 +14,27 @@ echo python $PREFIX/gitstrap.py --nocheck --log=$gitlog1 --noshortcut >> $logfil
 # finish installation
 echo python $PREFIX/gitstrap.py --nocheck --log=$gitlog2 --nodownload >> $logfile 2>&1
      python $PREFIX/gitstrap.py --nocheck --log=$gitlog2 --nodownload >> $logfile 2>&1
-# create shortcut to start GSAS-II     =======================================================
-echo "# Commands to start GSAS-II" > $PREFIX/start_GSASII.sh
-echo "source $PREFIX/bin/activate" >> $PREFIX/start_GSASII.sh
-echo "python $PREFIX/GSAS-II/GSASII.py" >> $PREFIX/start_GSASII.sh
+#============================================================================
+#============================================================================
+# create scripts that might be of use for GSAS-II
+#============================================================================
+# create bootstrap-reset script
+resetScript=$PREFIX/bin/reset-gsasII.sh
+echo "# Commands to run GSAS-II load/update process" > $resetScript
+#echo "source $PREFIX/bin/activate" >> $resetScript
+echo "source $CONDA_ROOT/bin/activate $CONDA_DEFAULT_ENV" >> $resetScript
+#echo "python $PREFIX/gitstrap.py" >> $resetScript
+echo "$PREFIX/bin/python $PREFIX/gitstrap.py --reset" >>  $resetScript
+chmod +x $resetScript
+#============================================================================
+# create start script
+startScript=$PREFIX/bin/gsasII.sh
+echo "# Commands to start GSAS-II" > $startScript
+#echo "source $PREFIX/bin/activate" >> $startScript
+echo "source $CONDA_ROOT/bin/activate $CONDA_DEFAULT_ENV" >> $startScript
+#echo "python $PREFIX/GSAS-II/GSASII.py" >> $startScript
+echo "$PREFIX/bin/python $PREFIX/GSAS-II/GSASII/GSASII.py \$*" >> $startScript
+chmod +x $startScript
+#============================================================================
 echo "GSAS-II installer, version **Version** completed"
-# create shortcut to bootstrap script =======================================================
-echo "# Commands to run GSAS-II load/update process" > $PREFIX/start_G2_bootstrap.sh
-echo "source $PREFIX/bin/activate" >> $PREFIX/start_G2_bootstrap.sh
-echo "python $PREFIX/gitstrap.py" >> $PREFIX/start_G2_bootstrap.sh
 #MACOnly# echo "*** Viewing GSAS-II app in Finder; you may wish to drag it to the dock.***"
