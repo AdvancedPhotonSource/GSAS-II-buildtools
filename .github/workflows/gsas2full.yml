@@ -25,10 +25,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-#        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
 #        os: [macos-14]
 #        os: [windows-latest]
-        os: [macos-13]
+#        os: [macos-13]
 
     steps:
       - name: Checkout
@@ -94,7 +94,7 @@ jobs:
         if: matrix.os != 'windows-latest'
         run: |
           cd install
-#          cp -v *.sh `ls gsas2full-*.sh | sed -e s/-[0-9]*-/-Latest-/`
+          cp -v *.sh `ls gsas2full-*.sh | sed -e s/-[0-9]*-/-Latest-/`
   
       - name: duplicate Windows
         if: matrix.os == 'windows-latest'
