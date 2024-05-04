@@ -18,3 +18,5 @@ download. For downloads, look here: https://github.com/AdvancedPhotonSource/GSAS
 The files stored in this repo are probably only of use for GSAS-II developers when packaging GSAS-II. 
 The gsas2full installers in the release area will be of general use. The .tgz files in the release area 
 are used by the git installer (gitstrap.py) as part of the installation process. 
+
+For download statistics since last build of installation/binary kits, see https://tooomm.github.io/github-release-stats/?username=AdvancedPhotonSource&repository=GSAS-II-buildtools
