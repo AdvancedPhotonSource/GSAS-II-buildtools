@@ -3,8 +3,11 @@ version: **Version**
 #install_in_dependency_order: True
 
 channels:
-  - **gsas2complete-loc**
+#  - **gsas2complete-loc**
   - https://conda.anaconda.org/conda-forge
+channels_remap:
+  - src: **gsas2complete-loc**
+    dest: https://conda.anaconda.org/conda-forge
 
 conda_default_channels:
   - https://conda.anaconda.org/conda-forge
