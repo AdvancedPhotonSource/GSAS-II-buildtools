@@ -25,9 +25,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+#        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
 #        os: [macos-14]
-#        os: [windows-latest]
+        os: [windows-latest]
 #        os: [macos-13]
 
     steps:
@@ -87,6 +87,18 @@ jobs:
           cd install
           CONDA_SOLVER=classic constructor g2full   # can't use mamba in constructor 3.7
 
+      - name: show build logs
+        if: failure()
+        shell: bash -l {0}
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+             echo Show install/g2full/construct.yaml
+             type install/g2full/construct.yaml
+          else
+             echo Show install/g2full/construct.yaml
+             cat install/g2full/construct.yaml
+          fi
+          
 # Now have a gsas2full-####-<platform>.sh or gsas2full-####-<platform>.exe 
 # file in install. 
       - name: duplicate Unix
