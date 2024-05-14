@@ -92,8 +92,9 @@ jobs:
         shell: bash -l {0}
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
+             dir
              echo Show install/g2full/construct.yaml
-             type install/g2full/construct.yaml
+             type g2full/construct.yaml
           else
              echo Show install/g2full/construct.yaml
              cat install/g2full/construct.yaml
