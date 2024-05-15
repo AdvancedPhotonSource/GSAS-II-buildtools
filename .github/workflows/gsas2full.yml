@@ -85,6 +85,7 @@ jobs:
         shell: bash -l {0}
         run: |
           cd install
+          type install/g2full/construct.yaml
           CONDA_SOLVER=classic constructor g2full   # can't use mamba in constructor 3.7
 
       - name: show build logs
@@ -92,9 +93,9 @@ jobs:
         shell: bash -l {0}
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
-             dir
              echo Show install/g2full/construct.yaml
-             type g2full/construct.yaml
+             pwd
+             type install/g2full/construct.yaml
           else
              echo Show install/g2full/construct.yaml
              cat install/g2full/construct.yaml
