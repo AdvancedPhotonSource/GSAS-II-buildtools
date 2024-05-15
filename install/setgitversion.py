@@ -48,7 +48,8 @@ mplversion = mpl.__version__[:mpl.__version__.find('.',2)]
 pyversion = platform.python_version()
 if pyversion.find('.',2) > 0: pyversion = pyversion[:pyversion.find('.',2)]
 if sys.platform == "win32":
-    G2buildLoc = 'file:///' + G2buildLoc
+    import pathlib
+    G2buildLoc = 'file:///' + pathlib.PureWindowsPath(G2buildLoc).as_posix()
 else:
     G2buildLoc = 'file://' + G2buildLoc
 print (f'GSAS-II version   {G2version}')
