@@ -54,7 +54,6 @@ jobs:
           if [ "$RUNNER_OS" == "Windows" ]; then
              echo "Windows build"
              python setgitversion.py ../_gsas2 C:/tmp/builds
-             type g2full\construct.yaml
              conda build g2complete --output-folder C:/tmp/builds
           else
              echo "Unix build"
@@ -88,19 +87,6 @@ jobs:
           cd install
           CONDA_SOLVER=classic constructor g2full   # can't use mamba in constructor 3.7
 
-      - name: show build logs
-        if: failure()
-        shell: bash -l {0}
-        run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-             echo Show install/g2full/construct.yaml
-             pwd
-             type install\g2full\construct.yaml
-          else
-             echo Show install/g2full/construct.yaml
-             cat install/g2full/construct.yaml
-          fi
-          
 # Now have a gsas2full-####-<platform>.sh or gsas2full-####-<platform>.exe 
 # file in install. 
       - name: duplicate Unix
