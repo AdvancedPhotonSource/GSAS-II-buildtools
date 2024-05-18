@@ -4,6 +4,7 @@
 name: test workflow
 on:
   workflow_dispatch:   # nice for debugging
+  repository_dispatch: # run from Web API
 jobs:
   build:
     #name: gsas2pkg build on ${{ matrix.os }}
