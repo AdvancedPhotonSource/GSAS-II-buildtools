@@ -26,10 +26,10 @@ jobs:
           compiler: gcc
           version: 13
 
-      - run: |
-          ${{ env.FC }} -v # environment vars FC, CC, and CXX are set
-          env
-          ${{ steps.setup-fortran.outputs.fc }} ... # outputs work too
+#      - run: |
+#          ${{ env.FC }} -v # environment vars FC, CC, and CXX are set
+#          env
+#          ${{ steps.setup-fortran.outputs.fc }} ... # outputs work too
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -95,12 +95,12 @@ jobs:
             name: constructor
             retention-days: 1
 
-       - name: Release on Unix
-         uses: softprops/action-gh-release@v2
-         if: matrix.os != 'windows-latest'
-         with:
-           files: $TMPDIR/$newdir.tgz
-           tag_name: v1.0.1
+      - name: Release on Unix
+        uses: softprops/action-gh-release@v2
+        if: matrix.os != 'windows-latest'
+        with:
+          files: $TMPDIR/$newdir.tgz
+          tag_name: v1.0.1
 
 #       - name: show build logs
 #         if: failure()
