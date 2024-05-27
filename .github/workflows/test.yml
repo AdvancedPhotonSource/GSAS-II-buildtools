@@ -21,4 +21,4 @@ jobs:
     
     steps:
       - name: Compile MacOS
-        uses: ./.github/actions/compile-mac
+        uses: ../.github/actions/compile-mac
