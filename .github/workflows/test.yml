@@ -1,7 +1,5 @@
 # new GitHub Action to test use of outputs
 
-name: test action
-
 name: compile GSAS-II
 
 permissions:
