@@ -34,7 +34,7 @@ runs:
         id: compile-step
         shell: bash -l {0}
         run: |
-	  env
+          env
           cd _gsas2/sources
           echo "Linux build"
           #scons install=T LIBGFORTRAN=T LIBGCC=T 
@@ -61,7 +61,7 @@ runs:
   
           # create tar file with binaries
           cd ../AllBinaries/$newdir
-	  TMPDIR=/tmp/
+          TMPDIR=/tmp/
           TARFILE=${TMPDIR}${newdir}.tgz
           echo "tarname=$(echo $TARFILE)" >> $GITHUB_OUTPUT
           echo "tarname=$(echo $TARFILE)"
