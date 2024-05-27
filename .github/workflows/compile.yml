@@ -81,6 +81,15 @@ jobs:
               echo "Linux build"
            fi
 
+      # for testing, upload the .sh/.exe file created here
+      - name: Save artifact  # creates zip file with directory contents
+        if: failure()
+        uses: actions/upload-pages-artifact@v3
+        with:
+            path: _gsas2
+            name: constructor
+            retention-days: 1
+
 #       - name: show build logs
 #         if: failure()
 #         shell: bash -l {0}
@@ -152,11 +161,4 @@ jobs:
 #             #bash `ls install/*.sh` -b -p ~/testinstall
 #          fi
 
-#      # for testing, upload the .sh/.exe file created here
-#      - name: Upload artifact  # creates zip file with directory contents
-#        uses: actions/upload-pages-artifact@v3
-#        with:
-#            path: install
-#            name: constructor
-#            retention-days: 1
     
