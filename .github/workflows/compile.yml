@@ -36,8 +36,8 @@ jobs:
         run: |
            cd _gsas2/sources
            echo $RUNNER_OS
-	   newdir=test-1234.tgz
-      	   echo "tar-name=$(echo ${TMPFILE}${newdir})" >> $GITHUB_OUTPUT
+           newdir=test-1234.tgz
+           echo "tar-name=$(echo ${TMPFILE}${newdir})" >> $GITHUB_OUTPUT
 
       - name: Read output
         run: echo "${{ steps.test-compile-step.tar-name }}"
