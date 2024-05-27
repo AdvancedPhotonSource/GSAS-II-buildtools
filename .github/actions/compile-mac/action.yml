@@ -12,19 +12,19 @@ runs:
   using: "composite"
 
   steps:
-      - uses: fortran-lang/setup-fortran@v1
-        id: setup-fortran
-        with:
-          compiler: gcc
-          version: 13
+#      - uses: fortran-lang/setup-fortran@v1
+#        id: setup-fortran
+#        with:
+#          compiler: gcc
+#          version: 13
 
       - name: Test save output
         id: compile-step
         shell: bash -l {0}
         run: |
-           echo $RUNNER_OS
            newdir=test-1234.tgz
            echo "tar-name=$(echo ${TMPFILE}${newdir})" >> $GITHUB_OUTPUT
+           echo "tar-name=$(echo ${TMPFILE}${newdir})"
 
       - name: Read output
         shell: bash -l {0}
