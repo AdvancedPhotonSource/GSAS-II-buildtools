@@ -21,12 +21,6 @@ runs:
       - name: Get GSAS-II sources
         shell: bash -l {0}
         run: |
-          newdir=win-1234-abc
-          TARFILE=${HOME}/$newdir.tgz
-          echo "tarname=$(echo $TARFILE)" >> $GITHUB_OUTPUT
-          echo "tarname=$(echo $TARFILE)"
-          echo creating $TARFILE
-          exit
           git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
       - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
         #uses: conda-incubator/setup-miniconda@v3.0.3
@@ -65,7 +59,7 @@ runs:
   
           # create tar file with binaries
           cd ../AllBinaries/$newdir
-          TARFILE=${TEMP}/$newdir.tgz
+          TARFILE=${HOME}/$newdir.tgz
           echo "tarname=$(echo $TARFILE)" >> $GITHUB_OUTPUT
           echo "tarname=$(echo $TARFILE)"
           echo creating $TARFILE
