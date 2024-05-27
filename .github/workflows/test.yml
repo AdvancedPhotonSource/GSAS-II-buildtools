@@ -1,6 +1,6 @@
 # new GitHub Action to test use of outputs
 
-name: compile GSAS-II
+name: dispatch GSAS-II compile scripts
 
 permissions:
   contents: write
