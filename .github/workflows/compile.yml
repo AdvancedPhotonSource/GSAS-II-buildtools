@@ -53,17 +53,12 @@ jobs:
            echo $RUNNER_OS
            if [ "$RUNNER_OS" == "MacOS" ]; then
               echo "Mac build"
-#              scons -c # cleanup old
-#              scons install=T LIBGFORTRAN=T LIBGCC=T # LIBGFORTRAN seems OK on OSX
+              #scons -c # cleanup old
+              #scons install=T LIBGFORTRAN=T LIBGCC=T # LIBGFORTRAN seems OK on OSX
            elif [ "$RUNNER_OS" == "Windows" ]; then
               echo "Windows build"
-#              python setgitversion.py ../_gsas2 C:/tmp/builds
-#              conda build g2complete --output-folder C:/tmp/builds
            else
               echo "Linux build"
-              scons install=T LIBGFORTRAN=T LIBGCC=T # LIBGFORTRAN seems OK on OSX
-#              python setgitversion.py ../_gsas2  ~/build
-#              conda build g2complete --output-folder ~/build
            fi
 
 #       - name: show build logs
