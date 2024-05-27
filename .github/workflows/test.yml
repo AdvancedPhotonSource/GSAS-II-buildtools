@@ -20,5 +20,8 @@ jobs:
 #        os: [macos-13]
     
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+	
       - name: Compile MacOS
-        uses: ../.github/actions/compile-mac
+        uses: ./.github/actions/compile-mac
