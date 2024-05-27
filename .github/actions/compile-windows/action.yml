@@ -21,7 +21,7 @@ runs:
       - name: Get GSAS-II sources
         shell: bash -l {0}
         run: |
-	  where ntldd
+          where ntldd
           git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
       - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
         #uses: conda-incubator/setup-miniconda@v3.0.3
