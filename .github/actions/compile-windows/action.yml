@@ -34,6 +34,9 @@ runs:
         id: compile-step
         shell: bash -l {0}
         run: |
+	  set
+	  ntldd
+	  exit
           cd _gsas2/sources
           echo "Windows build"
           #scons install=T LIBGFORTRAN=T LIBGCC=T # seems to cause problems on Linux
