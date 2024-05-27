@@ -28,6 +28,7 @@ jobs:
 
       - run: |
           ${{ env.FC }} -v # environment vars FC, CC, and CXX are set
+          env
 #          ${{ steps.setup-fortran.outputs.fc }} ... # outputs work too
 
       - name: Checkout
@@ -61,7 +62,7 @@ jobs:
               otool -L ../AllBinaries/$newdir/*
 
               # fix dylib naming
-              python macRelink.py ../AllBinaries/$newdir
+              python ../../compile/macRelink.py ../AllBinaries/$newdir
               
               echo "Built from G2 version `git log HEAD --oneline | head 1`" > ../AllBinaries/$newdir/Build.notes.txt
               conda list -f python | tail -1 >> ../AllBinaries/$newdir/Build.notes.txt
@@ -70,7 +71,8 @@ jobs:
               gfortran -v 2>> ../AllBinaries/$newdir/Build.notes.txt
               echo "*** Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
               otool -L ../AllBinaries/$newdir/* >> ../AllBinaries/$newdir/Build.notes.txt
-              
+
+              #/opt/homebrew/opt/gcc@13/lib/gcc/13/libquadmath.0.dylib 
               #cp $FLIBloc/libquadmath.0.dylib $WORKSPACE/GSASII/AllBinaries/$newdir/
 
            elif [ "$RUNNER_OS" == "Windows" ]; then
