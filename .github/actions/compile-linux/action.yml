@@ -34,6 +34,7 @@ runs:
         id: compile-step
         shell: bash -l {0}
         run: |
+	  env
           cd _gsas2/sources
           echo "Linux build"
           #scons install=T LIBGFORTRAN=T LIBGCC=T 
@@ -50,16 +51,17 @@ runs:
           conda list -f numpy | tail -1 >> ../AllBinaries/$newdir/Build.notes.txt
           echo "Using gfortran, info follows" >> ../AllBinaries/$newdir/Build.notes.txt
           gfortran -v 2>> ../AllBinaries/$newdir/Build.notes.txt
-          echo "*** Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
+          echo "### Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
           ldd ../AllBinaries/$newdir/*.so >> ../AllBinaries/$newdir/Build.notes.txt
           ldd ../AllBinaries/$newdir/LATTIC >> ../AllBinaries/$newdir/Build.notes.txt
           ldd ../AllBinaries/$newdir/convcell >> ../AllBinaries/$newdir/Build.notes.txt
 
-          echo *** Showing Build.notes.txt
+          echo "#### Showing Build.notes.txt"
           cat ../AllBinaries/$newdir/Build.notes.txt
   
           # create tar file with binaries
           cd ../AllBinaries/$newdir
+	  TMPDIR=/tmp/
           TARFILE=${TMPDIR}${newdir}.tgz
           echo "tarname=$(echo $TARFILE)" >> $GITHUB_OUTPUT
           echo "tarname=$(echo $TARFILE)"

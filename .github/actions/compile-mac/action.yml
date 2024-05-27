@@ -50,12 +50,12 @@ runs:
           conda list -f numpy | tail -1 >> ../AllBinaries/$newdir/Build.notes.txt
           echo "Using gfortran, info follows" >> ../AllBinaries/$newdir/Build.notes.txt
           gfortran -v 2>> ../AllBinaries/$newdir/Build.notes.txt
-          echo "*** Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
+          echo "### Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
           otool -L ../AllBinaries/$newdir/* >> ../AllBinaries/$newdir/Build.notes.txt
 
           #/opt/homebrew/opt/gcc@13/lib/gcc/13/libquadmath.0.dylib 
           #cp $FLIBloc/libquadmath.0.dylib $WORKSPACE/GSASII/AllBinaries/$newdir/
-          echo *** Showing Build.notes.txt
+          echo "### Showing Build.notes.txt"
           cat ../AllBinaries/$newdir/Build.notes.txt
  
           # create tar file with binaries
