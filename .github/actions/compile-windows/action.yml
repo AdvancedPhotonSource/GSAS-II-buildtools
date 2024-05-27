@@ -21,7 +21,12 @@ runs:
       - name: Get GSAS-II sources
         shell: bash -l {0}
         run: |
-          where ntldd
+          newdir=win-1234-abc
+          TARFILE=${TEMP}/$newdir.tgz
+          echo "tarname=$(echo $TARFILE)" >> $GITHUB_OUTPUT
+          echo "tarname=$(echo $TARFILE)"
+          echo creating $TARFILE
+          exit
           git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
       - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
         #uses: conda-incubator/setup-miniconda@v3.0.3
@@ -51,7 +56,7 @@ runs:
           conda list -f numpy | tail -1 >> ../AllBinaries/$newdir/Build.notes.txt
           echo "Using gfortran, info follows" >> ../AllBinaries/$newdir/Build.notes.txt
           gfortran -v 2>> ../AllBinaries/$newdir/Build.notes.txt
-          echo "### Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
+          #echo "### Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
           #ntldd ../AllBinaries/$newdir/*.so >> ../AllBinaries/$newdir/Build.notes.txt
           #ntldd ../AllBinaries/$newdir/*.exe >> ../AllBinaries/$newdir/Build.notes.txt
 
@@ -60,7 +65,7 @@ runs:
   
           # create tar file with binaries
           cd ../AllBinaries/$newdir
-          TARFILE=${TEMP}\${newdir}.tgz
+          TARFILE=${TEMP}/$newdir.tgz
           echo "tarname=$(echo $TARFILE)" >> $GITHUB_OUTPUT
           echo "tarname=$(echo $TARFILE)"
           echo creating $TARFILE
