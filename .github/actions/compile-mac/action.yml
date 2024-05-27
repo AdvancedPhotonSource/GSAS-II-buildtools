@@ -27,4 +27,5 @@ runs:
            echo "tar-name=$(echo ${TMPFILE}${newdir})" >> $GITHUB_OUTPUT
 
       - name: Read output
+        shell: bash -l {0}
         run: echo "${{ steps.compile-step.tar-name }}"
