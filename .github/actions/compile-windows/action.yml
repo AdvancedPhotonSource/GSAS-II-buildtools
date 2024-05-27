@@ -1,9 +1,9 @@
-# Compile the GSAS-II binary files on Linux using scons and then upload
+# Compile the GSAS-II binary files on Windows using scons and then upload
 # them to the releases area. Uses outputs capability to move the
 # output name between steps.
 
-name: Compile Linux
-description: compile GSAS-II binaries on Linux
+name: Compile Windows
+description: compile GSAS-II binaries on Windows
 
 outputs:
   tar-file:
@@ -35,14 +35,14 @@ runs:
         shell: bash -l {0}
         run: |
           cd _gsas2/sources
-          echo "Linux build"
+          echo "Windows build"
           #scons install=T LIBGFORTRAN=T LIBGCC=T # seems to cause problems on Linux
           scons install=T
-          newdir=`cd ../AllBinaries/; ls -d linux*`
+          newdir=`cd ../AllBinaries/; ls -d win*`
           echo Created $newdir
 
           # copy needed .so files
-          python ../../compile/linuxLibs.py ../AllBinaries/$newdir
+          #python ../../compile/linuxLibs.py ../AllBinaries/$newdir
 
           # document build  
           echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ../AllBinaries/$newdir/Build.notes.txt
@@ -51,9 +51,9 @@ runs:
           echo "Using gfortran, info follows" >> ../AllBinaries/$newdir/Build.notes.txt
           gfortran -v 2>> ../AllBinaries/$newdir/Build.notes.txt
           echo "### Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
-          ldd ../AllBinaries/$newdir/*.so >> ../AllBinaries/$newdir/Build.notes.txt
-          ldd ../AllBinaries/$newdir/LATTIC >> ../AllBinaries/$newdir/Build.notes.txt
-          ldd ../AllBinaries/$newdir/convcell >> ../AllBinaries/$newdir/Build.notes.txt
+          #ldd ../AllBinaries/$newdir/*.so >> ../AllBinaries/$newdir/Build.notes.txt
+          #ldd ../AllBinaries/$newdir/LATTIC >> ../AllBinaries/$newdir/Build.notes.txt
+          #ldd ../AllBinaries/$newdir/convcell >> ../AllBinaries/$newdir/Build.notes.txt
 
           echo "#### Showing Build.notes.txt"
           cat ../AllBinaries/$newdir/Build.notes.txt
