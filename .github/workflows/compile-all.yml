@@ -35,5 +35,5 @@ jobs:
 
       - name: Compile Windows
         if: runner.os == 'Windows'
-        uses: ./.github/actions/compile-win
+        uses: ./.github/actions/compile-windows
 
