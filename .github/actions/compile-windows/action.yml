@@ -24,7 +24,7 @@ runs:
           env
           exit
           newdir=win-1234-abc
-          TARFILE=${TEMP}/$newdir.tgz
+          TARFILE=${HOME}/$newdir.tgz
           echo "tarname=$(echo $TARFILE)" >> $GITHUB_OUTPUT
           echo "tarname=$(echo $TARFILE)"
           echo creating $TARFILE
@@ -79,11 +79,11 @@ runs:
           files: ${{ steps.compile-step.outputs.tarname }}
           tag_name: v1.0.1
 
-      # for debug, create a copy of the build directory
-      - name: Save artifact  # creates zip file with directory contents
-        if: failure()
-        uses: actions/upload-pages-artifact@v3
-        with:
-            path: _gsas2
-            name: compile
-            retention-days: 1
+#      # for debug, create a copy of the build directory
+#      - name: Save artifact  # creates zip file with directory contents
+#        if: failure()
+#        uses: actions/upload-pages-artifact@v3
+#        with:
+#            path: _gsas2
+#            name: compile
+#            retention-days: 1
