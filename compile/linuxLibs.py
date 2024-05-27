@@ -22,7 +22,7 @@ if __name__ == '__main__':
     fileList = glob.glob(os.path.join(dirloc,'*.so'))
     fileList += glob.glob(os.path.join(dirloc,'convcell'))
     fileList += glob.glob(os.path.join(dirloc,'LATTIC'))
-    fileList = glob.glob(os.path.join(dirloc,'zi*'))
+    print(f'Scanning {len(fileList)} files in {dirloc} for libraries to copy')
     
     libs = set([])
     ignorelist = []
@@ -31,12 +31,16 @@ if __name__ == '__main__':
         s = subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.PIPE,
                                  encoding='utf-8')
         out,err = s.communicate()
-        print(f)
+        if err:
+            print(f,err)
+            continue
         for i in out.split('\n')[1:]:
             if not i: continue
             if '=>' not in i: continue
             items = i.split()
-            if len(items) < 3: continue
+            if len(items) < 3:
+                print(i,'unparsed')
+                continue
             lib = items[2]
             libs.add(items[2])
             continue
@@ -55,5 +59,6 @@ if __name__ == '__main__':
             #     libs[lib] = []
             # libs[lib].append(f)
     for key in libs:
-        shutil.copy(key,dirloc)
-        print('copying\t',os.path.split(key)[1],'to',dirloc)
+        if 'libgcc' in key or 'libgfortran' in key or 'libquadmath' in key:
+            shutil.copy(key,dirloc)
+            print('copying\t',os.path.split(key)[1],'to',dirloc)

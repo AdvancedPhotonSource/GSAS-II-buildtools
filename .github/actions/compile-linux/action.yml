@@ -51,7 +51,9 @@ runs:
           echo "Using gfortran, info follows" >> ../AllBinaries/$newdir/Build.notes.txt
           gfortran -v 2>> ../AllBinaries/$newdir/Build.notes.txt
           echo "*** Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
-          ldd ../AllBinaries/$newdir/* >> ../AllBinaries/$newdir/Build.notes.txt
+          ldd ../AllBinaries/$newdir/*.so >> ../AllBinaries/$newdir/Build.notes.txt
+          ldd ../AllBinaries/$newdir/LATTIC >> ../AllBinaries/$newdir/Build.notes.txt
+          ldd ../AllBinaries/$newdir/convcell >> ../AllBinaries/$newdir/Build.notes.txt
 
           echo *** Showing Build.notes.txt
           cat ../AllBinaries/$newdir/Build.notes.txt
