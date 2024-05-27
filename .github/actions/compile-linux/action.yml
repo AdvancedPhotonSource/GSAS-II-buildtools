@@ -41,9 +41,8 @@ runs:
           newdir=`cd ../AllBinaries/; ls -d linux*`
           echo Created $newdir
 
-          # Get needed .so files
-          ldd ../AllBinaries/$newdir/*
-          #python ../../compile/macRelink.py ../AllBinaries/$newdir
+          # copy needed .so files
+          python ../../compile/linuxLibs.py ../AllBinaries/$newdir
 
           # document build  
           echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ../AllBinaries/$newdir/Build.notes.txt
@@ -52,10 +51,8 @@ runs:
           echo "Using gfortran, info follows" >> ../AllBinaries/$newdir/Build.notes.txt
           gfortran -v 2>> ../AllBinaries/$newdir/Build.notes.txt
           echo "*** Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
-          otool -L ../AllBinaries/$newdir/* >> ../AllBinaries/$newdir/Build.notes.txt
+          ldd ../AllBinaries/$newdir/* >> ../AllBinaries/$newdir/Build.notes.txt
 
-          #/opt/homebrew/opt/gcc@13/lib/gcc/13/libquadmath.0.dylib 
-          #cp $FLIBloc/libquadmath.0.dylib $WORKSPACE/GSASII/AllBinaries/$newdir/
           echo *** Showing Build.notes.txt
           cat ../AllBinaries/$newdir/Build.notes.txt
   
