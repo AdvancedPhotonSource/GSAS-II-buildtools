@@ -24,7 +24,6 @@ jobs:
 #        os: [windows-latest]
 #        os: [macos-13]
     
-    using: composite
     steps:
       - uses: fortran-lang/setup-fortran@v1
         id: setup-fortran
