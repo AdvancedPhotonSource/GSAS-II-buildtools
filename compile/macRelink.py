@@ -5,8 +5,8 @@
 
 '''
 from __future__ import division, print_function
-import sys, os, glob, subprocess
-#os.path, stat, shutil, subprocess, plistlib
+import sys, os, glob, subprocess, shutil
+#os.path, stat, plistlib
 def Usage():
     print("\n\tUsage: python "+sys.argv[0]+" <binary-dir>\n")
     sys.exit()
@@ -61,12 +61,17 @@ if __name__ == '__main__':
                 ignorelist.append(lib)
                 print("ignoring ",lib)
                 continue
+            elif "/" not in lib and lib not in ignorelist:
+                ignorelist.append(lib)
+                print("ignoring ",lib)
+                continue
             if lib not in libs:
                 libs[lib] = []
             libs[lib].append(f)
     for key in libs:
         newkey = os.path.join('@rpath',os.path.split(key)[1])
         print('Fixing',key,'to',newkey)
+        shutil.copy(key,dirloc)
         for f in libs[key]:
             print('\t',os.path.split(f)[1])
             cmd = ["install_name_tool","-change",key,newkey,f]

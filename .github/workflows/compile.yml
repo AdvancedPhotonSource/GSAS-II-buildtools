@@ -26,9 +26,9 @@ jobs:
           compiler: gcc
           version: 13
 
-      - run: |
-          ${{ env.FC }} -v # environment vars FC, CC, and CXX are set
-          env
+#      - run: |
+#          ${{ env.FC }} -v # environment vars FC, CC, and CXX are set
+#          env
 #          ${{ steps.setup-fortran.outputs.fc }} ... # outputs work too
 
       - name: Checkout
@@ -63,8 +63,9 @@ jobs:
 
               # fix dylib naming
               python ../../compile/macRelink.py ../AllBinaries/$newdir
-              
-              echo "Built from G2 version `git log HEAD --oneline | head 1`" > ../AllBinaries/$newdir/Build.notes.txt
+
+              cat ../AllBinaries/$newdir/Build.notes.txt
+              echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ../AllBinaries/$newdir/Build.notes.txt
               conda list -f python | tail -1 >> ../AllBinaries/$newdir/Build.notes.txt
               conda list -f numpy | tail -1 >> ../AllBinaries/$newdir/Build.notes.txt
               echo "Using gfortran, info follows" >> ../AllBinaries/$newdir/Build.notes.txt
@@ -74,6 +75,10 @@ jobs:
 
               #/opt/homebrew/opt/gcc@13/lib/gcc/13/libquadmath.0.dylib 
               #cp $FLIBloc/libquadmath.0.dylib $WORKSPACE/GSASII/AllBinaries/$newdir/
+              echo Showing Build.notes.txt
+              cat ../AllBinaries/$newdir/Build.notes.txt
+              cd ../AllBinaries/$newdir
+              tar cvzf $TMPDIR/$newdir.tgz *
 
            elif [ "$RUNNER_OS" == "Windows" ]; then
               echo "Windows build"
@@ -81,7 +86,7 @@ jobs:
               echo "Linux build"
            fi
 
-      # for testing, upload the .sh/.exe file created here
+      # for debug, create a copy of the build directory
       - name: Save artifact  # creates zip file with directory contents
         if: failure()
         uses: actions/upload-pages-artifact@v3
@@ -89,6 +94,13 @@ jobs:
             path: _gsas2
             name: constructor
             retention-days: 1
+
+       - name: Release on Unix
+         uses: softprops/action-gh-release@v2
+         if: matrix.os != 'windows-latest'
+         with:
+           files: $TMPDIR/$newdir.tgz
+           tag_name: v1.0.1
 
 #       - name: show build logs
 #         if: failure()
@@ -131,12 +143,6 @@ jobs:
 
 # # Now have above and gsas2full-Latest-<platform>.sh or gsas2full-Latest-<platform>.exe 
 # # file in install. 
-#       - name: Release on Unix
-#         uses: softprops/action-gh-release@v2
-#         if: matrix.os != 'windows-latest'
-#         with:
-#           files: install/*.sh
-#           tag_name: v1.0.1
 
 #       - name: Release on Windows
 #         uses: softprops/action-gh-release@v2
