@@ -11,20 +11,64 @@ outputs:
 runs:
   using: "composite"
   steps:
-#      - uses: fortran-lang/setup-fortran@v1
-#        id: setup-fortran
-#        with:
-#          compiler: gcc
-#          version: 13
+      - uses: fortran-lang/setup-fortran@v1
+        id: setup-fortran
+        with:
+          compiler: gcc
+          version: 13
+      - name: Get GSAS-II sources
+        shell: bash -l {0}
+        run: |
+          git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
+      - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
+        #uses: conda-incubator/setup-miniconda@v3.0.3
+        uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
+        with:
+          activate-environment: build
+          environment-file: compile/conda-build-env.yml
+          miniforge-version: latest
 
-      - name: Test save output
+      - name: compile with scons
         id: compile-step
         shell: bash -l {0}
         run: |
-           newdir=test-1234.tgz
-           echo "tarname=$(echo ${TMPFILE}${newdir})" >> $GITHUB_OUTPUT
-           echo "tarname=$(echo ${TMPFILE}${newdir})"
+          cd _gsas2/sources
+          echo "Mac build"
+          scons install=T LIBGFORTRAN=T LIBGCC=T # LIBGFORTRAN seems OK on OSX
+          newdir=`cd ../AllBinaries/; ls -d mac*`
+          echo Created $newdir
+
+          # fix dylib naming
+          # otool -L ../AllBinaries/$newdir/*
+          python ../../compile/macRelink.py ../AllBinaries/$newdir
+
+          echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ../AllBinaries/$newdir/Build.notes.txt
+          conda list -f python | tail -1 >> ../AllBinaries/$newdir/Build.notes.txt
+          conda list -f numpy | tail -1 >> ../AllBinaries/$newdir/Build.notes.txt
+          echo "Using gfortran, info follows" >> ../AllBinaries/$newdir/Build.notes.txt
+          gfortran -v 2>> ../AllBinaries/$newdir/Build.notes.txt
+          echo "*** Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
+          otool -L ../AllBinaries/$newdir/* >> ../AllBinaries/$newdir/Build.notes.txt
+
+          #/opt/homebrew/opt/gcc@13/lib/gcc/13/libquadmath.0.dylib 
+          #cp $FLIBloc/libquadmath.0.dylib $WORKSPACE/GSASII/AllBinaries/$newdir/
+          echo *** Showing Build.notes.txt
+          cat ../AllBinaries/$newdir/Build.notes.txt
+          # create tar file with binaries
+          cd ../AllBinaries/$newdir
+          TARFILE=${TMPDIR}${newdir}.tgz
+          echo "tarname=$(echo $TARFILE)" >> $GITHUB_OUTPUT
+          echo "tarname=$(echo $TARFILE)"
+          echo creating $TARFILE
+          tar cvzf $TARFILE *
 
       - name: Read output
         shell: bash -l {0}
         run: echo "${{ steps.compile-step.outputs.tarname }}"
+	
+      - name: Release on Unix
+        uses: softprops/action-gh-release@v2
+        if: matrix.os != 'windows-latest'
+        with:
+          files: ${{ steps.compile-step.outputs.tarname }}
+          tag_name: v1.0.1
