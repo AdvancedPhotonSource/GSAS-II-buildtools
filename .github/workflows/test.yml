@@ -25,5 +25,5 @@ jobs:
     
     steps:
       - name: Compile MacOS
-        uses: compile-mac
+        uses: compile-mac.yml
         id: run-my-action
