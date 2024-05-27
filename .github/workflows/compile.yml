@@ -51,10 +51,28 @@ jobs:
         run: |
            cd _gsas2/sources
            echo $RUNNER_OS
-           if [ "$RUNNER_OS" == "MacOS" ]; then
+           if [ "$RUNNER_OS" == "macOS" ]; then
               echo "Mac build"
-              #scons -c # cleanup old
-              #scons install=T LIBGFORTRAN=T LIBGCC=T # LIBGFORTRAN seems OK on OSX
+              scons -c # cleanup old
+              scons install=T LIBGFORTRAN=T LIBGCC=T # LIBGFORTRAN seems OK on OSX
+              newdir=`cd ../AllBinaries/; ls -d mac*`
+              echo $newdir
+
+              otool -L ../AllBinaries/$newdir/*
+
+              # fix dylib naming
+              python macRelink.py ../AllBinaries/$newdir
+              
+              echo "Built from G2 version `git log HEAD --oneline | head 1`" > ../AllBinaries/$newdir/Build.notes.txt
+              conda list -f python | tail -1 >> ../AllBinaries/$newdir/Build.notes.txt
+              conda list -f numpy | tail -1 >> ../AllBinaries/$newdir/Build.notes.txt
+              echo "Using gfortran, info follows" >> ../AllBinaries/$newdir/Build.notes.txt
+              gfortran -v 2>> ../AllBinaries/$newdir/Build.notes.txt
+              echo "*** Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
+              otool -L ../AllBinaries/$newdir/* >> ../AllBinaries/$newdir/Build.notes.txt
+              
+              #cp $FLIBloc/libquadmath.0.dylib $WORKSPACE/GSASII/AllBinaries/$newdir/
+
            elif [ "$RUNNER_OS" == "Windows" ]; then
               echo "Windows build"
            else
