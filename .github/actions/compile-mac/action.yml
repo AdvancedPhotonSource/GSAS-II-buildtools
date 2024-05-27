@@ -57,7 +57,7 @@ runs:
           #cp $FLIBloc/libquadmath.0.dylib $WORKSPACE/GSASII/AllBinaries/$newdir/
           echo *** Showing Build.notes.txt
           cat ../AllBinaries/$newdir/Build.notes.txt
-	  
+ 
           # create tar file with binaries
           cd ../AllBinaries/$newdir
           TARFILE=${TMPDIR}${newdir}.tgz
