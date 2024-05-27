@@ -21,8 +21,6 @@ runs:
       - name: Get GSAS-II sources
         shell: bash -l {0}
         run: |
-          env
-          exit
           newdir=win-1234-abc
           TARFILE=${HOME}/$newdir.tgz
           echo "tarname=$(echo $TARFILE)" >> $GITHUB_OUTPUT
