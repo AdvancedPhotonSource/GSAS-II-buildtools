@@ -27,11 +27,16 @@ jobs:
           version: 13
 
       - run: |
-          ${{ env.FC }} -h # environment vars FC, CC, and CXX are set
+          ${{ env.FC }} -v # environment vars FC, CC, and CXX are set
 #          ${{ steps.setup-fortran.outputs.fc }} ... # outputs work too
 
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Get GSAS-II sources
+        shell: bash -l {0}
+        run: |
+          git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
 
       - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
         #uses: conda-incubator/setup-miniconda@v3.0.3
@@ -40,11 +45,6 @@ jobs:
           activate-environment: build
           environment-file: compile/conda-build-env.yml
           miniforge-version: latest
-
-      - name: Get GSAS-II sources
-        shell: bash -l {0}
-        run: |
-          git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2          
 
 #       - name: create conda gsas2complete package
 #         shell: bash -l {0}
