@@ -26,10 +26,10 @@ jobs:
           compiler: gcc
           version: 13
 
-#      - run: |
-#          ${{ env.FC }} -v # environment vars FC, CC, and CXX are set
-#          env
-#          ${{ steps.setup-fortran.outputs.fc }} ... # outputs work too
+      - run: |
+          ${{ env.FC }} -v # environment vars FC, CC, and CXX are set
+          env
+          ${{ steps.setup-fortran.outputs.fc }} ... # outputs work too
 
       - name: Checkout
         uses: actions/checkout@v4
