@@ -1,9 +1,9 @@
-# Compile the GSAS-II binary files on MacOS using scons and then upload
-# them to the releases area. Uses GH outputs capability to move the
+# Compile the GSAS-II binary files on Linux using scons and then upload
+# them to the releases area. Uses outputs capability to move the
 # output name between steps.
 
-name: Compile MacOS
-description: compile GSAS-II binaries on MacOS
+name: Compile Linux
+description: compile GSAS-II binaries on Linux
 
 outputs:
   tar-file:
@@ -35,14 +35,14 @@ runs:
         shell: bash -l {0}
         run: |
           cd _gsas2/sources
-          echo "Mac build"
-          scons install=T LIBGFORTRAN=T LIBGCC=T # LIBGFORTRAN seems OK on OSX
-          newdir=`cd ../AllBinaries/; ls -d mac*`
+          echo "Linux build"
+          scons install=T LIBGFORTRAN=T LIBGCC=T 
+          newdir=`cd ../AllBinaries/; ls -d linux*`
           echo Created $newdir
 
-          # fix dylib naming
-          # otool -L ../AllBinaries/$newdir/*
-          python ../../compile/macRelink.py ../AllBinaries/$newdir
+          # Get needed .so files
+          ldd ../AllBinaries/$newdir/*
+          #python ../../compile/macRelink.py ../AllBinaries/$newdir
 
           # document build  
           echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ../AllBinaries/$newdir/Build.notes.txt
@@ -66,9 +66,22 @@ runs:
           echo creating $TARFILE
           tar cvzf $TARFILE *
 
+      - name: Read output
+        shell: bash -l {0}
+        run: echo "${{ steps.compile-step.outputs.tarname }}"
+
       - name: Release
         uses: softprops/action-gh-release@v2
         if: matrix.os != 'windows-latest'
         with:
           files: ${{ steps.compile-step.outputs.tarname }}
           tag_name: v1.0.1
+
+      # for debug, create a copy of the build directory
+      - name: Save artifact  # creates zip file with directory contents
+        if: failure()
+        uses: actions/upload-pages-artifact@v3
+        with:
+            path: _gsas2
+            name: compile
+            retention-days: 1
