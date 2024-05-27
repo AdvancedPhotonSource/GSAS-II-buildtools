@@ -79,9 +79,8 @@ jobs:
               cat ../AllBinaries/$newdir/Build.notes.txt
               cd ../AllBinaries/$newdir
               export TARFILE=${TMPDIR}${newdir}.tgz
-	      echo creating $TARFILE
+              echo creating $TARFILE
               tar cvzf $TARFILE *
-      
 
            elif [ "$RUNNER_OS" == "Windows" ]; then
               echo "Windows build"
