@@ -78,7 +78,10 @@ jobs:
               echo Showing Build.notes.txt
               cat ../AllBinaries/$newdir/Build.notes.txt
               cd ../AllBinaries/$newdir
-              tar cvzf $TMPDIR/$newdir.tgz *
+              export TARFILE=${TMPDIR}${newdir}.tgz
+	      echo creating $TARFILE
+              tar cvzf $TARFILE *
+      
 
            elif [ "$RUNNER_OS" == "Windows" ]; then
               echo "Windows build"
@@ -92,14 +95,14 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
             path: _gsas2
-            name: constructor
+            name: compile
             retention-days: 1
 
       - name: Release on Unix
         uses: softprops/action-gh-release@v2
         if: matrix.os != 'windows-latest'
         with:
-          files: $TMPDIR/$newdir.tgz
+          files: ${{ env.TARFILE }}
           tag_name: v1.0.1
 
 #       - name: show build logs
