@@ -21,6 +21,7 @@ runs:
       - name: Get GSAS-II sources
         shell: bash -l {0}
         run: |
+	  where ntldd
           git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
       - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
         #uses: conda-incubator/setup-miniconda@v3.0.3
@@ -34,9 +35,6 @@ runs:
         id: compile-step
         shell: bash -l {0}
         run: |
-          set
-          ntldd
-          exit
           cd _gsas2/sources
           echo "Windows build"
           #scons install=T LIBGFORTRAN=T LIBGCC=T # seems to cause problems on Linux
@@ -54,17 +52,15 @@ runs:
           echo "Using gfortran, info follows" >> ../AllBinaries/$newdir/Build.notes.txt
           gfortran -v 2>> ../AllBinaries/$newdir/Build.notes.txt
           echo "### Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
-          #ldd ../AllBinaries/$newdir/*.so >> ../AllBinaries/$newdir/Build.notes.txt
-          #ldd ../AllBinaries/$newdir/LATTIC >> ../AllBinaries/$newdir/Build.notes.txt
-          #ldd ../AllBinaries/$newdir/convcell >> ../AllBinaries/$newdir/Build.notes.txt
+          #ntldd ../AllBinaries/$newdir/*.so >> ../AllBinaries/$newdir/Build.notes.txt
+          #ntldd ../AllBinaries/$newdir/*.exe >> ../AllBinaries/$newdir/Build.notes.txt
 
           echo "#### Showing Build.notes.txt"
           cat ../AllBinaries/$newdir/Build.notes.txt
   
           # create tar file with binaries
           cd ../AllBinaries/$newdir
-          TMPDIR=/tmp/
-          TARFILE=${TMPDIR}${newdir}.tgz
+          TARFILE=${TEMP}\${newdir}.tgz
           echo "tarname=$(echo $TARFILE)" >> $GITHUB_OUTPUT
           echo "tarname=$(echo $TARFILE)"
           echo creating $TARFILE
