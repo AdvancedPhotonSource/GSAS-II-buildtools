@@ -13,18 +13,19 @@ outputs:
     value: ${{ steps.test-compile-step.tar-name }}
 
 jobs:
-  using: "composite"
+  runs:
+    using: "composite"
 
-  runs-on: ${{ matrix.os }}
-  strategy:
-    fail-fast: false
-    matrix:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
 #      os: [ubuntu-latest, windows-latest, macos-13, macos-14]
-      os: [macos-14]
+        os: [macos-14]
 #      os: [windows-latest]
 #      os: [macos-13]
 
-  steps:
+    steps:
       - uses: fortran-lang/setup-fortran@v1
         id: setup-fortran
         with:
