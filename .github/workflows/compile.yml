@@ -46,9 +46,9 @@ jobs:
 #          environment-file: compile/conda-build-env.yml
 #          miniforge-version: latest
 
-       - name: compile with scons
-         shell: bash -l {0}
-         run: |
+      - name: compile with scons
+        shell: bash -l {0}
+        run: |
            cd _gsas2/sources
            echo $RUNNER_OS
            if [ "$RUNNER_OS" == "MacOS" ]; then
