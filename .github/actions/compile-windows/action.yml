@@ -19,6 +19,11 @@ runs:
 #          compiler: gcc
 #          version: 12
 
+      - name: Get ntldd (ldd for Windows)
+        shell: bash -l {0}
+          curl -L https://github.com/LRN/ntldd/releases/download/0.2/i686-ntldd-0.2.tar.xz | tar xvz
+          dir
+  
       - name: Get GSAS-II sources
         shell: bash -l {0}
         run: |
@@ -43,8 +48,11 @@ runs:
           #newdir=win-Pyxx-Npyy
           newdir=`cd ../AllBinaries/; ls -d win*`
           echo Created $newdir
+  
           # copy needed .so files
           #python ../../compile/linuxLibs.py ../AllBinaries/$newdir
+          ../../ntldd ../AllBinaries/$newdir/*.so 
+          ../../ntldd ../AllBinaries/$newdir/*.exe
 
           # document build  
           echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ../AllBinaries/$newdir/Build.notes.txt
@@ -53,8 +61,8 @@ runs:
           echo "Using gfortran, info follows" >> ../AllBinaries/$newdir/Build.notes.txt
           gfortran -v 2>> ../AllBinaries/$newdir/Build.notes.txt
           #echo "### Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
-          #ntldd ../AllBinaries/$newdir/*.so >> ../AllBinaries/$newdir/Build.notes.txt
-          #ntldd ../AllBinaries/$newdir/*.exe >> ../AllBinaries/$newdir/Build.notes.txt
+          ../../ntldd ../AllBinaries/$newdir/*.so >> ../AllBinaries/$newdir/Build.notes.txt
+          ../../ntldd ../AllBinaries/$newdir/*.exe >> ../AllBinaries/$newdir/Build.notes.txt
 
           echo "#### Showing Build.notes.txt"
           cat ../AllBinaries/$newdir/Build.notes.txt
@@ -67,10 +75,6 @@ runs:
           echo "tarname=$(echo $newdir.tgz)"
           echo creating ../../../$newdir.tgz
           tar cvzf ../../../$newdir.tgz *
-          #echo "tarname=$(echo $newdir.txt)" >> $GITHUB_OUTPUT
-          #echo "tarname=$(echo $newdir.txt)"
-          #echo creating ../../../$newdir.txt
-          #echo test-file > ../../../$newdir.txt
 
       - name: find file
         id: debug
