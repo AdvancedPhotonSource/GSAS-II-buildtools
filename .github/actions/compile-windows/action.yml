@@ -38,8 +38,9 @@ runs:
         run: |
           cd _gsas2/sources
           echo "Windows build"
-          #scons install=T LIBGFORTRAN=T LIBGCC=T # seems to cause problems on Windows
-          scons install=T LIBGFORTRAN=T
+          scons install=T LIBGFORTRAN=T LIBGCC=T # seems to cause problems on Windows
+          #scons install=T LIBGFORTRAN=T
+          #scons install=T 
           newdir=`cd ../AllBinaries/; ls -d win*`
           echo Created $newdir
 
