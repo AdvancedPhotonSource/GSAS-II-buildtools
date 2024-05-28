@@ -19,7 +19,7 @@ if __name__ == '__main__':
         Usage()
         raise Exception
 
-    fileList = glob.glob(os.path.join(dirloc,'*.so'))
+    fileList = glob.glob(os.path.join(dirloc,'*.pyd'))
     fileList += glob.glob(os.path.join(dirloc,'*.exe'))
     print(f'Scanning {len(fileList)} files in {dirloc} for libraries to copy')
     

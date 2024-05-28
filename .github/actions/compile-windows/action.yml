@@ -13,18 +13,12 @@ outputs:
 runs:
   using: "composite"
   steps:
-#      - uses: fortran-lang/setup-fortran@v1
-#        id: setup-fortran
-#        with:
-#          compiler: gcc
-#          version: 12
-
-#      - name: Get ntldd (ldd for Windows)
-#        shell: bash -l {0}
-#        run: |
-#          curl -L https://github.com/LRN/ntldd/releases/download/0.2/i686-ntldd-0.2.tar.xz | tar xvz
-#          dir
-  
+      - uses: fortran-lang/setup-fortran@v1
+        id: setup-fortran
+        with:
+          compiler: gcc
+          version: 12
+ 
       - name: Get GSAS-II sources
         shell: bash -l {0}
         run: |
@@ -49,10 +43,11 @@ runs:
           #newdir=win-Pyxx-Npyy
           newdir=`cd ../AllBinaries/; ls -d win*`
           echo Created $newdir
-  
-          # copy needed .so files
+
+          # copy needed .dll files
           python ../../compile/winLibs.py ../AllBinaries/$newdir
-          ntldd ../AllBinaries/$newdir/*.so 
+          echo "### Dependencies"
+          ntldd ../AllBinaries/$newdir/*.pyd 
           ntldd ../AllBinaries/$newdir/*.exe
 
           # document build  
@@ -61,28 +56,25 @@ runs:
           conda list -f numpy | tail -1 >> ../AllBinaries/$newdir/Build.notes.txt
           echo "Using gfortran, info follows" >> ../AllBinaries/$newdir/Build.notes.txt
           gfortran -v 2>> ../AllBinaries/$newdir/Build.notes.txt
-          #echo "### Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
-          ntldd ../AllBinaries/$newdir/*.so >> ../AllBinaries/$newdir/Build.notes.txt
+          echo "### Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
+          ntldd ../AllBinaries/$newdir/*.pyd >> ../AllBinaries/$newdir/Build.notes.txt
           ntldd ../AllBinaries/$newdir/*.exe >> ../AllBinaries/$newdir/Build.notes.txt
 
           echo "#### Showing Build.notes.txt"
           cat ../AllBinaries/$newdir/Build.notes.txt
   
           # create tar file with binaries
-          #mkdir ../AllBinaries
-          #mkdir ../AllBinaries/$newdir
           cd ../AllBinaries/$newdir
           echo "tarname=$(echo $newdir.tgz)" >> $GITHUB_OUTPUT
           echo "tarname=$(echo $newdir.tgz)"
           echo creating ../../../$newdir.tgz
           tar cvzf ../../../$newdir.tgz *
 
-      - name: find file
-        id: debug
-        shell: bash -l {0}
-        run: |
-          dir
-          #dir _gsas2
+#      - name: find file
+#        id: debug
+#        shell: bash -l {0}
+#        run: |
+#          dir
 
       - name: Release
         uses: softprops/action-gh-release@v2
