@@ -17,4 +17,3 @@ dependencies:
   - imageio
   - scons
   - m2w64-ntldd-git [win]
- 
