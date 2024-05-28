@@ -32,9 +32,6 @@ runs:
 
           # copy needed .dll files
           python ../../compile/winLibs.py ../AllBinaries/$newdir
-          echo "### Dependencies"
-          ntldd ../AllBinaries/$newdir/*.pyd 
-          ntldd ../AllBinaries/$newdir/*.exe
 
           # document build  
           echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ../AllBinaries/$newdir/Build.notes.txt
@@ -45,6 +42,7 @@ runs:
           echo "### Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
           ntldd ../AllBinaries/$newdir/*.pyd >> ../AllBinaries/$newdir/Build.notes.txt
           ntldd ../AllBinaries/$newdir/*.exe >> ../AllBinaries/$newdir/Build.notes.txt
+          ntldd ../AllBinaries/$newdir/*.dll >> ../AllBinaries/$newdir/Build.notes.txt
 
           cp ../AllBinaries/$newdir/Build.notes.txt ../../Build.notes.txt
 
@@ -54,12 +52,6 @@ runs:
           echo "tarname=$(echo $newdir.tgz)"
           echo creating ../../../$newdir.tgz
           tar cvzf ../../../$newdir.tgz *
-
-#      - name: find file
-#        id: debug
-#        shell: bash -l {0}
-#        run: |
-#          dir
 
       - name: Release
         uses: softprops/action-gh-release@v2

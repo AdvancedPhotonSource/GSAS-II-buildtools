@@ -24,7 +24,7 @@ if __name__ == '__main__':
     print(f'Scanning {len(fileList)} files in {dirloc} for libraries to copy')
     
     libs = set([])
-    ignorelist = []
+    ignorelist = set([])
     for f in fileList:
         cmd = ['ntldd',f]
         s = subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.PIPE,
@@ -35,19 +35,21 @@ if __name__ == '__main__':
             print(f,err)
             continue
         for i in out.split('\n')[1:]:
-            print(i)
+            #print(i)
             if not i: continue
             if '=>' not in i: continue
             items = i.split()
             if len(items) < 3:
-                print(i,'unparsed')
+                print('==> unparsed',i)
                 continue
             if 'mingw' in i:
                 libs.add(items[2])
-                print('using',items[2])
+                #print('using',items[2])
             else:
-                print('ignoring',items[2])
+                ignorelist.add(items[2])
+                #print('ignoring',items[2])
+    for key in ignorelist:
+        print('ignoring\t',os.path.split(key)[1])
     for key in libs:
-#        if 'libgcc' in key or 'libgfortran' in key or 'libquadmath' in key:
-            shutil.copy(key,dirloc)
-            print('copying\t',os.path.split(key)[1],'to',dirloc)
+        shutil.copy(key,dirloc)
+        print('copying\t',os.path.split(key)[1],'to',dirloc)

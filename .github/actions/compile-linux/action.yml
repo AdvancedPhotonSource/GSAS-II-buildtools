@@ -19,8 +19,8 @@ runs:
         run: |
           cd _gsas2/sources
           echo "Linux build"
-          #scons install=T LIBGFORTRAN=T LIBGCC=T # seems to cause problems on Linux
-          scons install=T
+          scons install=T LIBGFORTRAN=T LIBGCC=T # seems to cause problems on Linux
+          #scons install=T
           newdir=`cd ../AllBinaries/; ls -d linux*`
           echo Created $newdir
 

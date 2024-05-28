@@ -56,7 +56,13 @@ jobs:
         if: runner.os == 'Windows'
         uses: ./.github/actions/compile-windows
 
-      # for debug, create a copy of the build directory
+      - name: Show Build notes
+        shell: bash -l {0}
+        run: |
+          echo "#### Showing Build.notes.txt"
+          cat Build.notes.txt
+
+      # if debug needed, create a copy of the build directory
       - name: Save artifact  # creates zip file with directory contents
         if: failure()
         uses: actions/upload-pages-artifact@v3
@@ -64,9 +70,3 @@ jobs:
             path: _gsas2
             name: compile
             retention-days: 1
-
-      - name: show Build notes
-        shell: bash -l {0}
-        run: |
-          echo "#### Showing Build.notes.txt"
-          cat Build.notes.txt

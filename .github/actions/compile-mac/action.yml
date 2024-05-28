@@ -13,24 +13,17 @@ outputs:
 runs:
   using: "composite"
   steps:
-#      - uses: fortran-lang/setup-fortran@v1
-#        id: setup-fortran
-#        with:
-#          compiler: gcc
-#          version: 13
-
       - name: compile with scons
         id: compile-step
         shell: bash -l {0}
         run: |
           cd _gsas2/sources
           echo "Mac build"
-          scons install=T LIBGFORTRAN=T LIBGCC=T # LIBGFORTRAN seems OK on OSX
+          scons install=T LIBGFORTRAN=T LIBGCC=T # static seems OK on OSX
           newdir=`cd ../AllBinaries/; ls -d mac*`
           echo Created $newdir
 
           # fix dylib naming
-          # otool -L ../AllBinaries/$newdir/*
           python ../../compile/macRelink.py ../AllBinaries/$newdir
 
           # document build  
@@ -42,8 +35,6 @@ runs:
           echo "### Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
           otool -L ../AllBinaries/$newdir/* >> ../AllBinaries/$newdir/Build.notes.txt
 
-          #/opt/homebrew/opt/gcc@13/lib/gcc/13/libquadmath.0.dylib 
-          #cp $FLIBloc/libquadmath.0.dylib $WORKSPACE/GSASII/AllBinaries/$newdir/
           cp ../AllBinaries/$newdir/Build.notes.txt ../../Build.notes.txt
 
           # create tar file with binaries
