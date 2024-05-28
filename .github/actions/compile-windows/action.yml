@@ -21,6 +21,7 @@ runs:
 
       - name: Get ntldd (ldd for Windows)
         shell: bash -l {0}
+        run: |
           curl -L https://github.com/LRN/ntldd/releases/download/0.2/i686-ntldd-0.2.tar.xz | tar xvz
           dir
   
