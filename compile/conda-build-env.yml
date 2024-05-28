@@ -16,4 +16,3 @@ dependencies:
   - h5py
   - imageio
   - scons
-  - m2w64-ntldd-git [win]

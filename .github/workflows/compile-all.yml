@@ -25,6 +25,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Get GSAS-II sources
+        shell: bash -l {0}
+        run: |
+          git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
+
+      - uses: fortran-lang/setup-fortran@v1
+        id: setup-fortran
+        with:
+          compiler: gcc
+          version: 12
+ 
+      - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
+        #uses: conda-incubator/setup-miniconda@v3.0.3
+        uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
+        with:
+          activate-environment: build
+          environment-file: compile/conda-build-env.yml
+          miniforge-version: latest
+
       - name: Compile MacOS
         if: runner.os == 'macOS'
         uses: ./.github/actions/compile-mac
@@ -37,3 +56,18 @@ jobs:
         if: runner.os == 'Windows'
         uses: ./.github/actions/compile-windows
 
+      # for debug, create a copy of the build directory
+      - name: Save artifact  # creates zip file with directory contents
+        if: failure()
+        uses: actions/upload-pages-artifact@v3
+        with:
+            path: _gsas2
+            name: compile
+            retention-days: 1
+
+      - name: show output
+        shell: bash -l {0}
+        run: |
+          dir
+          echo "#### Showing Build.notes.txt"
+          cat Build.notes.txt

@@ -13,25 +13,11 @@ outputs:
 runs:
   using: "composite"
   steps:
-      - uses: fortran-lang/setup-fortran@v1
-        id: setup-fortran
-        with:
-          compiler: gcc
-          version: 12
- 
-      - name: Get GSAS-II sources
+      - name: install Windows-specific conda package
         shell: bash -l {0}
         run: |
-          git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
-
-      - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
-        #uses: conda-incubator/setup-miniconda@v3.0.3
-        uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
-        with:
-          activate-environment: build
-          environment-file: compile/conda-build-env.yml
-          miniforge-version: latest
-
+          conda install m2w64-ntldd-git
+  `  
       - name: compile with scons
         id: compile-step
         shell: bash -l {0}
@@ -62,7 +48,8 @@ runs:
 
           echo "#### Showing Build.notes.txt"
           cat ../AllBinaries/$newdir/Build.notes.txt
-  
+          cp ../AllBinaries/$newdir/Build.notes.txt ../../Build.notes.txt
+
           # create tar file with binaries
           cd ../AllBinaries/$newdir
           echo "tarname=$(echo $newdir.tgz)" >> $GITHUB_OUTPUT
@@ -81,12 +68,3 @@ runs:
         with:
           files: ${{ steps.compile-step.outputs.tarname }}
           tag_name: v1.0.1
-
-      # for debug, create a copy of the build directory
-      - name: Save artifact  # creates zip file with directory contents
-        if: failure()
-        uses: actions/upload-pages-artifact@v3
-        with:
-            path: _gsas2
-            name: compile
-            retention-days: 1
