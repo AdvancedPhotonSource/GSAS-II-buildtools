@@ -24,13 +24,13 @@ runs:
         run: |
           git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
 
-#      - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
-#        #uses: conda-incubator/setup-miniconda@v3.0.3
-#        uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
-#        with:
-#          activate-environment: build
-#          environment-file: compile/conda-build-env.yml
-#          miniforge-version: latest
+      - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
+        #uses: conda-incubator/setup-miniconda@v3.0.3
+        uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
+        with:
+          activate-environment: build
+          environment-file: compile/conda-build-env.yml
+          miniforge-version: latest
 
       - name: compile with scons
         id: compile-step
@@ -39,45 +39,45 @@ runs:
           cd _gsas2/sources
           echo "Windows build"
           #scons install=T LIBGFORTRAN=T LIBGCC=T # seems to cause problems on Linux
-          #scons install=T
-          newdir=win-Pyxx-Npyy
-          #newdir=`cd ../AllBinaries/; ls -d win*`
+          scons install=T
+          #newdir=win-Pyxx-Npyy
+          newdir=`cd ../AllBinaries/; ls -d win*`
           echo Created $newdir
           # copy needed .so files
           #python ../../compile/linuxLibs.py ../AllBinaries/$newdir
 
           # document build  
-          #echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ../AllBinaries/$newdir/Build.notes.txt
-          #conda list -f python | tail -1 >> ../AllBinaries/$newdir/Build.notes.txt
-          #conda list -f numpy | tail -1 >> ../AllBinaries/$newdir/Build.notes.txt
-          #echo "Using gfortran, info follows" >> ../AllBinaries/$newdir/Build.notes.txt
-          #gfortran -v 2>> ../AllBinaries/$newdir/Build.notes.txt
-          ##echo "### Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
-          ##ntldd ../AllBinaries/$newdir/*.so >> ../AllBinaries/$newdir/Build.notes.txt
-          ##ntldd ../AllBinaries/$newdir/*.exe >> ../AllBinaries/$newdir/Build.notes.txt
+          echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ../AllBinaries/$newdir/Build.notes.txt
+          conda list -f python | tail -1 >> ../AllBinaries/$newdir/Build.notes.txt
+          conda list -f numpy | tail -1 >> ../AllBinaries/$newdir/Build.notes.txt
+          echo "Using gfortran, info follows" >> ../AllBinaries/$newdir/Build.notes.txt
+          gfortran -v 2>> ../AllBinaries/$newdir/Build.notes.txt
+          #echo "### Dependencies" >> ../AllBinaries/$newdir/Build.notes.txt
+          #ntldd ../AllBinaries/$newdir/*.so >> ../AllBinaries/$newdir/Build.notes.txt
+          #ntldd ../AllBinaries/$newdir/*.exe >> ../AllBinaries/$newdir/Build.notes.txt
 
-          #echo "#### Showing Build.notes.txt"
-          #cat ../AllBinaries/$newdir/Build.notes.txt
+          echo "#### Showing Build.notes.txt"
+          cat ../AllBinaries/$newdir/Build.notes.txt
   
           # create tar file with binaries
-          mkdir ../AllBinaries
-          mkdir ../AllBinaries/$newdir
+          #mkdir ../AllBinaries
+          #mkdir ../AllBinaries/$newdir
           cd ../AllBinaries/$newdir
-          #echo "tarname=$(echo $newdir.tgz)" >> $GITHUB_OUTPUT
-          #echo "tarname=$(echo $newdir.tgz)"
-          #echo creating ../../../../$newdir.tgz
-          #tar cvzf ../../../../$newdir.tgz *
-          echo "tarname=$(echo $newdir.txt)" >> $GITHUB_OUTPUT
-          echo "tarname=$(echo $newdir.txt)"
-          echo creating ../../../../$newdir.txt
-          echo test-file > ../../../$newdir.txt
+          echo "tarname=$(echo $newdir.tgz)" >> $GITHUB_OUTPUT
+          echo "tarname=$(echo $newdir.tgz)"
+          echo creating ../../../$newdir.tgz
+          tar cvzf ../../../$newdir.tgz *
+          #echo "tarname=$(echo $newdir.txt)" >> $GITHUB_OUTPUT
+          #echo "tarname=$(echo $newdir.txt)"
+          #echo creating ../../../$newdir.txt
+          #echo test-file > ../../../$newdir.txt
 
       - name: find file
         id: debug
         shell: bash -l {0}
         run: |
           dir
-          dir _gsas2
+          #dir _gsas2
 
       - name: Release
         uses: softprops/action-gh-release@v2
@@ -87,7 +87,7 @@ runs:
 
       # for debug, create a copy of the build directory
       - name: Save artifact  # creates zip file with directory contents
-        #if: failure()
+        if: failure()
         uses: actions/upload-pages-artifact@v3
         with:
             path: _gsas2
