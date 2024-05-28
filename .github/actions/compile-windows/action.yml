@@ -60,6 +60,7 @@ runs:
           #cat ../AllBinaries/$newdir/Build.notes.txt
   
           # create tar file with binaries
+          mkdir ../AllBinaries
           mkdir ../AllBinaries/$newdir
           cd ../AllBinaries/$newdir
           #echo "tarname=$(echo $newdir.tgz)" >> $GITHUB_OUTPUT
@@ -70,6 +71,13 @@ runs:
           echo "tarname=$(echo $newdir.txt)"
           echo creating ../../../../$newdir.txt
           echo test-file > ../../../$newdir.txt
+
+      - name: find file
+        id: debug
+        shell: bash -l {0}
+        run: |
+          dir
+          dir _gsas2
 
       - name: Release
         uses: softprops/action-gh-release@v2
