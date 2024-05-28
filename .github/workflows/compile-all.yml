@@ -1,6 +1,11 @@
-# new GitHub Action to test use of outputs
+# GitHub Action script to build GSAS-II binaries. This does not work
+# with Python 3.12+.
+#
+# Note that file compile/conda-build-env.yml has hard-coded versions of
+# Python and numpy. 
+#
 
-name: dispatch GSAS-II compile scripts
+name: Compile GSAS-II
 
 permissions:
   contents: write
