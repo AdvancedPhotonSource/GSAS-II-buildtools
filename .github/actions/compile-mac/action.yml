@@ -44,8 +44,6 @@ runs:
 
           #/opt/homebrew/opt/gcc@13/lib/gcc/13/libquadmath.0.dylib 
           #cp $FLIBloc/libquadmath.0.dylib $WORKSPACE/GSASII/AllBinaries/$newdir/
-          echo "### Showing Build.notes.txt"
-          cat ../AllBinaries/$newdir/Build.notes.txt
           cp ../AllBinaries/$newdir/Build.notes.txt ../../Build.notes.txt
 
           # create tar file with binaries

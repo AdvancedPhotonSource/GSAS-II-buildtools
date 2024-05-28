@@ -65,9 +65,8 @@ jobs:
             name: compile
             retention-days: 1
 
-      - name: show output
+      - name: show Build notes
         shell: bash -l {0}
         run: |
-          dir
           echo "#### Showing Build.notes.txt"
           cat Build.notes.txt

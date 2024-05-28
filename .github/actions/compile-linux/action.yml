@@ -38,7 +38,6 @@ runs:
           ldd ../AllBinaries/$newdir/LATTIC >> ../AllBinaries/$newdir/Build.notes.txt
           ldd ../AllBinaries/$newdir/convcell >> ../AllBinaries/$newdir/Build.notes.txt
 
-          echo "#### Showing Build.notes.txt"
           cp ../AllBinaries/$newdir/Build.notes.txt ../../Build.notes.txt
   
           # create tar file with binaries

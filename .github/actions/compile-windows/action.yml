@@ -17,7 +17,7 @@ runs:
         shell: bash -l {0}
         run: |
           conda install m2w64-ntldd-git
-  `  
+
       - name: compile with scons
         id: compile-step
         shell: bash -l {0}
@@ -46,8 +46,6 @@ runs:
           ntldd ../AllBinaries/$newdir/*.pyd >> ../AllBinaries/$newdir/Build.notes.txt
           ntldd ../AllBinaries/$newdir/*.exe >> ../AllBinaries/$newdir/Build.notes.txt
 
-          echo "#### Showing Build.notes.txt"
-          cat ../AllBinaries/$newdir/Build.notes.txt
           cp ../AllBinaries/$newdir/Build.notes.txt ../../Build.notes.txt
 
           # create tar file with binaries
