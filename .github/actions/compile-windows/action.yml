@@ -69,7 +69,7 @@ runs:
           echo "tarname=$(echo $newdir.txt)" >> $GITHUB_OUTPUT
           echo "tarname=$(echo $newdir.txt)"
           echo creating ../../../../$newdir.txt
-          echo test-file > ../../../../$newdir.txt
+          echo test-file > ../../../$newdir.txt
 
       - name: Release
         uses: softprops/action-gh-release@v2
@@ -77,11 +77,11 @@ runs:
           files: ${{ steps.compile-step.outputs.tarname }}
           tag_name: v1.0.1
 
-#      # for debug, create a copy of the build directory
-#      - name: Save artifact  # creates zip file with directory contents
-#        if: failure()
-#        uses: actions/upload-pages-artifact@v3
-#        with:
-#            path: _gsas2
-#            name: compile
-#            retention-days: 1
+      # for debug, create a copy of the build directory
+      - name: Save artifact  # creates zip file with directory contents
+        #if: failure()
+        uses: actions/upload-pages-artifact@v3
+        with:
+            path: _gsas2
+            name: compile
+            retention-days: 1
