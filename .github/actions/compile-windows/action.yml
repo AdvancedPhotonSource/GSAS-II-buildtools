@@ -35,7 +35,7 @@ runs:
           cd k_vec_cython
           python setup.py build_ext --inplace
           cd ..
-          cp k_vec_cython/kvec_general.cp310-win_amd64.pyd ../AllBinaries/$newdir
+          cp k_vec_cython/kvec_general.cp311-win_amd64.pyd ../AllBinaries/$newdir
 
           # document build  
           echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ../AllBinaries/$newdir/Build.notes.txt
