@@ -25,8 +25,8 @@ runs:
 
           # fix dylib naming
           python ../../compile/macRelink.py ../AllBinaries/$newdir
-	  
-	  # compile & copy k-vector cython file
+
+          # compile & copy k-vector cython file
           cd k_vec_cython
           python setup.py build_ext --inplace
           cd ..

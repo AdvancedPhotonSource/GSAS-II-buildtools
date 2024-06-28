@@ -26,8 +26,8 @@ runs:
 
           # copy needed .so files
           python ../../compile/linuxLibs.py ../AllBinaries/$newdir
-	  
-	  # compile & copy k-vector cython file
+
+          # compile & copy k-vector cython file
           cd k_vec_cython
           python setup.py build_ext --inplace
           cd ..
