@@ -26,6 +26,10 @@ runs:
 
           # copy needed .so files
           python ../../compile/linuxLibs.py ../AllBinaries/$newdir
+          cd k_vec_cython
+          python setup.py build_ext --inplace
+          cd ..
+          cp k_vec_cython/kvec_general.cpython-311-x86_64-linux-gnu.so ../AllBinaries/$newdir
 
           # document build  
           echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ../AllBinaries/$newdir/Build.notes.txt
