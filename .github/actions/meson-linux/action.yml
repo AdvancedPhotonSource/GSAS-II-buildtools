@@ -18,7 +18,7 @@ runs:
         shell: bash -l {0}
         run: |
           OUTDIR=./tmp/outfiles
-          TARNAME=`python compile/linuxLibs.py`
+          TARNAME=`python compile/nameTar.py`
           TMPDIR=/tmp/
           echo ${TARNAME}
           TARFILE=${TMPDIR}${newdir}.tgz
@@ -51,7 +51,9 @@ runs:
           ldd ${OUTDIR}/*.so >> ${OUTDIR}/Build.notes.txt
           ldd ${OUTDIR}/LATTIC >> ${OUTDIR}/Build.notes.txt
           ldd ${OUTDIR}/convcell >> ${OUTDIR}/Build.notes.txt
-          cp -l ${OUTDIR}/Build.notes.txt ../Build.notes.txt
+	  echo
+	  echo "Build notes contents:"
+          cat ${OUTDIR}/Build.notes.txt
 
           pwd
           ls -l ..

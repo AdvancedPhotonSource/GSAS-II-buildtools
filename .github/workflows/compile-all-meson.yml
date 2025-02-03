@@ -63,11 +63,11 @@ jobs:
       #   if: runner.os == 'Windows'
       #   uses: ./.github/actions/compile-windows
 
-      - name: Show Build notes
-        shell: bash -l {0}
-        run: |
-          echo "#### Showing Build.notes.txt"
-          cat ./tmp/outfiles/Build.notes.txt
+      # - name: Show Build notes
+      #   shell: bash -l {0}
+      #   run: |
+      #     echo "#### Showing Build.notes.txt"
+      #     cat ./tmp/outfiles/Build.notes.txt
 
       # if debug needed, create a copy of the build directory
       # - name: Save artifact  # creates zip file with directory contents
