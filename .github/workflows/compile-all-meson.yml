@@ -42,7 +42,7 @@ jobs:
           compiler: gcc
           version: 12
  
-      - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
+      - name: Set up conda  # numpy version is selected by conda
         #uses: conda-incubator/setup-miniconda@v3.0.3
         uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
         with:
@@ -51,17 +51,17 @@ jobs:
           miniforge-version: latest
           python-version: ${{ matrix.python-version }}
 
-      # - name: Compile MacOS
-      #   if: runner.os == 'macOS'
-      #   uses: ./.github/actions/compile-mac
+      - name: Compile MacOS
+        if: runner.os == 'macOS'
+        uses: ./.github/actions/meson-mac
 
       - name: Compile Linux
         if: runner.os == 'Linux'
         uses: ./.github/actions/meson-linux
 
-      # - name: Compile Windows
-      #   if: runner.os == 'Windows'
-      #   uses: ./.github/actions/compile-windows
+      - name: Compile Windows
+        if: runner.os == 'Windows'
+        uses: ./.github/actions/meson-windows
 
       # - name: Show Build notes
       #   shell: bash -l {0}
