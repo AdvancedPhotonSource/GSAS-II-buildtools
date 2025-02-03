@@ -48,7 +48,7 @@ jobs:
           activate-environment: build
           environment-file: compile/conda-build-env-nover.yml
           miniforge-version: latest
-          python-version: 3.11
+          python-version: ${{ matrix.python-version }}
 
       # - name: Compile MacOS
       #   if: runner.os == 'macOS'
