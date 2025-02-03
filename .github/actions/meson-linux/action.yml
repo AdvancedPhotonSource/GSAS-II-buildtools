@@ -51,8 +51,8 @@ runs:
           ldd ${OUTDIR}/*.so >> ${OUTDIR}/Build.notes.txt
           ldd ${OUTDIR}/LATTIC >> ${OUTDIR}/Build.notes.txt
           ldd ${OUTDIR}/convcell >> ${OUTDIR}/Build.notes.txt
-	  echo
-	  echo "Build notes contents:"
+          echo
+          echo "Build notes contents:"
           cat ${OUTDIR}/Build.notes.txt
 
           pwd
