@@ -3,7 +3,7 @@
 # output name between steps.
 
 name: Compile Linux w/Meson
-description: compile GSAS-II binaries on Linux using newer 
+description: compile GSAS-II binaries on Linux using newer Pythons
 
 outputs:
   tar-file:
@@ -17,10 +17,17 @@ runs:
         id: compile-step
         shell: bash -l {0}
         run: |
+          OUTDIR=./tmp/outfiles
+	  TARNAME=`python compile/linuxLibs.py`
+          TMPDIR=/tmp/
+	  echo ${TARNAME}
+          TARFILE=${TMPDIR}${newdir}.tgz
+	  echo ${TARFILE}
+	  
           cd _gsas2
           echo "Linux build"
           mkdir ./tmp
-          mkdir ./tmp/outfiles
+          mkdir ${OUTDIR}
           meson setup ./tmp/meson_build
           meson compile -C ./tmp/meson_build
           #ls -lR ./tmp
@@ -28,41 +35,39 @@ runs:
           #ls -l ./tmp/meson_build/sources/*/*.so
           #ls -l ./tmp/meson_build/sources/LATTIC
           #ls -l ./tmp/meson_build/sources/convcell
-          cp -l ./tmp/meson_build/sources/*.so ./tmp/outfiles/
-          cp -l ./tmp/meson_build/sources/*/*.so ./tmp/outfiles/
-          cp -l ./tmp/meson_build/sources/LATTIC ./tmp/outfiles/
-          cp -l ./tmp/meson_build/sources/convcell ./tmp/outfiles/
-          ls -l ./tmp/outfiles/
+          cp -l ./tmp/meson_build/sources/*.so ${OUTDIR}/
+          cp -l ./tmp/meson_build/sources/*/*.so ${OUTDIR}/
+          cp -l ./tmp/meson_build/sources/LATTIC ${OUTDIR}/
+          cp -l ./tmp/meson_build/sources/convcell ${OUTDIR}/
+          ls -l ${OUTDIR}/
           
           # document build  
-          echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ./tmp/outfiles/Build.notes.txt
-          conda list -f python | tail -1 >> ./tmp/outfiles/Build.notes.txt
-          conda list -f numpy | tail -1 >> ./tmp/outfiles/Build.notes.txt
-          echo "Using gfortran, info follows" >> ./tmp/outfiles/Build.notes.txt
-          gfortran -v 2>> ./tmp/outfiles/Build.notes.txt
-          echo "### Dependencies" >> ./tmp/outfiles/Build.notes.txt
-          ldd ./tmp/outfiles/*.so >> ./tmp/outfiles/Build.notes.txt
-          ldd ./tmp/outfiles/LATTIC >> ./tmp/outfiles/Build.notes.txt
-          ldd ./tmp/outfiles/convcell >> ./tmp/outfiles/Build.notes.txt
-          cp -l ./tmp/outfiles/Build.notes.txt ../Build.notes.txt
+          echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ${OUTDIR}/Build.notes.txt
+          conda list -f python | tail -1 >> ${OUTDIR}/Build.notes.txt
+          conda list -f numpy | tail -1 >> ${OUTDIR}/Build.notes.txt
+          echo "Using gfortran, info follows" >> ${OUTDIR}/Build.notes.txt
+          gfortran -v 2>> ${OUTDIR}/Build.notes.txt
+          echo "### Dependencies" >> ${OUTDIR}/Build.notes.txt
+          ldd ${OUTDIR}/*.so >> ${OUTDIR}/Build.notes.txt
+          ldd ${OUTDIR}/LATTIC >> ${OUTDIR}/Build.notes.txt
+          ldd ${OUTDIR}/convcell >> ${OUTDIR}/Build.notes.txt
+          cp -l ${OUTDIR}/Build.notes.txt ../Build.notes.txt
 
           pwd
           ls -l ..
           
           # copy needed .so files
-          python ../compile/linuxLibs.py ./tmp/outfiles/
+          python ../compile/linuxLibs.py ${OUTDIR}/
 
           conda list python
           conda list numpy
 
           # create tar file with binaries
-          #cd ../AllBinaries/$newdir
-          #TMPDIR=/tmp/
-          #TARFILE=${TMPDIR}${newdir}.tgz
-          #echo "tarname=$(echo $TARFILE)" >> $GITHUB_OUTPUT
-          #echo "tarname=$(echo $TARFILE)"
-          #echo creating $TARFILE
-          #tar cvzf $TARFILE *
+          cd ${OUTDIR}
+          echo "tarname=$(echo $TARFILE)" >> $GITHUB_OUTPUT
+          echo "tarname=$(echo $TARFILE)"
+          echo creating $TARFILE
+          tar cvzf $TARFILE *
 
       - name: Release
         uses: softprops/action-gh-release@v2
