@@ -7,7 +7,8 @@ name: Compile GSAS-II with meson
 permissions:
   contents: write
   
-on: [workflow_dispatch, push]
+on: [workflow_dispatch]
+#on: [workflow_dispatch, push]
 
 jobs:
 
@@ -23,8 +24,8 @@ jobs:
 #        os: [macos-14]
 #        os: [windows-latest]
 #        os: [macos-13]
-#        python-version: ["3.12", "3.13"]
-        python-version: ["3.13"]
+        python-version: ["3.12", "3.13"]
+#        python-version: ["3.13"]
 
     
     steps:
