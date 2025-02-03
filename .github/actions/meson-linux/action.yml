@@ -18,12 +18,12 @@ runs:
         shell: bash -l {0}
         run: |
           OUTDIR=./tmp/outfiles
-	  TARNAME=`python compile/linuxLibs.py`
+          TARNAME=`python compile/linuxLibs.py`
           TMPDIR=/tmp/
-	  echo ${TARNAME}
+          echo ${TARNAME}
           TARFILE=${TMPDIR}${newdir}.tgz
-	  echo ${TARFILE}
-	  
+          echo ${TARFILE}
+  
           cd _gsas2
           echo "Linux build"
           mkdir ./tmp
