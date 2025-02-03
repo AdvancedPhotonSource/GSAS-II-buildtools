@@ -10,9 +10,9 @@ permissions:
 on: [workflow_dispatch]
 
 jobs:
-  name: Compile GSAS-II (py${{ matrix.python-version }}, on ${{ matrix.os }})
 
-  test:
+  build:
+    name: Compile GSAS-II (py${{ matrix.python-version }}, on ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
