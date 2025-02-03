@@ -44,13 +44,13 @@ runs:
           ldd ./tmp/outfiles/*.so >> ./tmp/outfiles/Build.notes.txt
           ldd ./tmp/outfiles/LATTIC >> ./tmp/outfiles/Build.notes.txt
           ldd ./tmp/outfiles/convcell >> ./tmp/outfiles/Build.notes.txt
-          cp -l ./tmp/outfiles/Build.notes.txt ./Build.notes.txt
+          cp -l ./tmp/outfiles/Build.notes.txt ../Build.notes.txt
 
           pwd
-          ls -l
+          ls -l ..
           
           # copy needed .so files
-          python compile/linuxLibs.py ./tmp/outfiles/
+          python ../compile/linuxLibs.py ./tmp/outfiles/
 
           conda list python
           conda list numpy
