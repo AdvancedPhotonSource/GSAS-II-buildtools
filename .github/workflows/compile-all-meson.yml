@@ -2,7 +2,7 @@
 # build process. This is needed for Python 3.12+.
 #
 
-name: Compile GSAS-II
+name: Compile GSAS-II with meson
 
 permissions:
   contents: write
@@ -10,6 +10,7 @@ permissions:
 on: [workflow_dispatch]
 
 jobs:
+  name: Compile GSAS-II (py${{ matrix.python-version }}, on ${{ matrix.os }})
 
   test:
     runs-on: ${{ matrix.os }}
@@ -22,6 +23,8 @@ jobs:
 #        os: [macos-14]
 #        os: [windows-latest]
 #        os: [macos-13]
+        python-version: ["3.12", "3.13"]
+
     
     steps:
       - name: Checkout
@@ -30,8 +33,8 @@ jobs:
       - name: Get GSAS-II sources
         shell: bash -l {0}
         run: |
-          #git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
           git clone --single-branch --branch develop --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
+          #git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
       - uses: fortran-lang/setup-fortran@v1
         id: setup-fortran
         with:
@@ -51,19 +54,19 @@ jobs:
       #   if: runner.os == 'macOS'
       #   uses: ./.github/actions/compile-mac
 
-      # - name: Compile Linux
-      #   if: runner.os == 'Linux'
-      #   uses: ./.github/actions/compile-linux
+      - name: Compile Linux
+        if: runner.os == 'Linux'
+        uses: ./.github/actions/meson-linux
 
       # - name: Compile Windows
       #   if: runner.os == 'Windows'
       #   uses: ./.github/actions/compile-windows
 
-      # - name: Show Build notes
-      #   shell: bash -l {0}
-      #   run: |
-      #     echo "#### Showing Build.notes.txt"
-      #     cat Build.notes.txt
+      - name: Show Build notes
+        shell: bash -l {0}
+        run: |
+          echo "#### Showing Build.notes.txt"
+          cat ./tmp/outfiles/Build.notes.txt
 
       # if debug needed, create a copy of the build directory
       # - name: Save artifact  # creates zip file with directory contents
