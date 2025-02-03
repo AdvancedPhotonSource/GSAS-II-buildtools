@@ -24,7 +24,7 @@ runs:
         run: |
           cd _gsas2
           OUTDIR=./tmp/outfiles
-          TARNAME=`python compile/nameTar.py`
+          TARNAME=`python ../compile/nameTar.py`
           TMPDIR=/tmp/
           TARFILE=$../../{TMPDIR}${TARNAME}
           echo "Windows build"
