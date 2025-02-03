@@ -12,7 +12,7 @@ on: [workflow_dispatch]
 jobs:
 
   build:
-    name: Compile GSAS-II (py${{ matrix.python-version }}, on ${{ matrix.os }})
+    name: Compile (py${{ matrix.python-version }}, on ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false

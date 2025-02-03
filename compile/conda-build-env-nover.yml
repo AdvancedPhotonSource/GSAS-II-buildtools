@@ -3,17 +3,6 @@ channels:
   - conda-forge
 dependencies:
   - python
-  - wxpython
   - numpy
-  - scipy
-  - matplotlib
-  - pyopengl
-  - conda
-  - git 
-  - gitpython
-  - requests
-  - pillow
-  - h5py
-  - imageio
-  - scons
+  - meson
   - cython
