@@ -1,9 +1,9 @@
-# Compile the GSAS-II binary files on Linux using meson and then upload
+# Compile the GSAS-II binary files on Windows using meson and then upload
 # them to the releases area. Uses GH outputs capability to move the
 # output name between steps.
 
-name: Compile Linux w/Meson
-description: compile GSAS-II binaries on Linux using newer Pythons
+name: Compile Windows w/Meson
+description: compile GSAS-II binaries on Windows
 
 outputs:
   tar-file:
@@ -13,28 +13,30 @@ outputs:
 runs:
   using: "composite"
   steps:
+      - name: install Windows-specific conda package
+        shell: bash -l {0}
+        run: |
+          conda install m2w64-ntldd-git
+
       - name: compile with meson
         id: compile-step
         shell: bash -l {0}
         run: |
+          cd _gsas2
           OUTDIR=./tmp/outfiles
           TARNAME=`python compile/nameTar.py`
           TMPDIR=/tmp/
-          TARFILE=${TMPDIR}${TARNAME}
-          echo creating ${TARFILE}
-  
-          cd _gsas2
-          echo "Linux build"
+          TARFILE=$../../{TMPDIR}${TARNAME}
+          echo "Windows build"
           mkdir ./tmp
-          mkdir ${OUTDIR}
           meson setup ./tmp/meson_build
           meson compile -C ./tmp/meson_build
-          cp -v ./tmp/meson_build/sources/*.so ${OUTDIR}/
-          cp -v ./tmp/meson_build/sources/*/*.so ${OUTDIR}/
-          cp -v ./tmp/meson_build/sources/LATTIC ${OUTDIR}/
-          cp -v ./tmp/meson_build/sources/convcell ${OUTDIR}/
+          cp -v ./tmp/meson_build/sources/*.pyd ${OUTDIR}/
+          cp -v ./tmp/meson_build/sources/*.dll ${OUTDIR}/
+          cp -v ./tmp/meson_build/sources/*/*.pyd ${OUTDIR}/
+          cp -v ./tmp/meson_build/sources/*.exe ${OUTDIR}/
           ls -l ${OUTDIR}/
-          
+
           # document build  
           echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ${OUTDIR}/Build.notes.txt
           conda list -f python | tail -1 >> ${OUTDIR}/Build.notes.txt
@@ -42,15 +44,12 @@ runs:
           echo "Using gfortran, info follows" >> ${OUTDIR}/Build.notes.txt
           gfortran -v 2>> ${OUTDIR}/Build.notes.txt
           echo "### Dependencies" >> ${OUTDIR}/Build.notes.txt
-          ldd ${OUTDIR}/*.so >> ${OUTDIR}/Build.notes.txt
-          ldd ${OUTDIR}/LATTIC >> ${OUTDIR}/Build.notes.txt
-          ldd ${OUTDIR}/convcell >> ${OUTDIR}/Build.notes.txt
+          ntldd ${OUTDIR}/*.pyd >> ${OUTDIR}/Build.notes.txt
+          ntldd ${OUTDIR}/*.exe >> ${OUTDIR}/Build.notes.txt
+          ntldd ${OUTDIR}/*.dll >> ${OUTDIR}/Build.notes.txt
           echo
           echo "Build notes contents:"
           cat ${OUTDIR}/Build.notes.txt
-
-          # copy needed .so files
-          python ../compile/linuxLibs.py ${OUTDIR}/
 
           # create tar file with binaries
           cd ${OUTDIR}

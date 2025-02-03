@@ -1,9 +1,9 @@
-# Compile the GSAS-II binary files on Linux using meson and then upload
+# Compile the GSAS-II binary files on MacOS using meson and then upload
 # them to the releases area. Uses GH outputs capability to move the
 # output name between steps.
 
-name: Compile Linux w/Meson
-description: compile GSAS-II binaries on Linux using newer Pythons
+name: Compile MacOS w/Meson
+description: compile GSAS-II binaries on MacOS
 
 outputs:
   tar-file:
@@ -22,9 +22,9 @@ runs:
           TMPDIR=/tmp/
           TARFILE=${TMPDIR}${TARNAME}
           echo creating ${TARFILE}
-  
+
           cd _gsas2
-          echo "Linux build"
+          echo "Mac build"
           mkdir ./tmp
           mkdir ${OUTDIR}
           meson setup ./tmp/meson_build
@@ -33,8 +33,12 @@ runs:
           cp -v ./tmp/meson_build/sources/*/*.so ${OUTDIR}/
           cp -v ./tmp/meson_build/sources/LATTIC ${OUTDIR}/
           cp -v ./tmp/meson_build/sources/convcell ${OUTDIR}/
-          ls -l ${OUTDIR}/
-          
+
+          ls -lt ${OUTDIR}
+          # fix dylib naming
+          python ../compile/macRelink.py ${OUTDIR}
+          ls -lt ${OUTDIR}
+
           # document build  
           echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ${OUTDIR}/Build.notes.txt
           conda list -f python | tail -1 >> ${OUTDIR}/Build.notes.txt
@@ -42,15 +46,10 @@ runs:
           echo "Using gfortran, info follows" >> ${OUTDIR}/Build.notes.txt
           gfortran -v 2>> ${OUTDIR}/Build.notes.txt
           echo "### Dependencies" >> ${OUTDIR}/Build.notes.txt
-          ldd ${OUTDIR}/*.so >> ${OUTDIR}/Build.notes.txt
-          ldd ${OUTDIR}/LATTIC >> ${OUTDIR}/Build.notes.txt
-          ldd ${OUTDIR}/convcell >> ${OUTDIR}/Build.notes.txt
+          otool -L ${OUTDIR}/* >> ${OUTDIR}/Build.notes.txt
           echo
           echo "Build notes contents:"
           cat ${OUTDIR}/Build.notes.txt
-
-          # copy needed .so files
-          python ../compile/linuxLibs.py ${OUTDIR}/
 
           # create tar file with binaries
           cd ${OUTDIR}
