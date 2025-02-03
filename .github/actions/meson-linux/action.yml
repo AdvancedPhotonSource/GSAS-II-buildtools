@@ -23,14 +23,16 @@ runs:
           mkdir ./tmp/outfiles
           meson setup ./tmp/meson_build
           meson compile -C ./tmp/meson_build
-          ls -lR ./tmp
-          #ls -l ./tmp/meson_build/*.so
-          #ls -l ./tmp/meson_build/LATTIC
-          #ls -l ./tmp/meson_build/convcell
-          #cp -l ./tmp/meson_build/*.so ./tmp/outfiles/
-          #cp -l ./tmp/meson_build/LATTIC ./tmp/outfiles/
-          #cp -l ./tmp/meson_build/convcell ./tmp/outfiles/
-          #ls -l ./tmp/outfiles/
+          #ls -lR ./tmp
+          ls -l ./tmp/meson_build/sources/*.so
+          ls -l ./tmp/meson_build/sources/*/*.so
+          ls -l ./tmp/meson_build/sources/LATTIC
+          ls -l ./tmp/meson_build/sources/convcell
+          cp -l ./tmp/meson_build/sources/*.so ./tmp/outfiles/
+          cp -l ./tmp/meson_build/sources/*/*.so ./tmp/outfiles/
+          cp -l ./tmp/meson_build/sources/LATTIC ./tmp/outfiles/
+          cp -l ./tmp/meson_build/sources/convcell ./tmp/outfiles/
+          ls -l ./tmp/outfiles/
           
           # copy needed .so files
           python ../../compile/linuxLibs.py ./tmp/outfiles/
