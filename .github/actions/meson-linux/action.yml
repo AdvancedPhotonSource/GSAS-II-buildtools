@@ -24,25 +24,16 @@ runs:
           meson setup ./tmp/meson_build
           meson compile -C ./tmp/meson_build
           #ls -lR ./tmp
-          ls -l ./tmp/meson_build/sources/*.so
-          ls -l ./tmp/meson_build/sources/*/*.so
-          ls -l ./tmp/meson_build/sources/LATTIC
-          ls -l ./tmp/meson_build/sources/convcell
+          #ls -l ./tmp/meson_build/sources/*.so
+          #ls -l ./tmp/meson_build/sources/*/*.so
+          #ls -l ./tmp/meson_build/sources/LATTIC
+          #ls -l ./tmp/meson_build/sources/convcell
           cp -l ./tmp/meson_build/sources/*.so ./tmp/outfiles/
           cp -l ./tmp/meson_build/sources/*/*.so ./tmp/outfiles/
           cp -l ./tmp/meson_build/sources/LATTIC ./tmp/outfiles/
           cp -l ./tmp/meson_build/sources/convcell ./tmp/outfiles/
           ls -l ./tmp/outfiles/
           
-          # copy needed .so files
-          python ../../compile/linuxLibs.py ./tmp/outfiles/
-
-          # compile & copy k-vector cython file
-          #cd k_vec_cython
-          #python setup.py build_ext --inplace
-          #cd ..
-          #cp k_vec_cython/kvec_general.*.so ../AllBinaries/$newdir
-
           # document build  
           echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ./tmp/outfiles/Build.notes.txt
           conda list -f python | tail -1 >> ./tmp/outfiles/Build.notes.txt
@@ -53,12 +44,20 @@ runs:
           ldd ./tmp/outfiles/*.so >> ./tmp/outfiles/Build.notes.txt
           ldd ./tmp/outfiles/LATTIC >> ./tmp/outfiles/Build.notes.txt
           ldd ./tmp/outfiles/convcell >> ./tmp/outfiles/Build.notes.txt
+          cp -l ./tmp/outfiles/Build.notes.txt ./Build.notes.txt
 
-          #cp ../AllBinaries/$newdir/Build.notes.txt ../../Build.notes.txt
-  
+          pwd
+          ls -l
+          
+          # copy needed .so files
+          python compile/linuxLibs.py ./tmp/outfiles/
+
+          conda list python
+          conda list numpy
+
           # create tar file with binaries
-          cd ../AllBinaries/$newdir
-          TMPDIR=/tmp/
+          #cd ../AllBinaries/$newdir
+          #TMPDIR=/tmp/
           #TARFILE=${TMPDIR}${newdir}.tgz
           #echo "tarname=$(echo $TARFILE)" >> $GITHUB_OUTPUT
           #echo "tarname=$(echo $TARFILE)"
