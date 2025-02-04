@@ -23,18 +23,19 @@ runs:
         shell: bash -l {0}
         run: |
           cd _gsas2
-          OUTDIR=./tmp/outfiles
+          OUTDIR=/tmp/outfiles
           TARNAME=`python ../compile/nameTar.py`
           TMPDIR=/tmp/
-          TARFILE=$../../{TMPDIR}${TARNAME}
+          TARFILE=${TMPDIR}${TARNAME}
+          BLDDIR=/tmp/meson_build
           echo "Windows build"
-          mkdir ./tmp
-          meson setup ./tmp/meson_build
-          meson compile -C ./tmp/meson_build
-          cp -v ./tmp/meson_build/sources/*.pyd ${OUTDIR}/
-          cp -v ./tmp/meson_build/sources/*.dll ${OUTDIR}/
-          cp -v ./tmp/meson_build/sources/*/*.pyd ${OUTDIR}/
-          cp -v ./tmp/meson_build/sources/*.exe ${OUTDIR}/
+          mkdir ${OUTDIR}
+          meson setup ${BLDDIR}
+          meson compile -C ${BLDDIR}
+          cp -v ${BLDDIR}/sources/*.pyd ${OUTDIR}/
+          cp -v ${BLDDIR}/sources/*.dll ${OUTDIR}/
+          cp -v ${BLDDIR}/sources/*/*.pyd ${OUTDIR}/
+          cp -v ${BLDDIR}/sources/*.exe ${OUTDIR}/
           ls -l ${OUTDIR}/
 
           # document build  
