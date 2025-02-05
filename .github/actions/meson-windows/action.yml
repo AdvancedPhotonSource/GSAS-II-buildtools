@@ -13,10 +13,10 @@ outputs:
 runs:
   using: "composite"
   steps:
-      # - name: install Windows-specific conda package
-      #   shell: bash -l {0}
-      #   run: |
-      #     conda install m2w64-ntldd-git
+      - name: install Windows-specific conda package
+        shell: bash -l {0}
+        run: |
+          conda install m2w64-ntldd-git
 
       - name: compile with meson
         id: compile-step
