@@ -6,5 +6,5 @@ dependencies:
   - numpy
   - meson
   - cython
-  - m2w64-ntldd-git [win]
+  - m2w64-ntldd-git  # [win]
   
