@@ -13,10 +13,10 @@ outputs:
 runs:
   using: "composite"
   steps:
-      - name: install Windows-specific conda package
-        shell: bash -l {0}
-        run: |
-          conda install m2w64-ntldd-git
+      # - name: install Windows-specific conda package
+      #   shell: bash -l {0}
+      #   run: |
+      #     conda install m2w64-ntldd-git
 
       - name: compile with meson
         id: compile-step
@@ -37,6 +37,13 @@ runs:
           cp -v ${BLDDIR}/sources/*/*.pyd ${OUTDIR}/
           cp -v ${BLDDIR}/sources/*.exe ${OUTDIR}/
 
+          # TODO: better to modify the meson.build to not use
+          #   shared libraries (-static-libgfortran -static-libgcc)
+          #   on platforms where this is possible. For now -- on Windows -- 
+          #   just copy the one that it seems we need
+          cp "C:\mingw64\bin\libgfortran-5.dll" ${OUTDIR}
+          ls -l ${OUTDIR}
+
           # document build  
           echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ${OUTDIR}/Build.notes.txt
           conda list -f python | tail -1 >> ${OUTDIR}/Build.notes.txt
@@ -46,17 +53,11 @@ runs:
           echo "### Dependencies" >> ${OUTDIR}/Build.notes.txt
           ntldd ${OUTDIR}/*.pyd >> ${OUTDIR}/Build.notes.txt
           ntldd ${OUTDIR}/*.exe >> ${OUTDIR}/Build.notes.txt
-          #ntldd ${OUTDIR}/*.dll >> ${OUTDIR}/Build.notes.txt
+          ntldd ${OUTDIR}/*.dll >> ${OUTDIR}/Build.notes.txt
           echo
           echo "Build notes contents:"
           cat ${OUTDIR}/Build.notes.txt
 
-          # TODO: better to modify the meson.build to not use
-          #   shared libraries (-static-libgfortran -static-libgcc)
-          #   on platforms where this is possible. For now -- on Windows -- 
-          #   just copy the one that it seems we need
-          cp "C:\mingw64\bin\libgfortran-5.dll" ${OUTDIR}
-          ls -l ${OUTDIR}
 
           # create tar file with binaries. N.B. converting tar name to windows
           cd ${OUTDIR}
