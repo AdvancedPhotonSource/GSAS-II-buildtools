@@ -36,7 +36,6 @@ runs:
           #cp -v ${BLDDIR}/sources/*.dll ${OUTDIR}/
           cp -v ${BLDDIR}/sources/*/*.pyd ${OUTDIR}/
           cp -v ${BLDDIR}/sources/*.exe ${OUTDIR}/
-          ls -l ${OUTDIR}
 
           # document build  
           echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ${OUTDIR}/Build.notes.txt
@@ -52,12 +51,23 @@ runs:
           echo "Build notes contents:"
           cat ${OUTDIR}/Build.notes.txt
 
-          # create tar file with binaries
+          # TODO: better to modify the meson.build to not use
+          #   shared libraries (-static-libgfortran -static-libgcc)
+          #   on platforms where this is possible. For now -- on Windows -- 
+          #   just copy the one that it seems we need
+          cp "C:\mingw64\bin\libgfortran-5.dll" ${OUTDIR}
+          ls -l ${OUTDIR}
+
+          # create tar file with binaries. N.B. converting tar name to windows
           cd ${OUTDIR}
-          echo "tarname=$(echo $TARFILE)" >> $GITHUB_OUTPUT
+          #echo "tarname=$(echo $TARFILE)" >> $GITHUB_OUTPUT
           echo "tarname=$(echo $TARFILE)"
           echo creating $TARFILE
           tar cvzf $TARFILE *
+          ls -l $TARFILE
+          WINTARFILE=$(cygpath -w "$TARFILE")
+          echo "tarname=$(echo $WINTARFILE)" >> $GITHUB_OUTPUT
+          echo "tarname=$(echo $WINTARFILE)"
 
       - name: Release
         uses: softprops/action-gh-release@v2
