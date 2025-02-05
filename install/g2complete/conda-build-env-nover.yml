@@ -3,17 +3,17 @@ channels:
   - conda-forge
 dependencies:
   - python
-  - wxpython
+#  - wxpython
   - numpy
-  - scipy
-  - matplotlib
-  - pyopengl
+#  - scipy
+#  - matplotlib
+#  - pyopengl
   - conda
   - constructor
   - conda-build
-  - git 
-  - gitpython
-  - requests
-  - pillow
-  - h5py
-  - imageio
+#  - git 
+#  - gitpython
+#  - requests
+#  - pillow
+#  - h5py
+#  - imageio
