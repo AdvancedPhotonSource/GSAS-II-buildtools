@@ -2,6 +2,8 @@
 # them to the releases area. Uses GH outputs capability to move the
 # output name between steps.
 
+# this is a test script as windows build is still being developed
+
 name: Compile Windows w/Meson
 description: compile GSAS-II binaries on Windows
 
@@ -26,7 +28,7 @@ runs:
           OUTDIR=/tmp/outfiles
           TARNAME=`python ../compile/nameTar.py`
           TMPDIR=/tmp/
-          TARFILE=${TMPDIR}${TARNAME}
+          TARFILE=${TMPDIR}test${TARNAME}
           BLDDIR=/tmp/meson_build
           echo "Windows build"
           mkdir ${OUTDIR}
@@ -66,6 +68,7 @@ runs:
           echo creating $TARFILE
           tar cvzf $TARFILE *
           ls -l $TARFILE
+          # fix windows name
           WINTARFILE=$(cygpath -w "$TARFILE")
           echo "tarname=$(echo $WINTARFILE)" >> $GITHUB_OUTPUT
           echo "tarname=$(echo $WINTARFILE)"
@@ -75,3 +78,11 @@ runs:
         with:
           files: ${{ steps.compile-step.outputs.tarname }}
           tag_name: v1.0.1
+
+      - name: Save artifact  # creates zip file with directory contents
+      #   if: failure()
+        uses: actions/upload-pages-artifact@v3
+        with:
+            path: ${BLDDIR}
+            name: meson-build
+            retention-days: 1

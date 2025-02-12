@@ -5,7 +5,8 @@
 # Python and numpy. 
 #
 
-name: Compile GSAS-II
+name: scons Compile GSAS-II no upload
+# f2py seems to be broken alas so this does not work
 
 permissions:
   contents: write
