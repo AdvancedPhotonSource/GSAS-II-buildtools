@@ -32,7 +32,7 @@ runs:
           BLDDIR=/tmp/meson_build
           echo "Windows build"
           mkdir ${OUTDIR}
-          meson setup ${BLDDIR}
+          meson setup ${BLDDIR} --default-library=static
           meson compile -C ${BLDDIR}
           cp -v ${BLDDIR}/sources/*.pyd ${OUTDIR}/
           #cp -v ${BLDDIR}/sources/*.dll ${OUTDIR}/
@@ -83,6 +83,6 @@ runs:
       #   if: failure()
         uses: actions/upload-pages-artifact@v3
         with:
-            path: ${BLDDIR}
+            path: /tmp/meson_build
             name: meson-build
             retention-days: 1
