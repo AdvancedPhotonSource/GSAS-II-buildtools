@@ -1,5 +1,7 @@
 '''Generate the name for a tar file with binaries for the current Python
 and numpy versions, as in "mac_arm_p3.11_n1.26.tgz"
+
+This code must match :func:`GSASIIpath.GetBinaryPrefix`
 '''
 import sys
 import os
