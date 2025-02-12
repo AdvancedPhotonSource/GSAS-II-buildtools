@@ -2,8 +2,6 @@
 # them to the releases area. Uses GH outputs capability to move the
 # output name between steps.
 
-# this is a test script as windows build is still being developed
-
 name: Compile Windows w/Meson
 description: compile GSAS-II binaries on Windows
 
@@ -28,7 +26,7 @@ runs:
           OUTDIR=/tmp/outfiles
           TARNAME=`python ../compile/nameTar.py`
           TMPDIR=/tmp/
-          TARFILE=${TMPDIR}test${TARNAME}
+          TARFILE=${TMPDIR}${TARNAME}
           BLDDIR=/tmp/meson_build
           echo "Windows build"
           mkdir ${OUTDIR}
@@ -55,7 +53,7 @@ runs:
           conda list -f numpy | tail -1 >> ${OUTDIR}/Build.notes.txt
           echo "Using gfortran, info follows" >> ${OUTDIR}/Build.notes.txt
           gfortran -v 2>> ${OUTDIR}/Build.notes.txt
-	  cd ${OUTDIR}
+          cd ${OUTDIR}
           echo "### .pyd Dependencies" >> ${OUTDIR}/Build.notes.txt
           ntldd ${OUTDIR}/*.pyd >> ${OUTDIR}/Build.notes.txt
           echo "### .exe Dependencies" >> ${OUTDIR}/Build.notes.txt

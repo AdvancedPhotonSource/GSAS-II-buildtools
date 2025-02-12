@@ -25,9 +25,9 @@ jobs:
         os: [windows-latest]
 #        os: [macos-13]
 
-#        python-version: ["3.12", "3.13"]
+        python-version: ["3.12", "3.13"]
 #        python-version: ["3.13"]
-        python-version: ["3.12"]
+#        python-version: ["3.12"]
 
     
     steps:
