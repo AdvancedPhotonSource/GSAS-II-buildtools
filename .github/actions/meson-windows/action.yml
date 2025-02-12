@@ -42,8 +42,11 @@ runs:
           # TODO: better to modify the meson.build to not use
           #   shared libraries (-static-libgfortran -static-libgcc)
           #   on platforms where this is possible. For now -- on Windows -- 
-          #   just copy the one that it seems we need
+          #   just copy the files we do need
           cp "C:\mingw64\bin\libgfortran-5.dll" ${OUTDIR}
+          cp "C:\mingw64\bin\libquadmath-0.dll" ${OUTDIR}
+          cp "C:\mingw64\bin\libgcc_s_seh-1.dll" ${OUTDIR}
+          cp "C:\mingw64\bin\libwinpthread-1.dll" ${OUTDIR}
           ls -l ${OUTDIR}
 
           # document build  
@@ -52,9 +55,12 @@ runs:
           conda list -f numpy | tail -1 >> ${OUTDIR}/Build.notes.txt
           echo "Using gfortran, info follows" >> ${OUTDIR}/Build.notes.txt
           gfortran -v 2>> ${OUTDIR}/Build.notes.txt
-          echo "### Dependencies" >> ${OUTDIR}/Build.notes.txt
+	  cd ${OUTDIR}
+          echo "### .pyd Dependencies" >> ${OUTDIR}/Build.notes.txt
           ntldd ${OUTDIR}/*.pyd >> ${OUTDIR}/Build.notes.txt
+          echo "### .exe Dependencies" >> ${OUTDIR}/Build.notes.txt
           ntldd ${OUTDIR}/*.exe >> ${OUTDIR}/Build.notes.txt
+          echo "### .dll Dependencies" >> ${OUTDIR}/Build.notes.txt
           ntldd ${OUTDIR}/*.dll >> ${OUTDIR}/Build.notes.txt
           echo
           echo "Build notes contents:"
@@ -79,10 +85,10 @@ runs:
           files: ${{ steps.compile-step.outputs.tarname }}
           tag_name: v1.0.1
 
-      - name: Save artifact  # creates zip file with directory contents
-      #   if: failure()
-        uses: actions/upload-pages-artifact@v3
-        with:
-            path: /tmp/meson_build
-            name: meson-build
-            retention-days: 1
+      # - name: Save artifact  # creates zip file with directory contents
+      # #   if: failure()
+      #   uses: actions/upload-pages-artifact@v3
+      #   with:
+      #       path: /tmp/meson_build
+      #       name: meson-build
+      #       retention-days: 1
