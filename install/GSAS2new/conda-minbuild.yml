@@ -1,0 +1,14 @@
+# these are the packages needed to build/upload the GSAS2new conda package
+# that contains GSAS-II and its .git directory
+name: conda-build-env
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - numpy
+  - conda
+  - conda-build
+  - constructor
+  - git
+  - gitpython
+  - anaconda-client

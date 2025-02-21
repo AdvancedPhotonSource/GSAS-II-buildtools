@@ -1,9 +1,6 @@
-# Build the gsas2full self-installer for all supported platforms from develop branch of
-# GSAS-II for testing. Python version is set in the code below and the numpy version is
-# selected by conda; hope it is the same minor version as what is used in the binary build
-# step
-
-name: build gsas2full/develop branch
+# Build the gsas2new self-installer for all supported platforms
+#
+name: build gsas2new
 
 permissions:
   contents: write
@@ -24,18 +21,14 @@ on: [workflow_dispatch]
 
 jobs:
   build:
-    name: gsas2full develop build on ${{ matrix.os }}
+    name: gsas2new build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
 #        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
-#        os: [macos-14]
+        os: [macos-14]
 #        os: [windows-latest]
 #        os: [macos-13]
-
-#        python-version: ["3.12", "3.13"]
-        python-version: ["3.13"]
 
     steps:
       - name: Checkout
@@ -46,28 +39,29 @@ jobs:
         uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
         with:
           activate-environment: build
-          environment-file: install/g2complete/conda-build-env-nover.yml
+          environment-file: install/GSAS2new/conda-minbuild.yml
           miniforge-version: latest
-          python-version: ${{ matrix.python-version }}
 
       - name: Get GSAS-II sources
         shell: bash -l {0}
         run: |
-          git clone --single-branch --branch develop --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
-#          git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2          
+          git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
 
-      - name: create conda gsas2complete package
+      - name: create gsas2new conda package
         shell: bash -l {0}
         run: |
           cd install
           if [ "$RUNNER_OS" == "Windows" ]; then
              echo "Windows build"
-             python setgitversion.py ../_gsas2 C:/tmp/builds
-             conda build g2complete --output-folder C:/tmp/builds
+             python makeBldFiles.py
+             conda build GSAS2new --output-folder C:/tmp/builds
+             anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload /tmp/build/*/*.conda --user briantoby --force
+
           else
              echo "Unix build"
-             python setgitversion.py ../_gsas2  ~/build
-             conda build g2complete --output-folder ~/build
+             python makeBldFiles.py
+             conda build GSAS2new --output-folder ~/build
+             anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ~/build/*/*.conda --user briantoby --force
           fi
 
       - name: show build logs
@@ -75,61 +69,60 @@ jobs:
         shell: bash -l {0}
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
-             echo Show install/g2complete/meta.yaml
-             type install/g2complete/meta.yaml
+             echo Show install/GSAS2new/meta.yaml
+             type install/GSAS2new/meta.yaml
              echo Show showing c:\tmp\constructor_bld.log
              type c:/tmp/constructor_bld.log
              echo Show showing c:\tmp\gitstrap.log
              type c:/tmp/gitstrap.log
           else
-             echo Show install/g2complete/meta.yaml
-             cat install/g2complete/meta.yaml
+             echo Show install/GSAS2new/meta.yaml
+             cat install/GSAS2new/meta.yaml
              echo Show contents of /tmp/conda_G2build_out.log
              cat /tmp/conda_G2build_out.log
              echo Show contents of /tmp/gitstrap.log
              cat /tmp/gitstrap.log
           fi
 
-      - name: create conda gsas2full installer
+      - name: create gsas2new self-installer
         shell: bash -l {0}
         run: |
           cd install
-          #CONDA_SOLVER=classic constructor g2full   # can't use mamba in constructor 3.7
-          constructor g2full   # can't use mamba in constructor 3.7
+          constructor gsas2new
 
-# Now have a gsas2full-####-<platform>.sh or gsas2full-####-<platform>.exe 
+# Now have a gsas2new-####-<platform>.sh or gsas2new-####-<platform>.exe 
 # file in install. 
-      - name: duplicate Unix
+      - name: duplicate upload on Unixes
         shell: bash -l {0}
         if: matrix.os != 'windows-latest'
         run: |
           cd install
-          cp -v *.sh `ls gsas2full-*.sh | sed -e s/-[0-9]*-/-Latest-/`
+          cp -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-Latest-/`
   
-      - name: duplicate Windows
+      - name: duplicate on Windows
         if: matrix.os == 'windows-latest'
-        run: copy install/*.exe install/gsas2full-Latest-Windows-x86_64.exe 
+        run: copy install/*.exe install/gsas2new-Latest-Windows-x86_64.exe 
 
-# Now have above and gsas2full-Latest-<platform>.sh or gsas2full-Latest-<platform>.exe 
+# Now have above and gsas2new-Latest-<platform>.sh or gsas2new-Latest-<platform>.exe 
 # file in install. 
-      # - name: Release on Unix
-      #   uses: softprops/action-gh-release@v2
-      #   if: matrix.os != 'windows-latest'
-      #   with:
-      #     files: install/*.sh
-      #     tag_name: v1.0.1
+      - name: Release on Unix
+        uses: softprops/action-gh-release@v2
+        if: matrix.os != 'windows-latest'
+        with:
+          files: install/*.sh
+          tag_name: v1.0.1
 
-      # - name: Release on Windows
-      #   uses: softprops/action-gh-release@v2
-      #   if: matrix.os == 'windows-latest'
-      #   with:
-      #     files: install/*.exe
-      #     tag_name: v1.0.1
+      - name: Release on Windows
+        uses: softprops/action-gh-release@v2
+        if: matrix.os == 'windows-latest'
+        with:
+          files: install/*.exe
+          tag_name: v1.0.1
  
-# Now have a gsas2full-####-<platform>.sh or gsas2full-####-<platform>.exe file in
+# Now have a gsas2new-####-<platform>.sh or gsas2new-####-<platform>.exe file in
 # install. That file should get uploaded to the Assets area here:
 #    https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest
-# It should also be copied to replace file gsas2full-Latest-<platform>.*
+# It should also be copied to replace file gsas2new-Latest-<platform>.*
 
 # outtakes: 
 
@@ -143,10 +136,10 @@ jobs:
 #          fi
 
 #      # for testing, upload the .sh/.exe file created here
-      - name: Upload artifact  # creates zip file with directory contents
-        uses: actions/upload-pages-artifact@v3
-        with:
-            path: install
-            name: constructor
-            retention-days: 1
+#      - name: Upload artifact  # creates zip file with directory contents
+#        uses: actions/upload-pages-artifact@v3
+#        with:
+#            path: install
+#            name: constructor
+#            retention-days: 1
     

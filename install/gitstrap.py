@@ -4,7 +4,7 @@
 from __future__ import division, print_function
 import os, stat, sys, platform, subprocess, datetime
 
-version = "gitstrap.py from March 26, 2024"
+version = "gitstrap.py from February 17, 2025"
 g2URL = "https://github.com/AdvancedPhotonSource/GSAS-II.git"
 scriptpath = os.path.dirname(os.path.abspath(os.path.expanduser(__file__)))
 # This installs GSAS-II files in a directory called GSAS-II which
@@ -77,6 +77,10 @@ logfile=None               # name of log file used by this script. If
                            # in the parent directory of where GSAS-II is
                            # installed. Override this with --log
 
+branch=None                # name of git branch to install. None (default)
+                           # causes the default (currently "master")
+                           # to be used
+
 # option not yet implemented (not sure yet how to handle proxy settings)
                            
 skipProxy = False          # False: the script prompts for for proxy info
@@ -141,7 +145,10 @@ for a in sys.argv[1:]:
             print(f'Argument {a} is invalid.')
             help = True
             break
-    elif '-b' in a.lower():
+    elif '-br' in a.lower():
+        bad = False
+        _,branch = a.split('=')
+    elif '-bi' in a.lower():
         bad = False
         try:
             _,ver = a.split('=')
@@ -221,6 +228,9 @@ if help:
 
     --noprogress  omit the progress counter when downloading GSAS-II files 
 
+    --branch=git-branch  Causes the named branch to be installed rather
+                  than the default branch.
+
     --reset       Removes any locally-changed GSAS-II files and updates to 
                   the latest GSAS-II version. Useful when GSAS-II will not 
                   start. --noshortcut is set when --reset is used. 
@@ -229,7 +239,7 @@ if help:
 
 Note that options may be abbreviated to the minumum number of letters 
 needed for uniqueness and one dash works the same as two 
-(e.g. -b is equivalent to --binary, but -noc is needed for --nocheck).
+(e.g. -bi is equivalent to --binary, but -noc is needed for --nocheck).
 ''')
     sys.exit()
 
@@ -242,7 +252,9 @@ needed for uniqueness and one dash works the same as two
 path2GSAS2 = os.path.join(path2repo,'GSASII')
 
 now = str(datetime.datetime.now())
-msg = f'\nBootstrapping GSAS-II into {path2repo}\nat {now}\nfrom {g2URL}\n'
+msg = f'\nBootstrapping GSAS-II into {path2repo}\nat {now}\nfrom {g2URL}'
+if branch: msg += f', branch {branch}'
+msg += '\n'
 msg += f'\nscript:     {version}'
 msg += f"\nPython:     {sys.version.split()[0]}"
 try:
@@ -292,7 +304,7 @@ def BailOut(msg):
                   file=sys.stderr)
     sys.exit()
 
-def gitInstallGSASII(repo_URL,repo_path,depth=500,forceupdate=False,verbose=True):
+def gitInstallGSASII(repo_URL,repo_path,depth=500,forceupdate=False,verbose=True,branch=None):
     '''Install GSAS-II from git to a location. If the directory does 
     not exist it will be created. If the directory exists, and has not 
     been used for git before, it must be empty. If not a ValueError Exception
@@ -315,6 +327,8 @@ def gitInstallGSASII(repo_URL,repo_path,depth=500,forceupdate=False,verbose=True
       (Default is False.)
     :param bool verbose: When True (default) lots of messages are printed. 
       Otherwise this routine will not print anything. 
+    :param str branch: When None (default), this is ignored. Otherwise this
+      specifies the name of the branch to be installed.
 
     :returns: False if a new installation is made and True if an update
       to an existing installation has been made. Anything else
@@ -352,10 +366,15 @@ def gitInstallGSASII(repo_URL,repo_path,depth=500,forceupdate=False,verbose=True
     progress = None
     if verbose:
         msg = f'Cloning GSAS-II to {repo_path} from {repo_URL}.'
+        if branch: msg += f' Using branch={branch}.'
         print(msg)
         logmsg(msg)
         if ProgressCnt: progress = gitProgress()
-    git.Repo.clone_from(repo_URL,repo_path,depth=depth,progress=progress)
+    if branch:
+        git.Repo.clone_from(repo_URL,repo_path,depth=depth,progress=progress,
+                            branch=branch)
+    else:
+        git.Repo.clone_from(repo_URL,repo_path,depth=depth,progress=progress)
     if verbose:
         logmsg('clone done')
         print('\nclone done')
@@ -422,7 +441,7 @@ if reset:
 
 if not skipDownload:
     try:
-        gitInstallGSASII(g2URL,path2repo,depth=depth) # forceupdate=False
+        gitInstallGSASII(g2URL,path2repo,depth=depth,branch=branch) # forceupdate=False
     except UserWarning:
         print('\n***Unable to update due to changes that have been made locally to GSAS-II files')
         print('If an update must be done from inside this script, use --reset')
