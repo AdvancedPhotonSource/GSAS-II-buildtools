@@ -51,9 +51,9 @@ jobs:
         shell: bash -l {0}
         run: |
           cd install
-          if [ "$RUNNER_OS" == "Linux" ]; then   # this is a short-term patch for a bad version
+          if [ "$RUNNER_OS" == "Linux" ]; then   # this is a short-term patch for a bad version (25.1.2)
              conda list conda-build
-             conda install conda-build=25.1.2
+             conda install conda-build=24.*
           fi
           if [ "$RUNNER_OS" == "Windows" ]; then
              echo "Windows build"
