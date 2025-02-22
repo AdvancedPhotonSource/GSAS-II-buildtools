@@ -26,7 +26,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, windows-latest, macos-13, macos-14]
 #        os: [macos-latest]   # single-platform testing
     steps:
       - name: Checkout
@@ -55,8 +55,8 @@ jobs:
           cd install
           conda build g2pkg -c conda-forge --numpy 1.26 --output-folder ../build
           if [ "$RUNNER_OS" == "macOS" ]; then
-             conda convert ../build/osx-arm64/gsas2pkg-*.tar.bz2 -p osx-64 -o ../build
+             conda convert ../build/osx-arm64/gsas2pkg-*.conda -p osx-64 -o ../build
              #ls -ltR ../build
           fi 
-          #ls -ltR ../build/*/*.tar.bz2
-          anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ../build/*/*.tar.bz2 --user briantoby --force
+          #ls -ltR ../build/*/*.conda
+          anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ../build/*/*.conda --user briantoby --force

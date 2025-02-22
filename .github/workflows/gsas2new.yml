@@ -26,15 +26,15 @@ jobs:
     strategy:
       matrix:
 #        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
-        os: [macos-14]
-#        os: [windows-latest]
+#        os: [macos-14]
+        os: [windows-latest,ubuntu-latest]
 #        os: [macos-13]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up conda  # note that conda-build-env.yml fixes Python & numpy versions (alas)
+      - name: Set up conda  # version here is not used for package/installer
         #uses: conda-incubator/setup-miniconda@v3.0.3
         uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
         with:
@@ -42,10 +42,10 @@ jobs:
           environment-file: install/GSAS2new/conda-minbuild.yml
           miniforge-version: latest
 
-      - name: Get GSAS-II sources
-        shell: bash -l {0}
-        run: |
-          git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
+#      - name: Get GSAS-II sources
+#        shell: bash -l {0}
+#        run: |
+#          git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
 
       - name: create gsas2new conda package
         shell: bash -l {0}
