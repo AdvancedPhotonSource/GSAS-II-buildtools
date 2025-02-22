@@ -1,5 +1,5 @@
 # this creates the files needed to build the GSAS2new conda package
-# and the GSAS2new self-installer
+# and the GSAS2new self-installer from the develop branch
 
 import os
 import sys
@@ -13,6 +13,7 @@ G2url="https://github.com/AdvancedPhotonSource/GSAS-II.git"
 # location where conda build output files are written
 bldloc = os.path.join(os.path.normpath(os.path.dirname(__file__)),'GSAS2new')
 consloc = os.path.join(os.path.normpath(os.path.dirname(__file__)),'GSAS2new')
+branch='develop'
 
 def GetBinaryPrefix():
     '''Creates the first part of the binary directory name
@@ -97,20 +98,19 @@ def getNewestVersions():
     '''
     
     binaries = getGitBinaryReleases()
+    if binaries is None:
+        print('No binaries found!')
+        return None
     prefix = GetBinaryPrefix()
 
-    # this command gets the latest numerical tag in the entire repo
-    # it is not exactly what I want in that the tag might not be in
-    # the desired branch, but it is good enough for naming the file
-    # we are creating. 
-    version = git.cmd.Git().ls_remote(G2url,sort='-v:refname', tags=True).split('\n')[0].split('/')[-1]
-    # the better, but slower, way to do this would be make a fairly narrow clone:
-    # import os,tempfile,shutil
-    # tpath = os.path.join(tempfile.gettempdir(),'git-tmp')
-    # r = git.Repo.clone_from(G2url,branch='develop',depth=500,to_path=tpath)
-    # tags = [tag.name for tag in r.tags] # get all the tags
-    # r.close() # clean up
-    # shutil.rmtree(tpath)
+    # these command gets the latest numerical tag in most recent entries in the branch
+    import os,tempfile,shutil
+    tpath = os.path.join(tempfile.gettempdir(),'git-tmp')
+    r = git.Repo.clone_from(G2url,branch=branch,depth=500,to_path=tpath)
+    tags = [tag.name for tag in r.tags] # get all the tags
+    r.close() # clean up
+    shutil.rmtree(tpath)
+    version = sorted([i for i in tags if i.isdecimal()],key=int)[-1]
 
     # get max python release #
     maxpy = 0
@@ -158,14 +158,14 @@ echo git= >> $logfile 2>&1
 which git >> $logfile 2>&1
 echo python= >> $logfile 2>&1
 which python >> $logfile 2>&1
-echo python $PREFIX/gitstrap.py --nocheck --noshortcut --noprogress --binary={npversion},{pyversion} --log=/tmp/gitstrap.log --branch=develop >> $logfile 2>&1
-python $PREFIX/gitstrap.py --nocheck --noshortcut --noprogress --binary={npversion},{pyversion} --log=/tmp/gitstrap.log --branch=develop >> $logfile 2>&1
+echo python $PREFIX/gitstrap.py --nocheck --noshortcut --noprogress --binary={npversion},{pyversion} --log=/tmp/gitstrap.log --branch={branch} >> $logfile 2>&1
+python $PREFIX/gitstrap.py --nocheck --noshortcut --noprogress --binary={npversion},{pyversion} --log=/tmp/gitstrap.log --branch={branch} >> $logfile 2>&1
 # rename the .git files so they get copied into the conda package
 mv -v $PREFIX/GSAS-II/.git $PREFIX/GSAS-II/keep_git  >> $logfile 2>&1
 mv -v $PREFIX/GSAS-II/.gitignore $PREFIX/GSAS-II/keep.gitignore  >> $logfile 2>&1
 '''
     s = f'#!/bin/bash\n#written by {__file__}'
-    s += build_sh.format(pyversion=pyver, npversion=npver)
+    s += build_sh.format(pyversion=pyver, npversion=npver,branch=branch)
     open(os.path.join(bldloc,name),'w').write(s)
     print('created',os.path.join(bldloc,name))
 
@@ -188,8 +188,8 @@ echo copy %RECIPE_DIR%\..\gitstrap.py %PREFIX%\ >  %logfile%
 if errorlevel 1 exit 1
 
 REM Install files now
-echo python %PREFIX%\gitstrap.py --nocheck --noshortcut --noprogress --binary={npversion},{pyversion} --log=c:/tmp/gitstrap.log --branch=develop >> %logfile%
-     python %PREFIX%\gitstrap.py --nocheck --noshortcut --noprogress --binary={npversion},{pyversion} --log=c:/tmp/gitstrap.log --branch=develop >> %logfile%
+echo python %PREFIX%\gitstrap.py --nocheck --noshortcut --noprogress --binary={npversion},{pyversion} --log=c:/tmp/gitstrap.log --branch={branch} >> %logfile%
+     python %PREFIX%\gitstrap.py --nocheck --noshortcut --noprogress --binary={npversion},{pyversion} --log=c:/tmp/gitstrap.log --branch={branch} >> %logfile%
 if errorlevel 1 exit 1
 
 REM save the .git files so they get copied
@@ -202,7 +202,7 @@ echo C:\Windows\System32\tar.exe cvzf git.tgz .git >> %logfile%
 if errorlevel 1 exit 1
 '''
     s = f'REM written by {__file__}'
-    s += build_sh.format(pyversion=pyver, npversion=npver)
+    s += build_sh.format(pyversion=pyver, npversion=npver,branch=branch)
     open(os.path.join(bldloc,name),'w').write(s)
     print('created',os.path.join(bldloc,name))
     
