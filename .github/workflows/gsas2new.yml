@@ -23,11 +23,13 @@ jobs:
     name: gsas2new build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
 #        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
 #        os: [macos-14]
 #        os: [windows-latest]
-         os: [ubuntu-latest]
+#        os: [ubuntu-latest]
+        os: [windows-latest, ubuntu-latest]
 #        os: [macos-13]
 
     steps:
@@ -59,13 +61,14 @@ jobs:
              echo "Windows build"
              python makeBldFiles.py
              conda config --set anaconda_upload yes
-             conda build GSAS2new --output-folder C:/tmp/builds
+             conda build GSAS2new --output-folder C:/tmp/builds --user briantoby  --token -t ${{ secrets.ANACONDA_TOKEN }}
              #anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload /tmp/build/*/*.conda --user briantoby --force
 
           else
              echo "Unix build"
              python makeBldFiles.py
-             conda build GSAS2new --output-folder ~/build
+             #conda build GSAS2new --output-folder ~/build 
+             conda build GSAS2new --output-folder ~/build --package-format .conda
              anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ~/build/*/*.conda --user briantoby --force
           fi
 
