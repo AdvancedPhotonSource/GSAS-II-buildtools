@@ -61,13 +61,13 @@ jobs:
              echo "Windows build"
              python makeBldFiles.py
              conda config --set anaconda_upload yes
-             conda build GSAS2new --output-folder C:/tmp/builds --user briantoby  --token -t ${{ secrets.ANACONDA_TOKEN }}
+             conda build GSAS2new --output-folder C:/tmp/builds --user briantoby  --token ${{ secrets.ANACONDA_TOKEN }}
              #anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload /tmp/build/*/*.conda --user briantoby --force
 
           else
              echo "Unix build"
              python makeBldFiles.py
-             #conda build GSAS2new --output-folder ~/build 
+             #conda build GSAS2new --output-folder ~/build # use below due to patch above
              conda build GSAS2new --output-folder ~/build --package-format .conda
              anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ~/build/*/*.conda --user briantoby --force
           fi
@@ -97,7 +97,7 @@ jobs:
         shell: bash -l {0}
         run: |
           cd install
-          constructor gsas2new
+          constructor GSAS2new
 
 # Now have a gsas2new-####-<platform>.sh or gsas2new-####-<platform>.exe 
 # file in install. 
