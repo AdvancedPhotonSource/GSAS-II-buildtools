@@ -8,9 +8,8 @@ permissions:
 # Triggers for needing to run this would be if there are changes to any
 # of these files: 
 #    install/gitstrap.py
-#    install/g2complete/*
-#    install/g2full/*
-#    https://github.com/AdvancedPhotonSource/GSAS-II/tree/master/GSASII/**
+#    install/GSAS2new/*
+#    https://github.com/AdvancedPhotonSource/GSAS-II/tree/develop/GSASII/**
 # Better might be to rebuild only with creation of a new tag # in
 # AdvancedPhotonSource/GSAS-II
 # 
@@ -27,8 +26,8 @@ jobs:
       matrix:
 #        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
 #        os: [macos-14]
-        os: [windows-latest]
-#	os: [ubuntu-latest]
+#        os: [windows-latest]
+         os: [ubuntu-latest]
 #        os: [macos-13]
 
     steps:
@@ -52,11 +51,16 @@ jobs:
         shell: bash -l {0}
         run: |
           cd install
+          if [ "$RUNNER_OS" == "Linux" ]; then   # this is a short-term patch for a bad version
+             conda list conda-build
+             conda install conda-build=25.1.2
+          fi
           if [ "$RUNNER_OS" == "Windows" ]; then
              echo "Windows build"
              python makeBldFiles.py
+             conda config --set anaconda_upload yes
              conda build GSAS2new --output-folder C:/tmp/builds
-             anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload /tmp/build/*/*.conda --user briantoby --force
+             #anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload /tmp/build/*/*.conda --user briantoby --force
 
           else
              echo "Unix build"
@@ -69,6 +73,7 @@ jobs:
         if: failure()
         shell: bash -l {0}
         run: |
+          conda list
           if [ "$RUNNER_OS" == "Windows" ]; then
              echo Show install/GSAS2new/meta.yaml
              type install/GSAS2new/meta.yaml
