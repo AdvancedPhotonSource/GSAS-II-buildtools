@@ -188,8 +188,8 @@ echo copy %RECIPE_DIR%\..\gitstrap.py %PREFIX%\ >  %logfile%
 if errorlevel 1 exit 1
 
 REM Install files now
-echo python %PREFIX%\gitstrap.py --nocheck --noshortcut --noprogress --binary={npversion},{pyversion} --log=c:/tmp/gitstrap.log >> %logfile%
-     python %PREFIX%\gitstrap.py --nocheck --noshortcut --noprogress --binary={npversion},{pyversion} --log=c:/tmp/gitstrap.log >> %logfile%
+echo python %PREFIX%\gitstrap.py --nocheck --noshortcut --noprogress --binary={npversion},{pyversion} --log=c:/tmp/gitstrap.log --branch=develop >> %logfile%
+     python %PREFIX%\gitstrap.py --nocheck --noshortcut --noprogress --binary={npversion},{pyversion} --log=c:/tmp/gitstrap.log --branch=develop >> %logfile%
 if errorlevel 1 exit 1
 
 REM save the .git files so they get copied
@@ -229,22 +229,22 @@ requirements:
     - numpy={npversion}
     - matplotlib
     - wxpython
-#    - pillow
     - pyopengl
     - scipy
     - git
     - gitpython
     - PyCifRW
-#    - conda
+    - conda
+# useful packages, but not required packages are:
+#    - pillow
 #    - requests
 #    - hdf5
 #    - h5py
 #    - imageio
-#    - zarr=2.18
+#    - zarr=2.18    # patch because 3.0.x appears broken
 #    - xmltodict
 #    - pybaselines
 #    - pywin32                              [win]
-# useful packages are also listed above, but are commented out
 '''
     s = f'#!/bin/bash\n#written by {__file__}'
     s += meta_yaml.format(pyversion=pyver, npversion=npver, Version=Gver)

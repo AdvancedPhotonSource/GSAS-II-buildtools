@@ -1,3 +1,5 @@
+# *** no longer in use *** 
+#
 # this is used during the gsas2full (& gsas2complete) build process
 # to modify the g2complete & g2full .template files to reflect the
 # versions of Python & packages that should be used for builds. 

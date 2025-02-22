@@ -5,18 +5,19 @@ name: build gsas2new
 permissions:
   contents: write
   
-# Triggers for needing to run this would be if there are changes to any
-# of these files: 
-#    install/gitstrap.py
-#    install/GSAS2new/*
-#    https://github.com/AdvancedPhotonSource/GSAS-II/tree/develop/GSASII/**
-# Better might be to rebuild only with creation of a new tag # in
-# AdvancedPhotonSource/GSAS-II
-# 
-# For now will build only manually via workflow_dispatch
-
-#on: [push, workflow_dispatch]
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:   # nice for debugging
+  
+  push:
+    branches: [ "main" ]
+    paths:                  # want this to run only when files relevant to
+                            # package build change
+      - install/gitstrap.py
+      - install/makeBldFiles.py
+      - install/GSAS2new/*
+      - .github/workflows/gsas2new.yml
+      
+  repository_dispatch: # TODO: launch from GSASII repo via Web API
 
 jobs:
   build:
@@ -25,11 +26,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-#        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
 #        os: [macos-14]
 #        os: [windows-latest]
 #        os: [ubuntu-latest]
-        os: [windows-latest, ubuntu-latest]
+#        os: [windows-latest, ubuntu-latest]
 #        os: [macos-13]
 
     steps:
@@ -43,11 +44,6 @@ jobs:
           activate-environment: build
           environment-file: install/GSAS2new/conda-minbuild.yml
           miniforge-version: latest
-
-#      - name: Get GSAS-II sources
-#        shell: bash -l {0}
-#        run: |
-#          git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
 
       - name: create gsas2new conda package
         shell: bash -l {0}
@@ -72,7 +68,7 @@ jobs:
              anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ~/build/*/*.conda --user briantoby --force
           fi
 
-      - name: show build logs
+      - name: on failure show build logs
         if: failure()
         shell: bash -l {0}
         run: |
@@ -100,7 +96,7 @@ jobs:
           constructor GSAS2new
 
 # Now have a gsas2new-####-<platform>.sh or gsas2new-####-<platform>.exe 
-# file in install. 
+# file in install dir, dup with name as -Latest- 
       - name: duplicate upload on Unixes
         shell: bash -l {0}
         if: matrix.os != 'windows-latest'
@@ -113,7 +109,9 @@ jobs:
         run: copy install/*.exe install/gsas2new-Latest-Windows-x86_64.exe 
 
 # Now have above and gsas2new-Latest-<platform>.sh or gsas2new-Latest-<platform>.exe 
-# file in install. 
+# file in install. Upload to the Assets area:
+#    https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest
+#
       - name: Release on Unix
         uses: softprops/action-gh-release@v2
         if: matrix.os != 'windows-latest'
@@ -128,12 +126,7 @@ jobs:
           files: install/*.exe
           tag_name: v1.0.1
  
-# Now have a gsas2new-####-<platform>.sh or gsas2new-####-<platform>.exe file in
-# install. That file should get uploaded to the Assets area here:
-#    https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest
-# It should also be copied to replace file gsas2new-Latest-<platform>.*
-
-# outtakes: 
+# debug outtakes: 
 
 #      - name: Test the g2full installer
 #        shell: bash -l {0}
