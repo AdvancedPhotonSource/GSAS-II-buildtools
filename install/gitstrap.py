@@ -495,7 +495,6 @@ for k,s in {'win':"makeBat.py", 'darwin':"makeMacApp.py",
         break
 else:
     print(f'Unknown platform {sys.platform}')
-G2script = os.path.join(path2GSAS2,'GSASII.py')
 # on a Mac, make an applescript
 if script and sys.platform.startswith('darwin'):
     logmsg(f'running {script}')

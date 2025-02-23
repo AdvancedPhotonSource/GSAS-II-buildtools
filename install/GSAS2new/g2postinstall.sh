@@ -27,9 +27,12 @@ chmod +x $resetScript
 startScript=$PREFIX/bin/gsasII.sh
 echo "# Commands to start GSAS-II" > $startScript
 echo "source $PREFIX/bin/activate" >> $startScript
-echo "$PREFIX/bin/python $PREFIX/GSAS-II/GSASII/GSASII.py \$*" >> $startScript
+echo "$PREFIX/bin/python $PREFIX/GSAS-II/GSASII/G2.py \$*" >> $startScript
 chmod +x $startScript
 #============================================================================
 #============================================================================
 echo "GSAS-II installer completed"
-echo "*** On Mac, GSAS-II app will be opened in Finder; you may wish to drag it to the dock.***"
+if [[ "$OSTYPE" == "darwin"* ]]; then 
+    echo "*** GSAS-II app will be highlighted in Finder ***"
+    echo "***   you may wish to drag it to the dock.    ***"
+fi
