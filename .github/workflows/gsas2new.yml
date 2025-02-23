@@ -49,7 +49,7 @@ jobs:
         shell: bash -l {0}
         run: |
           cd install
-          if [ "$RUNNER_OS" == "Linux" ]; then   # this is a short-term patch for a bad version (25.1.2)
+          if [ "$RUNNER_OS" == "Linux" ]; then   # this is a short-term patch for a bad conda-build version (25.1.2)
              conda list conda-build
              conda install conda-build=24.*
           fi
@@ -58,8 +58,6 @@ jobs:
              python makeBldFiles.py
              conda config --set anaconda_upload yes
              conda build GSAS2new --output-folder C:/tmp/builds --user briantoby  --token ${{ secrets.ANACONDA_TOKEN }}
-             #anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload /tmp/build/*/*.conda --user briantoby --force
-
           else
              echo "Unix build"
              python makeBldFiles.py
