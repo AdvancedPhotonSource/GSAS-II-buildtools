@@ -1,6 +1,10 @@
+# note that this has pinned packages to be compliant with the code
+# included in the master branch and to avoid bugs. This should be
+# reviewed in the future. (BHT Feb/23/25)
+
 package: 
   name: gsas2pkg
-  version: "5.1.0"
+  version: "5.0.0"
 
 about:
   home: https://advancedphotonsource.github.io/GSAS-II-tutorials
@@ -15,7 +19,7 @@ requirements:
     - python=3.11   # to match prebuilt binaries
     - numpy=1.26    # to match prebuilt binaries
     - conda
-    - scipy
+    - scipy=1.13
     - matplotlib>=3.7
     - pillow        # kind of big, perhaps make this optional?
     - pyopengl
@@ -26,4 +30,8 @@ requirements:
     - hdf5
     - h5py
     - imageio
+    - zarr=2.18 # avoid buggy 3.0.2 & 3.0.3 
+    #- PyCifRW   # not yet needed
+    #- pybaselines  # not yet needed
+    - xmltodict
     - pywin32                              [win]
