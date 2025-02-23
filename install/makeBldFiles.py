@@ -138,8 +138,8 @@ def getNewestVersions():
                 if float(s) > maxnp:
                     maxnp = float(s)
                     maxnpstr = s
-                except ValueError:
-                    pass
+            except ValueError:
+                pass
         if maxnpstr is None:
             print('No NumPy version found')
     if maxpystr is None or maxnpstr is None:
