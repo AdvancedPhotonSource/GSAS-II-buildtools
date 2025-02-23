@@ -42,7 +42,7 @@ jobs:
         id: setup-fortran
         with:
           compiler: gcc
-          version: 12
+          version: 11
  
       - name: Set up conda  # numpy version is selected by conda
         #uses: conda-incubator/setup-miniconda@v3.0.3
