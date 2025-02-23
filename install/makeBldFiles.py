@@ -81,9 +81,9 @@ def getGitBinaryReleases():
                     #URLs.append(asset['browser_download_url'])
                     count += 1
         except:
-            print('Attempt to list GSAS-II binary releases failed, sleeping for 10 sec and then retrying')
+            print('Attempt to list GSAS-II binary releases failed, sleeping for 100 sec and then retrying')
             import time
-            time.sleep(10)  # this does not seem to help when GitHub is not letting the queries through
+            time.sleep(100)  # this does not seem to help when GitHub is not letting the queries through
             continue
         return versions
 
@@ -100,7 +100,7 @@ def getNewestVersions():
     binaries = getGitBinaryReleases()
     if binaries is None:
         print('No binaries found!')
-        return None
+        binaries = []
     prefix = GetBinaryPrefix()
 
     # these command gets the latest numerical tag in most recent entries in the branch
@@ -109,12 +109,16 @@ def getNewestVersions():
     r = git.Repo.clone_from(G2url,branch=branch,depth=500,to_path=tpath)
     tags = [tag.name for tag in r.tags] # get all the tags
     r.close() # clean up
-    shutil.rmtree(tpath)
+    try:
+        shutil.rmtree(tpath)
+    except:  # since a tempfile, will get cleaned up eventually anyway...
+        pass
     version = sorted([i for i in tags if i.isdecimal()],key=int)[-1]
 
     # get max python release #
     maxpy = 0
     maxpystr = None
+    maxnpstr = None
     for j in [i for i in binaries if i.startswith(prefix)]:
         s = j.split('_p')[1].split('_n')[0]
         try:
@@ -125,23 +129,22 @@ def getNewestVersions():
             pass
     if maxpystr is None:
         print('No Python version found')
-        return None
-
-    pyprefix = prefix+'_p'+maxpystr
-    maxnp = 0
-    maxnpstr = None
-    for j in [i for i in binaries if i.startswith(pyprefix)]:
-        s = j.split('_n')[1]
-        try:
-            if float(s) > maxnp:
-                maxnp = float(s)
-                maxnpstr = s
-        except ValueError:
-            pass
-    if maxnpstr is None:
-        print('No NumPy version found')
-        return None
-
+    else:
+        pyprefix = prefix+'_p'+maxpystr
+        maxnp = 0
+        for j in [i for i in binaries if i.startswith(pyprefix)]:
+            s = j.split('_n')[1]
+            try:
+                if float(s) > maxnp:
+                    maxnp = float(s)
+                    maxnpstr = s
+                except ValueError:
+                    pass
+        if maxnpstr is None:
+            print('No NumPy version found')
+    if maxpystr is None or maxnpstr is None:
+        maxpystr, maxnpstr = '3.13', '2.2'
+        print(f'Using default versions: Python ({maxpystr}), numpy ({maxnpstr})')
     return version, maxpystr, maxnpstr
 
 def makeBuild(pyver,npver,name='build.sh'):
