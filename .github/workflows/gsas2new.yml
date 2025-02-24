@@ -26,9 +26,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+#        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
 #        os: [macos-14]
-#        os: [windows-latest]
+        os: [windows-latest]
 #        os: [ubuntu-latest]
 #        os: [windows-latest, ubuntu-latest]
 #        os: [macos-13]
@@ -66,6 +66,16 @@ jobs:
              anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ~/build/*/*.conda --user briantoby --force
           fi
 
+      - name: show build info
+        shell: bash -l {0}
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+             echo "c:\tmp\constructor_bld.log"
+             type c:\tmp\constructor_bld.log
+             echo "c:\tmp\gitstrap.log"
+             type c:\tmp\gitstrap.log
+             dir /s C:\tmp\builds
+     
       - name: on failure show build logs
         if: failure()
         shell: bash -l {0}
