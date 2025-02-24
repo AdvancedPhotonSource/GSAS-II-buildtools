@@ -74,8 +74,9 @@ jobs:
              type c:\tmp\constructor_bld.log
              echo "c:\tmp\gitstrap.log"
              type c:\tmp\gitstrap.log
-             dir /s C:\tmp\builds
-     
+             dir /s c:\tmp\builds
+          fi
+
       - name: on failure show build logs
         if: failure()
         shell: bash -l {0}
