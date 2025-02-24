@@ -70,11 +70,11 @@ jobs:
         shell: bash -l {0}
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
-             echo "c:\tmp\constructor_bld.log"
-             type c:\tmp\constructor_bld.log
-             echo "c:\tmp\gitstrap.log"
-             type c:\tmp\gitstrap.log
-             dir /s c:\tmp\builds
+             echo "c:/tmp/constructor_bld.log"
+             type c:/tmp/constructor_bld.log
+             echo "c:/tmp/gitstrap.log"
+             type c:/tmp/gitstrap.log
+             dir /s c:/tmp/builds
           fi
 
       - name: on failure show build logs

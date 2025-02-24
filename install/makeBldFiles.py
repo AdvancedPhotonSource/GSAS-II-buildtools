@@ -200,9 +200,10 @@ cd %PREFIX%\GSAS-II
 if errorlevel 1 exit 1
 where tar >> %logfile%
 REM Make a tar so we can put it back later
-echo C:\Windows\System32\tar.exe cvzf git.tgz .git >> %logfile%
-     C:\Windows\System32\tar.exe cvzf git.tgz .git >> %logfile%
+echo C:\Windows\System32\tar.exe czf git.tgz .git >> %logfile%
+     C:\Windows\System32\tar.exe czf git.tgz .git >> %logfile%
 if errorlevel 1 exit 1
+dir /s
 '''
     s = f'REM written by {__file__}'
     s += build_sh.format(pyversion=pyver, npversion=npver,branch=branch)
