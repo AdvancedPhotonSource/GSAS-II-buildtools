@@ -26,10 +26,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+#        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
 #        os: [macos-14]
 #        os: [windows-latest]
-#        os: [ubuntu-latest]
+        os: [ubuntu-latest]
 #        os: [windows-latest, ubuntu-latest]
 #        os: [macos-13]
 
@@ -49,10 +49,10 @@ jobs:
         shell: bash -l {0}
         run: |
           cd install
-          if [ "$RUNNER_OS" == "Linux" ]; then   # this is a short-term patch for a bad conda-build version (25.1.2)
-             conda list conda-build
-             conda install conda-build=24.*
-          fi
+#          if [ "$RUNNER_OS" == "Linux" ]; then   # this is a short-term patch for a bad conda-build version (25.1.2)
+#             conda list conda-build
+#             conda install conda-build=24.*
+#          fi
           if [ "$RUNNER_OS" == "Windows" ]; then
              echo "Windows build"
              python makeBldFiles.py
