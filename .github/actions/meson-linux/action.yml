@@ -1,3 +1,7 @@
+# Note this is not used at present. The GH ubuntu runners have a glibc
+# version that is way too new for use on Redhat Enterprise workstations
+# Building manually using tinodi_build.sh.
+#
 # Compile the GSAS-II binary files on Linux using meson and then upload
 # them to the releases area. Uses GH outputs capability to move the
 # output name between steps.
@@ -25,10 +29,10 @@ runs:
   
           cd _gsas2
           echo "Linux build"
-          mkdir ./tmp
-          mkdir ${OUTDIR}
           meson setup ./tmp/meson_build
           meson compile -C ./tmp/meson_build
+
+          mkdir -p ${OUTDIR}
           cp -v ./tmp/meson_build/sources/*.so ${OUTDIR}/
           cp -v ./tmp/meson_build/sources/*/*.so ${OUTDIR}/
           cp -v ./tmp/meson_build/sources/LATTIC ${OUTDIR}/
