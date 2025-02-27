@@ -3,14 +3,19 @@ echo Completing install of GSAS-II from conda package > %logfile%
 REM 
 REM ============= Restore the git repository file
 REM 
+dir  >> %logfile%
 echo fix git files >> %logfile%
 cd %PREFIX%\GSAS-II
+dir  >> %logfile%
+echo post-link.bat now done >> %logfile%
+exit
+
 
 echo C:\Windows\System32\tar.exe xzf git.tgz  >> %logfile%
      C:\Windows\System32\tar.exe xzf git.tgz  >> %logfile%
 if errorlevel 1 exit 1
 
-del git.tgz >> %logfile%
+del /s git.tgz >> %logfile%
 REM
 REM create shortcut to start GSAS-II     =======================================
 echo REM Commands to run GSAS-II load/update process > "%PREFIX%\G2_start.bat"

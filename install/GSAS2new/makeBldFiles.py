@@ -179,9 +179,12 @@ REM  =========================================================================
 REM  This gets run during build of a conda package to put all G2 files into
 REM  the .conda file so they end up in the windows .exe
 REM  =========================================================================
-REM 
-
-set logfile=c:\tmp\constructor_bld.log
+REM
+ 
+rem set outloc=c:\tmp
+set outloc=%PREFIX%
+set logfile=%outloc%\constructor_bld.log
+set gitlog=%outloc%\gitstrap_bld.log
 if exist "%PREFIX%\GSAS-II" (
    exit 1
  )
@@ -190,8 +193,8 @@ echo copy %RECIPE_DIR%\..\gitstrap.py %PREFIX%\ >  %logfile%
 if errorlevel 1 exit 1
 
 REM Install files now
-echo python %PREFIX%\gitstrap.py --nocheck --noshortcut --noprogress --binary={npversion},{pyversion} --log=c:/tmp/gitstrap.log --branch={branch} >> %logfile%
-     python %PREFIX%\gitstrap.py --nocheck --noshortcut --noprogress --binary={npversion},{pyversion} --log=c:/tmp/gitstrap.log --branch={branch} >> %logfile%
+echo python %PREFIX%\gitstrap.py --nocheck --noshortcut --noprogress --binary={npversion},{pyversion} --log=%gitlog% --branch={branch} >> %logfile%
+     python %PREFIX%\gitstrap.py --nocheck --noshortcut --noprogress --binary={npversion},{pyversion} --log=%gitlog% --branch={branch} >> %logfile%
 if errorlevel 1 exit 1
 
 REM save the .git files so they get copied
