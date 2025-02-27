@@ -13,7 +13,6 @@ on:
     paths:                  # want this to run only when files relevant to
                             # package build change
       - install/gitstrap.py
-      - install/makeBldFiles.py
       - install/GSAS2new/*
       - .github/workflows/gsas2new.yml
       
@@ -51,12 +50,12 @@ jobs:
           cd install
           if [ "$RUNNER_OS" == "Windows" ]; then
              echo "Windows build"
-             python makeBldFiles.py
+             python GSAS2new/makeBldFiles.py
              conda config --set anaconda_upload yes
              conda build GSAS2new --output-folder C:/tmp/builds --user briantoby  --token ${{ secrets.ANACONDA_TOKEN }}
           else
              echo "Unix build"
-             python makeBldFiles.py
+             python GSAS2new/makeBldFiles.py
              #conda build GSAS2new --output-folder ~/build # use below due to patch above
              conda build GSAS2new --output-folder ~/build --package-format .conda
              anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ~/build/*/*.conda --user briantoby --force

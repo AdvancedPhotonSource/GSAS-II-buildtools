@@ -292,7 +292,7 @@ specs:
     - pywin32                              [win]
 
 post_install: g2postinstall.sh           [unix]
-post_install: g2postinstall.bat           [win]
+#post_install: g2postinstall.bat           [win]
 
 license_file: EULA.txt
 
