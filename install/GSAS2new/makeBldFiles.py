@@ -11,8 +11,7 @@ BASE_HEADER = {'Accept': 'application/vnd.github+json',
 G2binURL = "https://api.github.com/repos/AdvancedPhotonSource/GSAS-II-buildtools"
 G2url="https://github.com/AdvancedPhotonSource/GSAS-II.git"
 # location where conda build output files are written
-bldloc = os.path.join(os.path.normpath(os.path.dirname(__file__)),'GSAS2new')
-consloc = os.path.join(os.path.normpath(os.path.dirname(__file__)),'GSAS2new')
+bldloc = os.path.normpath(os.path.dirname(__file__))
 branch='develop'
 
 def GetBinaryPrefix():
@@ -307,7 +306,7 @@ write_condarc: True
 '''
     s = f'#!/bin/bash\n#written by {__file__}'
     s += construct_yaml.format(pyversion=pyver, npversion=npver, Version=Gver)
-    open(os.path.join(consloc,name),'w').write(s)
+    open(os.path.join(bldloc,name),'w').write(s)
     print('created',os.path.join(bldloc,name))
 
     
