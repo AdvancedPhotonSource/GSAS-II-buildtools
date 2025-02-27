@@ -17,13 +17,11 @@ echo REM Commands to run GSAS-II load/update process > "%PREFIX%\G2_start.bat"
 echo call %PREFIX%\Scripts\activate >> "%PREFIX%\G2_start.bat"
 echo python %PREFIX%\GSAS-II\GSASII\G2.py >> "%PREFIX%\G2_start.bat"
 REM create bootstrap batch file ================================================
-echo REM Commands to run GSAS-II load/update process > "%PREFIX%\G2_bootstrap.bat"
+Note that these commands assume that gcc and gfortran are already installed. echo REM Commands to run GSAS-II load/update process > "%PREFIX%\G2_bootstrap.bat"
 echo call %PREFIX%\Scripts\activate >> "%PREFIX%\G2_bootstrap.bat"
 echo python %gitstrap% >> "%PREFIX%\G2_bootstrap.bat"
-REM
-echo %python% %gitstrap% --nocheck --log=%gitlog1% --noshortcut >> %logfile%
-     %python% %gitstrap% --nocheck --log=%gitlog1% --noshortcut >> %logfile%
-REM finish installation
-echo %python% %gitstrap% --nocheck --log=%gitlog2% --nodownload >> %logfile%
-     %python% %gitstrap% --nocheck --log=%gitlog2% --nodownload >> %logfile%
+echo PREFIX = %PREFIX%  >> %logfile%
+echo PKG_NAME = %PKG_NAME% >> %logfile%
+echo PKG_VERSION = %PKG_NAME% >> %logfile%
+echo PKG_BUILDNUM = %PKG_BUILDNUM% >> %logfile%
 echo post-link.bat now done >> %logfile%
