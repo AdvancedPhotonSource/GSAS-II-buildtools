@@ -8,7 +8,7 @@ dependencies:
   - numpy
   - conda
   - conda-build
-  - constructor
+  - constructor=3.9
   - git
   - gitpython
   - anaconda-client
