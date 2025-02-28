@@ -9,7 +9,8 @@ dependencies:
   - conda
   - conda-build
 #  - constructor=3.9  # works
-  - constructor=3.10
+#  - constructor=3.10
+  - constructor
   - git
   - gitpython
   - anaconda-client
