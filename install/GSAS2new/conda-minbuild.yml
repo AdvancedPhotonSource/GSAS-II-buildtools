@@ -8,7 +8,8 @@ dependencies:
   - numpy
   - conda
   - conda-build
-  - constructor=3.9
+#  - constructor=3.9  # works
+  - constructor=3.10
   - git
   - gitpython
   - anaconda-client
