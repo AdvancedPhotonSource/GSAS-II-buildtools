@@ -252,7 +252,7 @@ requirements:
 #    - pybaselines
 #    - pywin32                              [win]
 '''
-    s = f'#!/bin/bash\n#written by {__file__}'
+    s = f'#written by {__file__}'
     s += meta_yaml.format(pyversion=pyver, npversion=npver, Version=Gver)
     open(os.path.join(bldloc,name),'w').write(s)
     print('created',os.path.join(bldloc,name))
@@ -307,7 +307,7 @@ initialize_by_default: False
 company: Argonne National Laboratory
 write_condarc: True
 '''
-    s = f'#!/bin/bash\n#written by {__file__}'
+    s = f'#written by {__file__}'
     s += construct_yaml.format(pyversion=pyver, npversion=npver, Version=Gver)
     open(os.path.join(bldloc,name),'w').write(s)
     print('created',os.path.join(bldloc,name))
