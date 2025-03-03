@@ -95,7 +95,7 @@ jobs:
   
       - name: duplicate on Windows
         if: matrix.os == 'windows-latest'
-        run: ren install/*.exe install/gsas2test-Windows-x86_64.exe 
+        run: copy install/*.exe install/gsas2test-Windows-x86_64.exe 
 
 # Now have above and gsas2new-Latest-<platform>.sh or gsas2new-Latest-<platform>.exe 
 # file in install. Upload to the Assets area:
@@ -114,3 +114,4 @@ jobs:
         with:
           files: install/gsas2test*.exe
           tag_name: v1.0.1
+ 
