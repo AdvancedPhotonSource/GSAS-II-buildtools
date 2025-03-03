@@ -1,0 +1,116 @@
+# Build the gsas2new self-installer for all supported platforms
+#
+name: test version of gsas2new
+
+permissions:
+  contents: write
+  
+on:
+  workflow_dispatch:   # nice for debugging
+  
+jobs:
+  build:
+    name: gsas2new build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+#        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+#        os: [macos-14]
+        os: [windows-latest]
+#        os: [ubuntu-latest]
+#        os: [macos-13]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up conda  # versions here are not tied to what is used for package or installer
+        #uses: conda-incubator/setup-miniconda@v3.0.3
+        uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
+        with:
+          activate-environment: build
+          environment-file: install/GSAS2new/conda-minbuild.yml
+          miniforge-version: latest
+
+      - name: regress conda/constructor on Windows
+        if: matrix.os == 'windows-latest'
+        shell: bash -l {0}
+        run: |
+          #conda install constructor=3.9   # do this here so it is not buried in the .yml
+          conda install conda-standalone=24.9.2   # do this here so it is not buried in the .yml
+
+      - name: create gsas2new conda package
+        shell: bash -l {0}
+        run: |
+          cd install
+          if [ "$RUNNER_OS" == "Windows" ]; then
+             echo "Windows build"
+             python GSAS2new/makeBldFiles.py
+             conda config --set anaconda_upload yes
+             conda build GSAS2new --output-folder C:/tmp/builds --user briantoby  --token ${{ secrets.ANACONDA_TOKEN }}
+          else
+             echo "Unix build"
+             python GSAS2new/makeBldFiles.py
+             #conda build GSAS2new --output-folder ~/build # use below due to patch above
+             conda build GSAS2new --output-folder ~/build --package-format .conda
+             anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ~/build/*/*.conda --user briantoby --force
+          fi
+
+      - name: on failure show build logs
+        if: failure()
+        shell: bash -l {0}
+        run: |
+          conda list
+          if [ "$RUNNER_OS" == "Windows" ]; then
+             echo Show install/GSAS2new/meta.yaml
+             type install/GSAS2new/meta.yaml
+             echo Show showing c:\tmp\constructor_bld.log
+             type c:/tmp/constructor_bld.log
+             echo Show showing c:\tmp\gitstrap.log
+             type c:/tmp/gitstrap.log
+          else
+             echo Show install/GSAS2new/meta.yaml
+             cat install/GSAS2new/meta.yaml
+             echo Show contents of /tmp/conda_G2build_out.log
+             cat /tmp/conda_G2build_out.log
+             echo Show contents of /tmp/gitstrap.log
+             cat /tmp/gitstrap.log
+          fi
+
+      - name: create gsas2new self-installer
+        shell: bash -l {0}
+        run: |
+          cd install
+          constructor GSAS2new
+
+# Now have a gsas2new-####-<platform>.sh or gsas2new-####-<platform>.exe 
+# file in install dir, dup with name as -Latest- 
+      - name: duplicate upload on Unixes
+        shell: bash -l {0}
+        if: matrix.os != 'windows-latest'
+        run: |
+          cd install
+          mv -v *.sh `ls gsas2new-*.sh | sed -e s/gsas2new/gsas2new-test/`
+  
+      - name: duplicate on Windows
+        if: matrix.os == 'windows-latest'
+        run: ren install/*.exe install/gsas2test-Windows-x86_64.exe 
+
+# Now have above and gsas2new-Latest-<platform>.sh or gsas2new-Latest-<platform>.exe 
+# file in install. Upload to the Assets area:
+#    https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest
+#
+      - name: Release on Unix
+        uses: softprops/action-gh-release@v2
+        if: matrix.os != 'windows-latest'
+        with:
+          files: install/*.sh
+          tag_name: v1.0.1
+
+      - name: Release on Windows
+        uses: softprops/action-gh-release@v2
+        if: matrix.os == 'windows-latest'
+        with:
+          files: install/gsas2test*.exe
+          tag_name: v1.0.1
