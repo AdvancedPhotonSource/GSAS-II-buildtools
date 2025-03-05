@@ -43,11 +43,11 @@ jobs:
           environment-file: install/GSAS2new/conda-minbuild.yml
           miniforge-version: latest
 
-      - name: regress conda/constructor on Windows
-        if: matrix.os == 'windows-latest'
-        shell: bash -l {0}
-        run: |
-          conda install constructor=3.9   # do this here so it is not buried in the .yml
+      # - name: regress conda/constructor on Windows
+      #   if: matrix.os == 'windows-latest'
+      #   shell: bash -l {0}
+      #   run: |
+      #     conda install constructor=3.9   # do this here so it is not buried in the .yml
 
       - name: create gsas2new conda package
         shell: bash -l {0}
@@ -90,21 +90,27 @@ jobs:
       - name: create gsas2new self-installer
         shell: bash -l {0}
         run: |
-          cd install
-          constructor GSAS2new
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            cd install
+            constructor GSAS2new --quiet
+            conda list
+          else
+            cd install
+            constructor GSAS2new
+          fi
 
 # Now have a gsas2new-####-<platform>.sh or gsas2new-####-<platform>.exe 
 # file in install dir, dup with name as -Latest- 
-      - name: duplicate upload on Unixes
-        shell: bash -l {0}
-        if: matrix.os != 'windows-latest'
-        run: |
-          cd install
-          cp -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-Latest-/`
+      # - name: duplicate upload on Unixes
+      #   shell: bash -l {0}
+      #   if: matrix.os != 'windows-latest'
+      #   run: |
+      #     cd install
+      #     cp -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-Latest-/`
   
-      - name: duplicate on Windows
-        if: matrix.os == 'windows-latest'
-        run: copy install/*.exe install/gsas2new-Latest-Windows-x86_64.exe 
+      # - name: duplicate on Windows
+      #   if: matrix.os == 'windows-latest'
+      #   run: copy install/*.exe install/gsas2new-Latest-Windows-x86_64.exe 
 
 # Now have above and gsas2new-Latest-<platform>.sh or gsas2new-Latest-<platform>.exe 
 # file in install. Upload to the Assets area:
