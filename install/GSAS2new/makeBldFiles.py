@@ -1,5 +1,5 @@
 # this creates the files needed to build the GSAS2new conda package
-# and the GSAS2new self-installer from the develop branch
+# and the GSAS2new self-installer from the main branch
 
 import os
 import sys
@@ -12,7 +12,7 @@ G2binURL = "https://api.github.com/repos/AdvancedPhotonSource/GSAS-II-buildtools
 G2url="https://github.com/AdvancedPhotonSource/GSAS-II.git"
 # location where conda build output files are written
 bldloc = os.path.normpath(os.path.dirname(__file__))
-branch='develop'
+branch='main'
 
 def GetBinaryPrefix():
     '''Creates the first part of the binary directory name
