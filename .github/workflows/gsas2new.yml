@@ -43,11 +43,12 @@ jobs:
           environment-file: install/GSAS2new/conda-minbuild.yml
           miniforge-version: latest
 
-      # - name: regress conda/constructor on Windows
-      #   if: matrix.os == 'windows-latest'
-      #   shell: bash -l {0}
-      #   run: |
-      #     conda install constructor=3.9   # do this here so it is not buried in the .yml
+      - name: regress conda-standalone on Windows until constructor 3.11.2 is out
+        if: matrix.os == 'windows-latest'
+        shell: bash -l {0}
+        run: |
+          #conda install constructor=3.9   # do this here so it is not buried in the .yml
+          conda install conda-standalone=24.9.2   # do this here so it is not buried in the .yml
 
       - name: create gsas2new conda package
         shell: bash -l {0}
@@ -90,14 +91,9 @@ jobs:
       - name: create gsas2new self-installer
         shell: bash -l {0}
         run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            cd install
-            constructor GSAS2new --quiet
-            conda list
-          else
-            cd install
-            constructor GSAS2new
-          fi
+          cd install
+          constructor GSAS2new
+          #conda list
 
 # Now have a gsas2new-####-<platform>.sh or gsas2new-####-<platform>.exe 
 # file in install dir, dup with name as -Latest- 
