@@ -1,0 +1,24 @@
+name: Common Workflow
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        required: true
+        type: number
+      os:
+        required: true
+        type: string
+
+
+jobs:
+  job1:
+    runs-on: ${{ inputs.os }}
+    steps:
+      - run: echo 'job1 version ${{ inputs.python-version }} on ${{ inputs.os }}'
+
+  job2:
+    runs-on: ${{ inputs.os }}
+    needs: job1
+    steps:
+      - run: echo 'job2 version ${{ inputs.python-version }} on ${{ inputs.os }}'
