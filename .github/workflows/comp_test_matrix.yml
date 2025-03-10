@@ -1,4 +1,6 @@
-name: Master Workflow
+name: Master workflow for meson compile & test
+# this passes on the matrix settings to another workflow
+# with multiple jobs. Intended to replace compile-all-meson.yml
 
 on: [workflow_dispatch]
 
@@ -6,6 +8,7 @@ jobs:
   version-matrix:
     strategy:
       fail-fast: false
+
       matrix:
 #        os: [windows-latest, macos-13, macos-14] 
 # N.B. glibc on the ubuntu runners is way too new for use on Redhat systems
@@ -19,6 +22,7 @@ jobs:
 
 #        python-version: ["3.12", "3.13"]
         python-version: ["3.13"]
+
     uses: ./.github/workflows/compile_test.yml
     with:
       python-version: ${{ matrix.python-version }}
