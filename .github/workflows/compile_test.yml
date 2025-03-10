@@ -1,6 +1,9 @@
 name: Compile binaries and then test them.
 # Called from .github/workflows/comp_test_matrix.yml
 
+permissions:
+  contents: write
+
 on:
   workflow_call:
     inputs:
