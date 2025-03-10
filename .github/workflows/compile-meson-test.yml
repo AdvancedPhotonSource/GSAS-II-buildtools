@@ -29,8 +29,16 @@ jobs:
 
 #        python-version: ["3.12", "3.13"]
         python-version: ["3.13"]
+        
+    outputs:  
+        output1: ${{ steps.step1.outputs.pyver }}  
+        output2: ${{ steps.step2.outputs.os }}  
     
     steps:
+      - id: step1  
+        run: echo "::set-output name=pyver::${{ matrix.python-version }}"  
+      - id: step2  
+        run: echo "::set-output name=os::${{ matrix.os }}"  
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -67,9 +75,9 @@ jobs:
       #   uses: ./.github/actions/meson-windows
 
   notify:
-    name: test w/(py${{ matrix.python-version }}, on ${{ matrix.os }})
+    name: test w/(py${{ needs.build.outputs.pyver }}, on ${{ needs.build.outputs.os }})
     needs: build
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ needs.build.outputs.os }}
     
     steps:
       - name: Set up conda  # numpy version is selected by conda
