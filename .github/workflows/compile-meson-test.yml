@@ -45,14 +45,14 @@ jobs:
           compiler: gcc
           version: 12
  
-      - name: Set up conda  # numpy version is selected by conda
-        #uses: conda-incubator/setup-miniconda@v3.0.3
-        uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
-        with:
-          activate-environment: build
-          environment-file: compile/conda-build-env-nover.yml
-          miniforge-version: latest
-          python-version: ${{ matrix.python-version }}
+      # - name: Set up conda  # numpy version is selected by conda
+      #   #uses: conda-incubator/setup-miniconda@v3.0.3
+      #   uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
+      #   with:
+      #     activate-environment: build
+      #     environment-file: compile/conda-build-env-nover.yml
+      #     miniforge-version: latest
+      #     python-version: ${{ matrix.python-version }}
 
       - name: Compile MacOS
         if: runner.os == 'macOS'
@@ -62,12 +62,13 @@ jobs:
         if: runner.os == 'Linux'
         uses: ./.github/actions/meson-linux
 
-      - name: Compile Windows
-        if: runner.os == 'Windows'
-        uses: ./.github/actions/meson-windows
+      # - name: Compile Windows
+      #   if: runner.os == 'Windows'
+      #   uses: ./.github/actions/meson-windows
 
   notify:
     name: test w/(py${{ matrix.python-version }}, on ${{ matrix.os }})
+    needs: build
     runs-on: ${{ matrix.os }}
     
     steps:
