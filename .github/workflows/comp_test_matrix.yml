@@ -2,6 +2,9 @@ name: Master workflow for meson compile & test
 # this passes on the matrix settings to another workflow
 # with multiple jobs. Intended to replace compile-all-meson.yml
 
+permissions:
+  contents: write
+
 on: [workflow_dispatch]
 
 jobs:
