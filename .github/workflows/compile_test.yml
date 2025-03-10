@@ -24,31 +24,31 @@ jobs:
         run: |
           git clone --single-branch --branch main --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
 
-      # - uses: fortran-lang/setup-fortran@v1
-      #   id: setup-fortran
-      #   with:
-      #     compiler: gcc
-      #     version: 12
+      - uses: fortran-lang/setup-fortran@v1
+        id: setup-fortran
+        with:
+          compiler: gcc
+          version: 12
  
-      # - name: Set up minimal conda for build
-      #   #uses: conda-incubator/setup-miniconda@v3.0.3
-      #   uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
-      #   with:
-      #     activate-environment: build
-      #     miniforge-version: latest
-      #     python-version: ${{ inputs.python-version }}
-      # - name: Conda install for build
-      #   shell: bash -el {0}
-      #   run: |
-      #     # tailor the numpy version to match the GSAS-II binaries 
-      #     if [ "${{ inputs.python-version }}" == "3.13" ]; then
-      #       npver="2.2 python-gil"
-      #     elif [ "${{ inputs.python-version }}" == "3.12" ]; then
-      #       npver=2.2
-      #     elif [ "${{ inputs.python-version }}" == "3.11" ]; then
-      #       npver=1.26
-      #     fi
-      #     conda install python=${{ inputs.python-version }} numpy=${npver} meson cython -c conda-forge --override-channels --quiet
+      - name: Set up minimal conda for build
+        #uses: conda-incubator/setup-miniconda@v3.0.3
+        uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
+        with:
+          activate-environment: build
+          miniforge-version: latest
+          python-version: ${{ inputs.python-version }}
+      - name: Conda install for build
+        shell: bash -el {0}
+        run: |
+          # tailor the numpy version to match the GSAS-II binaries 
+          if [ "${{ inputs.python-version }}" == "3.13" ]; then
+            npver="2.2 python-gil"
+          elif [ "${{ inputs.python-version }}" == "3.12" ]; then
+            npver=2.2
+          elif [ "${{ inputs.python-version }}" == "3.11" ]; then
+            npver=1.26
+          fi
+          conda install python=${{ inputs.python-version }} numpy=${npver} meson cython -c conda-forge --override-channels --quiet
 
       - name: Compile MacOS
         if: runner.os == 'macOS'
@@ -58,9 +58,9 @@ jobs:
         if: runner.os == 'Linux'
         uses: ./.github/actions/meson-linux
 
-      # - name: Compile Windows
-      #   if: runner.os == 'Windows'
-      #   uses: ./.github/actions/meson-windows
+      - name: Compile Windows
+        if: runner.os == 'Windows'
+        uses: ./.github/actions/meson-windows
 
   job2:
     name: test w/ (py${{ inputs.python-version }}, on ${{ inputs.os }})  

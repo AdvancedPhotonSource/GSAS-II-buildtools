@@ -5,12 +5,12 @@
 # Python and numpy. 
 #
 
-name: Compile GSAS-II w/scons (old)
+name: Old: Compile GSAS-II w/scons
 
 permissions:
   contents: write
   
-on: [workflow_dispatch]
+#on: [workflow_dispatch]
 
 jobs:
 
