@@ -11,7 +11,12 @@ on: [workflow_dispatch]
 #on: [workflow_dispatch, push]
 
 jobs:
-  matrix:
+  build:
+    name: Compile (py${{ matrix.python-version }}, on ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+    matrix:
 #        os: [windows-latest, macos-13, macos-14] 
 # N.B. glibc on the ubuntu runners is way too new for use on Redhat systems
 # so build that on Redhat for dist as a GH release asset (see tinodi_build.sh)
@@ -24,12 +29,6 @@ jobs:
 
 #        python-version: ["3.12", "3.13"]
         python-version: ["3.13"]
-
-  build:
-    name: Compile (py${{ matrix.python-version }}, on ${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
     
     steps:
       - name: Checkout
@@ -68,7 +67,7 @@ jobs:
         uses: ./.github/actions/meson-windows
 
   notify:
-    name: test (py${{ matrix.python-version }}, on ${{ matrix.os }})
+    name: test w/(py${{ matrix.python-version }}, on ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     
     steps:
