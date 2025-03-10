@@ -37,18 +37,18 @@ jobs:
       #     activate-environment: build
       #     miniforge-version: latest
       #     python-version: ${{ inputs.python-version }}
-      - name: Conda install for build
-        shell: bash -el {0}
-        run: |
-          # tailor the numpy version to match the GSAS-II binaries 
-          if [ "${{ inputs.python-version }}" == "3.13" ]; then
-            npver="2.2 python-gil"
-          elif [ "${{ inputs.python-version }}" == "3.12" ]; then
-            npver=2.2
-          elif [ "${{ inputs.python-version }}" == "3.11" ]; then
-            npver=1.26
-          fi
-          conda install python=${{ inputs.python-version }} numpy=${npver} meson cython -c conda-forge --override-channels --quiet
+      # - name: Conda install for build
+      #   shell: bash -el {0}
+      #   run: |
+      #     # tailor the numpy version to match the GSAS-II binaries 
+      #     if [ "${{ inputs.python-version }}" == "3.13" ]; then
+      #       npver="2.2 python-gil"
+      #     elif [ "${{ inputs.python-version }}" == "3.12" ]; then
+      #       npver=2.2
+      #     elif [ "${{ inputs.python-version }}" == "3.11" ]; then
+      #       npver=1.26
+      #     fi
+      #     conda install python=${{ inputs.python-version }} numpy=${npver} meson cython -c conda-forge --override-channels --quiet
 
       - name: Compile MacOS
         if: runner.os == 'macOS'
