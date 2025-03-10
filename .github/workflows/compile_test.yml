@@ -12,13 +12,60 @@ on:
 
 
 jobs:
-  job1:
+  build:
+    name: Compile (py${{ matrix.python-version }}, on ${{ matrix.os }})  
     runs-on: ${{ inputs.os }}
     steps:
-      - run: echo 'job1 version ${{ inputs.python-version }} on ${{ inputs.os }}'
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Get GSAS-II sources
+        shell: bash -l {0}
+        run: |
+          git clone --single-branch --branch main --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
+          #git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2
+      - uses: fortran-lang/setup-fortran@v1
+        id: setup-fortran
+        with:
+          compiler: gcc
+          version: 12
+ 
+      # - name: Set up conda  # numpy version is selected by conda
+      #   #uses: conda-incubator/setup-miniconda@v3.0.3
+      #   uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
+      #   with:
+      #     activate-environment: build
+      #     environment-file: compile/conda-build-env-nover.yml
+      #     miniforge-version: latest
+      #     python-version: ${{ matrix.python-version }}
+
+      - name: Compile MacOS
+        if: runner.os == 'macOS'
+        uses: ./.github/actions/meson-mac
+
+      - name: Compile Linux
+        if: runner.os == 'Linux'
+        uses: ./.github/actions/meson-linux
+
+      # - name: Compile Windows
+      #   if: runner.os == 'Windows'
+      #   uses: ./.github/actions/meson-windows
 
   job2:
+    name: test w/(py${{ needs.build.outputs.pyver }}, on ${{ needs.build.outputs.os }})
     runs-on: ${{ inputs.os }}
-    needs: job1
+    needs: build
     steps:
-      - run: echo 'job2 version ${{ inputs.python-version }} on ${{ inputs.os }}'
+      - name: Set up conda  # numpy version is selected by conda
+        #uses: conda-incubator/setup-miniconda@v3.0.3
+        uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
+        with:
+          activate-environment: build
+          #environment-file: compile/conda-build-env-nover.yml
+          miniforge-version: latest
+          python-version: ${{ matrix.python-version }}
+
+      - name: Test for compiler?
+        id: compile-step
+        shell: bash -l {0}
+        run: |
+          gfortran -v
