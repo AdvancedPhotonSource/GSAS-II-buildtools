@@ -112,9 +112,9 @@ jobs:
         if: runner.os == 'Windows'
         shell: bash
         run: |
-          ./Scripts/activate
+          C:/ProgramData/Scripts/activate
           conda install --quiet -y pytest
-          cd GSAS-II
+          cd C:/ProgramData/GSAS-II
           python -m pytest
 
       # GSAS-II install & test Linux/Mac
