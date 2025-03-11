@@ -114,8 +114,7 @@ jobs:
         run: |
           call C:\ProgramData\gsas2new\Scripts\activate
           call conda install --quiet -y pytest
-          cd C:\ProgramData\gsas2new\GSAS-II
-          python -m pytest
+          python -m pytest C:/ProgramData/gsas2new/GSAS-II
 
       # GSAS-II install & test Linux/Mac
       - name: download, install G2, pytest & test on unixes
