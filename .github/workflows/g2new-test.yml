@@ -19,76 +19,76 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up conda  # versions here are not tied to what is used for package or installer
-        #uses: conda-incubator/setup-miniconda@v3.0.3
-        uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
-        with:
-          activate-environment: build
-          environment-file: install/GSAS2new/conda-minbuild.yml
-          miniforge-version: latest
+      # - name: Set up conda  # versions here are not tied to what is used for package or installer
+      #   #uses: conda-incubator/setup-miniconda@v3.0.3
+      #   uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
+      #   with:
+      #     activate-environment: build
+      #     environment-file: install/GSAS2new/conda-minbuild.yml
+      #     miniforge-version: latest
 
-      - name: regress conda or conda-standalone on Windows
-        if: inputs.os == 'windows-latest'
-        shell: bash -l {0}
-        run: |
-          # regress conda or conda-standalone on Windows until constructor 3.11.2 is out
-          # do this here so it is not buried in the .yml
-          #conda install constructor=3.11.2   
-          #conda install constructor=3.9
-          conda install conda-standalone=24.9.2 # works with constructor 3.11.1
+      # - name: regress conda or conda-standalone on Windows
+      #   if: inputs.os == 'windows-latest'
+      #   shell: bash -l {0}
+      #   run: |
+      #     # regress conda or conda-standalone on Windows until constructor 3.11.2 is out
+      #     # do this here so it is not buried in the .yml
+      #     #conda install constructor=3.11.2   
+      #     #conda install constructor=3.9
+      #     conda install conda-standalone=24.9.2 # works with constructor 3.11.1
 
-      - name: create gsas2new conda package
-        shell: bash -l {0}
-        run: |
-          cd install
-          if [ "$RUNNER_OS" == "Windows" ]; then
-             echo "Windows build"
-             python GSAS2new/makeBldFiles.py
-             conda config --set anaconda_upload yes
-             conda build GSAS2new --output-folder C:/tmp/builds --user briantoby  --token ${{ secrets.ANACONDA_TOKEN }}
-          else
-             echo "Unix build"
-             python GSAS2new/makeBldFiles.py
-             conda build GSAS2new --output-folder ~/build # use below due to patch above
-             #conda build GSAS2new --output-folder ~/build --package-format .conda
-             anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ~/build/*/*.conda --user briantoby --force
-          fi
+      # - name: create gsas2new conda package
+      #   shell: bash -l {0}
+      #   run: |
+      #     cd install
+      #     if [ "$RUNNER_OS" == "Windows" ]; then
+      #        echo "Windows build"
+      #        python GSAS2new/makeBldFiles.py
+      #        conda config --set anaconda_upload yes
+      #        conda build GSAS2new --output-folder C:/tmp/builds --user briantoby  --token ${{ secrets.ANACONDA_TOKEN }}
+      #     else
+      #        echo "Unix build"
+      #        python GSAS2new/makeBldFiles.py
+      #        conda build GSAS2new --output-folder ~/build # use below due to patch above
+      #        #conda build GSAS2new --output-folder ~/build --package-format .conda
+      #        anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ~/build/*/*.conda --user briantoby --force
+      #     fi
 
-      - name: create gsas2new self-installer
-        shell: bash -l {0}
-        run: |
-          cd install
-          constructor GSAS2new
-          #conda list
+      # - name: create gsas2new self-installer
+      #   shell: bash -l {0}
+      #   run: |
+      #     cd install
+      #     constructor GSAS2new
+      #     #conda list
 
-      # Now have a gsas2new-####-<platform>.sh/.exe 
-      # file in install dir, dup with name as -Latest- 
-      - name: duplicate upload on Unixes
-        shell: bash -l {0}
-        if: inputs.os != 'windows-latest'
-        run: |
-          cd install
-          cp -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-Latest-/`
-      - name: duplicate on Windows
-        if: inputs.os == 'windows-latest'
-        run: copy install/*.exe install/gsas2new-Latest-Windows-x86_64.exe 
+      # # Now have a gsas2new-####-<platform>.sh/.exe 
+      # # file in install dir, dup with name as -Latest- 
+      # - name: duplicate upload on Unixes
+      #   shell: bash -l {0}
+      #   if: inputs.os != 'windows-latest'
+      #   run: |
+      #     cd install
+      #     cp -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-Latest-/`
+      # - name: duplicate on Windows
+      #   if: inputs.os == 'windows-latest'
+      #   run: copy install/*.exe install/gsas2new-Latest-Windows-x86_64.exe 
 
-      # Now have above and gsas2new-Latest-<platform>.sh/.exe 
-      # file in install. Upload to the Assets area:
-      #    https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest
-      #
-      - name: Release on Unix
-        uses: softprops/action-gh-release@v2
-        if: inputs.os != 'windows-latest'
-        with:
-          files: install/*.sh
-          tag_name: v1.0.1
-      - name: Release on Windows
-        uses: softprops/action-gh-release@v2
-        if: inputs.os == 'windows-latest'
-        with:
-          files: install/*.exe
-          tag_name: v1.0.1
+      # # Now have above and gsas2new-Latest-<platform>.sh/.exe 
+      # # file in install. Upload to the Assets area:
+      # #    https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest
+      # #
+      # - name: Release on Unix
+      #   uses: softprops/action-gh-release@v2
+      #   if: inputs.os != 'windows-latest'
+      #   with:
+      #     files: install/*.sh
+      #     tag_name: v1.0.1
+      # - name: Release on Windows
+      #   uses: softprops/action-gh-release@v2
+      #   if: inputs.os == 'windows-latest'
+      #   with:
+      #     files: install/*.exe
+      #     tag_name: v1.0.1
 
   # start testing 
   job2:
@@ -107,7 +107,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: Start-Process -FilePath .\gsas2new-Latest-Windows-x86_64.exe -ArgumentList "/S /AddToPath=1 " -NoNewWindow -Wait
-      - name: GSAS-II all tests
+      - name: GSAS-II all tests, Windows
         if: runner.os == 'Windows'
         shell: bash
         run: |
@@ -123,8 +123,11 @@ jobs:
       - name: GSAS-II install
         if: ${{ inputs.os }}" == "ubuntu-latest"
         shell: bash
-        run: bash /tmp/gsas2new-Latest-Linux-x86_64.sh -p /tmp/gsas2new
-      - name: GSAS-II all tests
+        run: bash /tmp/gsas2new-Latest-Linux-x86_64.sh -p /tmp/gsas2new -b
+
+
+
+      - name: GSAS-II all tests, unix
         if: ${{ inputs.os }}" == "ubuntu-latest"
         shell: bash
         run: |

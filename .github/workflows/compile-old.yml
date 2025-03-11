@@ -5,7 +5,7 @@
 # Python and numpy. 
 #
 
-name: Old: Compile GSAS-II w/scons
+name: Old, Compile GSAS-II w/scons
 
 permissions:
   contents: write

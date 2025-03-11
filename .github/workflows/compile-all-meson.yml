@@ -2,7 +2,7 @@
 # build process. This is needed for Python 3.12+.
 #
 
-name: Old: Compile GSAS-II with meson
+name: Old, Compile GSAS-II with meson
 
 permissions:
   contents: write
