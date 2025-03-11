@@ -100,7 +100,7 @@ jobs:
       - uses: suisei-cn/actions-download-file@818d6b7dc8fe73f2f924b6241f2b1134ca1377d9 # 1.6.0
         if: runner.os == 'Windows'
         id: downloadfile
-        name: Win: Download the file
+        name: Win, Download the file
         with:
           url: "https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/download/v1.0.1/gsas2new-Latest-Windows-x86_64.exe"
           #target: download/
@@ -108,6 +108,12 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: Start-Process -FilePath .\gsas2new-Latest-Windows-x86_64.exe -ArgumentList "/S /AddToPath=1 " -NoNewWindow -Wait
+      - name: GSAS-II all tests
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          cd GSAS-II
+          python -m pytest
 
       # GSAS-II install Linux
       - uses: suisei-cn/actions-download-file@818d6b7dc8fe73f2f924b6241f2b1134ca1377d9 # 1.6.0
@@ -117,10 +123,12 @@ jobs:
           url: "https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/download/v1.0.1/gsas2new-Latest-Linux-x86_64.sh"
           target: /tmp/
       - name: GSAS-II install
+        if: ${{ inputs.os }}" == "ubuntu-latest"
         shell: bash
         run: bash /tmp/gsas2new-Latest-Linux-x86_64.sh -p /tmp/gsas2new
       - name: GSAS-II all tests
-        shell: bash -el {0}
+        if: ${{ inputs.os }}" == "ubuntu-latest"
+        shell: bash
         run: |
           cd /tmp/gsas2new/GSAS-II
           python -m pytest
