@@ -141,5 +141,6 @@ jobs:
         if: runner.os != 'Windows'
         shell: bash
         run: |
+          source /tmp/gsas2new/bin/activate
           cd /tmp/gsas2new/GSAS-II
           python -m pytest
