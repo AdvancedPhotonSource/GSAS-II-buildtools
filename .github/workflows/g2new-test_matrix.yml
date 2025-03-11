@@ -15,7 +15,7 @@ on:
                             # package build change
       - install/gitstrap.py
       - install/GSAS2new/*
-      - .github/workflows/gsas2new.yml
+      - .github/workflows/g2new-test*.yml
       
   repository_dispatch: # TODO: launch from GSASII repo via Web API
 
