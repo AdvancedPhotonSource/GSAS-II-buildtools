@@ -113,7 +113,7 @@ jobs:
         shell: cmd
         run: |
           call C:\ProgramData\gsas2new\Scripts\activate
-          conda install --quiet -y pytest
+          call conda install --quiet -y pytest
           cd C:\ProgramData\gsas2new\GSAS-II
           python -m pytest
 
