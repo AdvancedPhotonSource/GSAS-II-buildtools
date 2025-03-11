@@ -92,7 +92,7 @@ jobs:
 
   # start testing 
   job2:
-    name: test on ${{ inputs.os }})  
+    name: test on ${{ inputs.os }}
     runs-on: ${{ inputs.os }}
     needs: build
     steps:
@@ -123,13 +123,13 @@ jobs:
         shell: bash
         run: |
           if [ "${{ inputs.os }}" == "ubuntu-latest" ]; then
-             dfil = "gsas2new-Latest-Linux-x86_64.sh"
+             dfil="gsas2new-Latest-Linux-x86_64.sh"
           elif [ "${{ inputs.os }}" == "macos-13" ]; then
-             dfil = "gsas2new-Latest-MacOSX-x86_64.sh"
+             dfil="gsas2new-Latest-MacOSX-x86_64.sh"
           elif [ "${{ inputs.os }}" == "macos-14" ]; then
-             dfil = "gsas2new-Latest-MacOSX-arm64.sh"
+             dfil="gsas2new-Latest-MacOSX-arm64.sh"
           else
-             dfil = "?"
+             dfil="?"
           fi
           curl -L -o /tmp/${dfil} https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/download/v1.0.1/${dfil}
           bash /tmp/${dfil} -p /tmp/gsas2new -b
