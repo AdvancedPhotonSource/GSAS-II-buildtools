@@ -110,7 +110,7 @@ jobs:
       - name: add pytest, Windows
         if: runner.os == 'Windows'
         shell: bash
-        run: conda install pytest
+        run: conda install --quiet -y pytest
       - name: GSAS-II all tests, Windows
         if: runner.os == 'Windows'
         shell: bash
@@ -134,7 +134,7 @@ jobs:
       - name: add pytest, unix
         if: runner.os != 'Windows'
         shell: bash
-        run: conda install pytest
+        run: conda install --quiet -y pytest
       - name: GSAS-II all tests, unix
         if: runner.os != 'Windows'
         shell: bash
