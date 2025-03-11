@@ -27,15 +27,15 @@ jobs:
           environment-file: install/GSAS2new/conda-minbuild.yml
           miniforge-version: latest
 
-      - name: regress conda or conda-standalone on Windows until constructor 3.11.2 is out
-        #if: inputs.os == 'windows-latest'
+      - name: regress conda or conda-standalone on Windows
+        if: inputs.os == 'windows-latest'
         shell: bash -l {0}
         run: |
           # regress conda or conda-standalone on Windows until constructor 3.11.2 is out
           # do this here so it is not buried in the .yml
-          conda install constructor=3.11.2   
+          #conda install constructor=3.11.2   
           #conda install constructor=3.9
-          #conda install conda-standalone=24.9.2 # works with constructor 3.11.1
+          conda install conda-standalone=24.9.2 # works with constructor 3.11.1
 
       - name: create gsas2new conda package
         shell: bash -l {0}
