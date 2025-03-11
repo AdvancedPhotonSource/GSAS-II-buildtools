@@ -110,11 +110,11 @@ jobs:
         
       - name: GSAS-II all tests, Windows
         if: runner.os == 'Windows'
-        shell: bash
+        shell: cmd
         run: |
-          C:/ProgramData/gsas2new/Scripts/activate
+          call C:\ProgramData\gsas2new\Scripts\activate
           conda install --quiet -y pytest
-          cd C:/ProgramData/gsas2new/GSAS-II
+          cd C:\ProgramData\gsas2new\GSAS-II
           python -m pytest
 
       # GSAS-II install & test Linux/Mac
