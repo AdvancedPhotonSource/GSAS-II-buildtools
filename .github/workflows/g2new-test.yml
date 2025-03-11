@@ -107,6 +107,10 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: Start-Process -FilePath .\gsas2new-Latest-Windows-x86_64.exe -ArgumentList "/S /AddToPath=1 " -NoNewWindow -Wait
+      - name: add pytest, Windows
+        if: runner.os == 'Windows'
+        shell: bash
+        run: conda install pytest
       - name: GSAS-II all tests, Windows
         if: runner.os == 'Windows'
         shell: bash
@@ -127,8 +131,12 @@ jobs:
 
 
 
+      - name: add pytest, unix
+        if: runner.os != 'Windows'
+        shell: bash
+        run: conda install pytest
       - name: GSAS-II all tests, unix
-        if: ${{ inputs.os }}" == "ubuntu-latest"
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           cd /tmp/gsas2new/GSAS-II
