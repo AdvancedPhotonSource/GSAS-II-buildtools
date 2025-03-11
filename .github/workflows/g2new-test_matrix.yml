@@ -1,0 +1,38 @@
+name: build & test the gsas2new self-installers
+# Master workflow to build and test the gsas2new*.(exe,sh) self-installers
+# this passes on the matrix settings to another workflow
+# with multiple jobs. Intended to replace gsas2new.yml
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:   # nice for debugging
+  
+  push:
+    branches: [ "main" ]
+    paths:                  # want this to run only when files relevant to
+                            # package build change
+      - install/gitstrap.py
+      - install/GSAS2new/*
+      - .github/workflows/gsas2new.yml
+      
+  repository_dispatch: # TODO: launch from GSASII repo via Web API
+
+jobs:
+  version-matrix:
+    strategy:
+      fail-fast: false
+
+      matrix:
+#        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+#        os: [ubuntu-latest, macos-13, macos-14]
+        os: [ubuntu-latest]
+#        os: [macos-14]
+#        os: [windows-latest]
+#        os: [macos-13]
+
+    uses: ./.github/workflows/g2new-test.yml
+    with:
+      os: ${{ matrix.os }}
+    secrets: inherit
