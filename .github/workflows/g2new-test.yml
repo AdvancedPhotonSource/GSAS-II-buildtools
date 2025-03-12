@@ -1,4 +1,4 @@
-name: Build the gsas2new self-installer for all supported platforms and then them.
+name: Build the gsas2new self-installer for all supported platforms and then test them.
 # Called from .github/workflows/G2new-test_matrix.yml
 
 permissions:

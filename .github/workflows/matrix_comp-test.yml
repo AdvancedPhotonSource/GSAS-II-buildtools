@@ -1,11 +1,16 @@
 name: Master workflow for meson compile & test
 # this passes on the matrix settings to another workflow
 # with multiple jobs. Intended to replace compile-all-meson.yml
+#
+# alas, there does not seem to be much point to building Linux binaries on 
+# Ubuntu-latest
 
 permissions:
   contents: write
 
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:   # nice for debugging
+  repository_dispatch: # TODO: launch from GSASII repo via Web API
 
 jobs:
   version-matrix:
@@ -26,7 +31,7 @@ jobs:
         python-version: ["3.12", "3.13"]
 #        python-version: ["3.13"]
 
-    uses: ./.github/workflows/compile_test.yml
+    uses: ./.github/workflows/comp-test.yml
     with:
       python-version: ${{ matrix.python-version }}
       os: ${{ matrix.os }}
