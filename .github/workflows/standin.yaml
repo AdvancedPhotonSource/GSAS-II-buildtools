@@ -1,11 +1,14 @@
 # this does not do anything other than just checkout the current repo
 # and the main GSAS-II repo. It is a test file to see if it can be 
 # triggered from another repo
-name: test workflow
+
+# this needs a personal access token, described in GH_token-gen.txt
+
+name: remote-triggered test workflow
 on:
-  workflow_dispatch:   # nice for debugging
+  #workflow_dispatch:   # nice for debugging
   repository_dispatch: # run from Web API
-jobs:
+Jobs:
   build:
     #name: gsas2pkg build on ${{ matrix.os }}
     #runs-on: ${{ matrix.os }}
@@ -14,8 +17,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Get GSAS-II sources
+      - name: Get settings
         shell: bash -l {0}
         run: |
-          git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2          
+           echo "event_type ${{ github.event.action }}"
+           echo "service    ${{ github.event.client_payload.service }}"'
+           echo "unit       ${{ github.event.client_payload.unit }}"'
+           echo "branch     ${{ github.event.branch }}"
+
+      # - name: Get GSAS-II sources
+      #   shell: bash -l {0}
+      #   run: |
+      #     git clone --depth 50 https://github.com/AdvancedPhotonSource/GSAS-II.git _gsas2          

@@ -1,4 +1,4 @@
-name: Master workflow for meson compile & test
+name: compile & test binaries (meson)
 # this passes on the matrix settings to another workflow
 # with multiple jobs. Intended to replace compile-all-meson.yml
 #
@@ -10,7 +10,8 @@ permissions:
 
 on:
   workflow_dispatch:   # nice for debugging
-  repository_dispatch: # TODO: launch from GSASII repo via Web API
+  
+#  repository_dispatch: # TODO: launch from GSASII repo via Web API
 
 jobs:
   version-matrix:

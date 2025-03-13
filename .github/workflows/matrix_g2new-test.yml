@@ -1,4 +1,4 @@
-name: build & test the gsas2new self-installers
+name: build & test self-installers (gsas2new)
 # Master workflow to build and test the gsas2new*.(exe,sh) self-installers
 # this passes on the matrix settings to another workflow
 # with multiple jobs. Intended to replace gsas2new.yml
@@ -17,7 +17,7 @@ on:
       - install/GSAS2new/*
       - .github/workflows/*g2new-test.yml
       
-  repository_dispatch: # TODO: launch from GSASII repo via Web API
+  #repository_dispatch: # TODO: launch from GSASII repo via Web API
 
 jobs:
   version-matrix:
