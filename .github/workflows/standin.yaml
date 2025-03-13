@@ -8,7 +8,8 @@ name: remote-triggered test workflow
 on:
   #workflow_dispatch:   # nice for debugging
   repository_dispatch: # run from Web API
-Jobs:
+
+jobs:
   build:
     #name: gsas2pkg build on ${{ matrix.os }}
     #runs-on: ${{ matrix.os }}
