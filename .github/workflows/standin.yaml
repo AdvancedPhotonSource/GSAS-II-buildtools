@@ -14,7 +14,8 @@ jobs:
     #name: gsas2pkg build on ${{ matrix.os }}
     #runs-on: ${{ matrix.os }}
     name: test run on ubuntu-latest
-    if: github.event.action == 'compile'
+    #if: github.event.action == 'compile'
+    if: github.event.action == 'remote build'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
