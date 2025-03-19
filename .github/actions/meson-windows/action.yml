@@ -65,6 +65,12 @@ runs:
           echo "Build notes contents:"
           cat ${OUTDIR}/Build.notes.txt
 
+          # record the git versions (version, number & hash)
+          git tag -l --sort=-authordate "v*" | head -1 > ${OUTDIR}/version.txt
+          git tag -l --sort=-authordate "[0-9]*" | head -1 >> ${OUTDIR}/version.txt
+          git log -1 >> ${OUTDIR}/version.txt
+          echo "Version info:"
+          cat ${OUTDIR}/version.txt
 
           # create tar file with binaries. N.B. converting tar name to windows
           cd ${OUTDIR}
