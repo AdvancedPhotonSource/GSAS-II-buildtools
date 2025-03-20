@@ -37,6 +37,7 @@ runs:
           #cp -v ${BLDDIR}/sources/*.dll ${OUTDIR}/
           cp -v ${BLDDIR}/sources/*/*.pyd ${OUTDIR}/
           cp -v ${BLDDIR}/sources/*.exe ${OUTDIR}/
+          cp -v ${BLDDIR}/sources/GSAS*.txt ${OUTDIR}/
 
           # TODO: better to modify the meson.build to not use
           #   shared libraries (-static-libgfortran -static-libgcc)
@@ -47,13 +48,6 @@ runs:
           cp "C:\mingw64\bin\libgcc_s_seh-1.dll" ${OUTDIR}
           cp "C:\mingw64\bin\libwinpthread-1.dll" ${OUTDIR}
           ls -l ${OUTDIR}
-
-          # record the git versions (version, number & hash)
-          git tag -l --sort=-authordate "v*" | head -1 > ${OUTDIR}/version.txt
-          git tag -l --sort=-authordate "[0-9]*" | head -1 >> ${OUTDIR}/version.txt
-          git log -1 >> ${OUTDIR}/version.txt
-          echo "Version info:"
-          cat ${OUTDIR}/version.txt
 
           # document build  
           echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ${OUTDIR}/Build.notes.txt
@@ -71,6 +65,8 @@ runs:
           echo
           echo "Build notes contents:"
           cat ${OUTDIR}/Build.notes.txt
+          echo "Version info:"
+          cat ${OUTDIR}/GSASIIversion.txt
 
           # create tar file with binaries. N.B. converting tar name to windows
           cd ${OUTDIR}

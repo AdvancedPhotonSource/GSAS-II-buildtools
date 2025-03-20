@@ -26,25 +26,19 @@ runs:
           TMPDIR=/tmp/
           TARFILE=${TMPDIR}${TARNAME}
           echo creating ${TARFILE}
-  
+
           cd _gsas2
           echo "Linux build"
+          mkdir ./tmp
+          mkdir ${OUTDIR}
           meson setup ./tmp/meson_build
           meson compile -C ./tmp/meson_build
-
-          mkdir -p ${OUTDIR}
           cp -v ./tmp/meson_build/sources/*.so ${OUTDIR}/
           cp -v ./tmp/meson_build/sources/*/*.so ${OUTDIR}/
           cp -v ./tmp/meson_build/sources/LATTIC ${OUTDIR}/
           cp -v ./tmp/meson_build/sources/convcell ${OUTDIR}/
+          cp -v ./tmp/meson_build/sources/GSAS*.txt ${OUTDIR}/
           ls -l ${OUTDIR}/
-          
-          # record the git versions (version, number & hash)
-          git tag -l --sort=-authordate "v*" | head -1 > ${OUTDIR}/version.txt
-          git tag -l --sort=-authordate "[0-9]*" | head -1 >> ${OUTDIR}/version.txt
-          git log -1 >> ${OUTDIR}/version.txt
-          echo "Version info:"
-          cat ${OUTDIR}/version.txt
 
           # document build  
           echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ${OUTDIR}/Build.notes.txt
@@ -59,6 +53,8 @@ runs:
           echo
           echo "Build notes contents:"
           cat ${OUTDIR}/Build.notes.txt
+          echo "Version info:"
+          cat ${OUTDIR}/GSAS*.txt
 
           # copy needed .so files
           python ../compile/linuxLibs.py ${OUTDIR}/
