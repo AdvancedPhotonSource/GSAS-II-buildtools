@@ -247,9 +247,10 @@ requirements:
 #    - hdf5
 #    - h5py
 #    - imageio
-#    - zarr=2.18    # patch because 3.0.x appears broken
+#    - zarr
 #    - xmltodict
 #    - pybaselines
+#    - seekpath
 #    - pywin32                              [win]
 '''
     s = f'#written by {__file__}'
@@ -288,9 +289,10 @@ specs:
     - hdf5
     - h5py
     - imageio
-    - zarr=2.18
+    - zarr
     - xmltodict
     - pybaselines
+    - seekpath
     - pywin32                              [win]
 
 post_install: g2postinstall.sh           [unix]

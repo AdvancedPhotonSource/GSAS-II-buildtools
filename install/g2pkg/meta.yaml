@@ -30,7 +30,7 @@ requirements:
     - hdf5
     - h5py
     - imageio
-    - zarr=2.18 # avoid buggy 3.0.2 & 3.0.3 
+    - zarr
     #- PyCifRW   # not yet needed
     #- pybaselines  # not yet needed
     - xmltodict
