@@ -20,13 +20,6 @@ jobs:
     name: gsas2new build on RHEL
     runs-on: self-hosted
     steps:
-      - name: setup for build
-        shell: bash -l {0}
-        run: |
-          mkdir -p /local/bht/build
-          cd /local/bht/build
-          source /local/bht/mf3/bin/activate
-
       - name: create Python environment
         shell: bash -l {0}
         run: |
@@ -34,32 +27,20 @@ jobs:
           conda create -p /local/bht/py313 python=3.13 numpy=2.2 \
             wxpython pyopengl PyCifRW pillow gitpython matplotlib scipy \
             conda requests h5py imageio zarr xmltodict pybaselines seekpath \
-            cython meson -y
+            cython meson pytest -y -c conda-forge --quiet
           source /local/bht/py313/bin/activate
           which python
           which meson
           python -VV
           
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-
-  #     - name: Set up conda  # versions here are not tied to what is used for package or installer
-  #       #uses: conda-incubator/setup-miniconda@v3.0.3
-  #       uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
-  #       with:
-  #         activate-environment: build
-  #         environment-file: install/GSAS2new/conda-minbuild.yml
-  #         miniforge-version: latest
-
-  #     - name: regress conda or conda-standalone on Windows
-  #       if: inputs.os == 'windows-latest'
-  #       shell: bash -l {0}
-  #       run: |
-  #         # regress conda or conda-standalone on Windows until constructor 3.11.2 is out
-  #         # do this here so it is not buried in the .yml
-  #         #conda install constructor=3.11.2   
-  #         #conda install constructor=3.9
-  #         conda install conda-standalone=24.9.2 # works with constructor 3.11.1
+      - name: setup for build
+        shell: bash -l {0}
+        run: |
+          source /local/bht/py313/bin/activate
+          mkdir -p /local/bht/build-tmp
+          cd /local/bht/build-tmp
+          curl -L -O https://raw.githubusercontent.com/AdvancedPhotonSource/GSAS-II-buildtools/refs/heads/main/install/gitcompile.py
+          python gitcompile.py --noshortcut
 
   #     - name: create gsas2new conda package
   #       shell: bash -l {0}
