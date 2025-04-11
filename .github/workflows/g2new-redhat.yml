@@ -3,6 +3,7 @@ name: Build & test gsas2new self-installer on RHEL
 permissions:
   contents: write
 
+on:
   workflow_dispatch:   # nice for debugging
   
   push:
