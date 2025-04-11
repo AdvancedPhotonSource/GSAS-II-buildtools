@@ -1,4 +1,4 @@
-name: Build & test gsas2new self-installer on RHEL
+name: RHEL Build & test gsas2new self-installer
 
 permissions:
   contents: write
@@ -20,11 +20,25 @@ jobs:
     name: gsas2new build on RHEL
     runs-on: self-hosted
     steps:
-      - name: test connection
+      - name: setup for build
         shell: bash -l {0}
         run: |
-          cd /local
-          ls
+          mkdir -p /local/bht/build
+          cd /local/bht/build
+          source /local/bht/mf3/bin/activate
+
+      - name: create Python environment
+        shell: bash -l {0}
+        run: |
+          #source /local/bht/mf3/bin/activate
+          conda create -p /local/bht/py313 python=3.13 numpy=2.2 \
+            wxpython pyopengl PyCifRW pillow gitpython matplotlib scipy \
+            conda requests h5py imageio zarr xmltodict pybaselines seekpath \
+            cython meson -y
+          source /local/bht/py313/bin/activate
+          which python
+          which meson
+          python -VV
           
   #     - name: Checkout
   #       uses: actions/checkout@v4
