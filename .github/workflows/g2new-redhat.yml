@@ -30,7 +30,7 @@ jobs:
       - name: create Python environment
         shell: bash -l {0}
         run: |
-          #source /local/bht/mf3/bin/activate
+          source /local/bht/mf3/bin/activate
           conda create -p /local/bht/py313 python=3.13 numpy=2.2 \
             wxpython pyopengl PyCifRW pillow gitpython matplotlib scipy \
             conda requests h5py imageio zarr xmltodict pybaselines seekpath \
