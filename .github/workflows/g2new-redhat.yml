@@ -20,35 +20,35 @@ jobs:
     name: gsas2new build on RHEL
     runs-on: self-hosted
     steps:
-      # - name: create Python run environment
-      #   shell: bash -l {0}
-      #   run: |
-      #     source /local/bht/mf3/bin/activate
-      #     conda create -p /local/bht/py313-run python=3.13 numpy=2.2 \
-      #       wxpython pyopengl PyCifRW pillow gitpython matplotlib scipy \
-      #       conda requests h5py imageio zarr xmltodict pybaselines seekpath \
-      #       pytest -y -c conda-forge --quiet
-      #     source /local/bht/py313-run/bin/activate
-      #     which python
-      #     python -VV
+      - name: create Python run environment
+        shell: bash -l {0}
+        run: |
+          source /local/bht/mf3/bin/activate
+          conda create -p /local/bht/py313-run python=3.13 numpy=2.2 \
+            wxpython pyopengl PyCifRW pillow gitpython matplotlib scipy \
+            conda requests h5py imageio zarr xmltodict pybaselines seekpath \
+            pytest -y -c conda-forge --quiet
+          source /local/bht/py313-run/bin/activate
+          which python
+          python -VV
 
-      # - name: create Python build environment
-      #   shell: bash -l {0}
-      #   run: |
-      #     source /local/bht/mf3/bin/activate
-      #     conda create -p /local/bht/py313-build python=3.13 numpy=2.2 \
-      #       gitpython cython meson conda-build anaconda-client -y -c conda-forge --quiet
-      #     source /local/bht/py313-build/bin/activate
-      #     which python
-      #     which meson
-      #     python -VV
-
+      - name: create Python build environment
+        shell: bash -l {0}
+        run: |
+          source /local/bht/mf3/bin/activate
+          conda create -p /local/bht/py313-build python=3.13 numpy=2.2 \
+            gitpython cython meson conda-build anaconda-client -y -c conda-forge --quiet
+          source /local/bht/py313-build/bin/activate
+          which python
+          which meson
+          python -VV
 
       - name: clone build repo
         shell: bash -l {0}
         run: |
           git clone https://github.com/AdvancedPhotonSource/GSAS-II-buildtools.git --depth 1 /local/bht/buildtools
 
+      # skip this: builds GSAS-II but not of use for packaging
       # - name: setup for build
       #   shell: bash -l {0}
       #   run: |
@@ -153,7 +153,7 @@ jobs:
   #         cd /tmp/gsas2new/GSAS-II
   #         python -m pytest
   
-      - name: cleanup build area
-        shell: bash -l {0}
-        run: |
-          rm -rf /local/bht/build-tmp
+      # - name: cleanup build area
+      #   shell: bash -l {0}
+      #   run: |
+      #     rm -rf /local/bht/build-tmp
