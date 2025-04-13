@@ -1,15 +1,13 @@
 name: compile & test binaries (meson)
-# this passes on the matrix settings to another workflow
-# with multiple jobs. Intended to replace compile-all-meson.yml
+# this passes on the matrix settings to another workflow (comp-test.yml)
+# that compiles the binaries and tests them.
 #
-# alas, there does not seem to be much point to building Linux binaries on 
-# Ubuntu-latest
 
 permissions:
   contents: write
 
 on:
-  workflow_dispatch:   # nice for debugging
+  workflow_dispatch:   # nice to have for debugging
   
 #  repository_dispatch: # TODO: launch from GSASII repo via Web API
 
@@ -19,7 +17,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        os: [windows-latest, macos-13, macos-14] 
+#        os: [windows-latest, macos-13, macos-14] 
 # N.B. glibc on the ubuntu runners is way too new for use on Redhat systems
 # so build that on Redhat for dist as a GH release asset (see tinodi_build.sh)
 #        os: [ubuntu-latest, windows-latest, macos-13, macos-14]

@@ -1,7 +1,7 @@
 name: build & test self-installers (gsas2new)
 # Master workflow to build and test the gsas2new*.(exe,sh) self-installers
 # this passes on the matrix settings to another workflow
-# with multiple jobs. Intended to replace gsas2new.yml
+# with multiple jobs. 
 
 permissions:
   contents: write

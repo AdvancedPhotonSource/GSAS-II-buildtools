@@ -43,8 +43,6 @@ reset = False              # True: any locally-made changes to GSAS-II
 skipChecks = False         # False: checks are made that required Python
                            # packages are present.
                            # Use --nocheck to install without checks
-                           #   Note that when --binary or --server is 
-                           #   specified, --nocheck is also set
                            
 skipShortcut = False       # if False, shortcuts are created after installing
                            # GSAS-II files.
@@ -61,18 +59,6 @@ WXerror = False            # if False error messages are shown in terminal
                            
 help = False               # use --help to show short info on script use
                            #--> True: -help
-
-pyVersion=None             # when set, specifies the Python version to be 
-                           # used for selection of binaries. If None, 
-                           # the version of Python used to run this script
-                           # will determines this. 
-                           # Use --binary to set this.
-
-npVersion=None             # when set, specifies the numpy version to be 
-                           # used for selection of binaries. If None, 
-                           # the version of numpy installed in the Python
-                           # used to run the script determines this
-                           # Use --binary to set this.
 
 depth=500                  # determines the number of past versions of
                            # GSAS-II to install locally. The larger this
@@ -162,35 +148,35 @@ for a in sys.argv[1:]:
             print(f'Argument {a} is invalid.')
             help = True
             break
-    elif '-br' in a.lower():
+    elif '-b' in a.lower():
         bad = False
         _,branch = a.split('=')
-    elif '-bi' in a.lower():
-        bad = False
-        try:
-            _,ver = a.split('=')
-            vers = ver.split(',')
-            if len(vers) == 1:
-                npVersion = vers[0].replace('(','').replace(')','')
-                # remove 'patch' version # if present
-                npVersion = npVersion.rsplit('.',npVersion.count('.')-1)[0] 
-            elif len(vers) == 2:
-                npVersion = vers[0].replace('(','')
-                pyVersion = vers[1].replace(')','')
-                npVersion = npVersion.rsplit('.',npVersion.count('.')-1)[0]
-                pyVersion = pyVersion.rsplit('.',pyVersion.count('.')-1)[0] 
-            else:
-                bad = False
-            skipChecks = True
-        except:
-            bad = True
-        if bad:
-            print(f'Argument {a} is invalid.')
-            help = True
-            break
-    elif '-s' in a.lower():
-        allBinaries = True
-        skipChecks = True
+    # elif '-bi' in a.lower():
+    #     bad = False
+    #     try:
+    #         _,ver = a.split('=')
+    #         vers = ver.split(',')
+    #         if len(vers) == 1:
+    #             npVersion = vers[0].replace('(','').replace(')','')
+    #             # remove 'patch' version # if present
+    #             npVersion = npVersion.rsplit('.',npVersion.count('.')-1)[0] 
+    #         elif len(vers) == 2:
+    #             npVersion = vers[0].replace('(','')
+    #             pyVersion = vers[1].replace(')','')
+    #             npVersion = npVersion.rsplit('.',npVersion.count('.')-1)[0]
+    #             pyVersion = pyVersion.rsplit('.',pyVersion.count('.')-1)[0] 
+    #         else:
+    #             bad = False
+    #         skipChecks = True
+    #     except:
+    #         bad = True
+    #     if bad:
+    #         print(f'Argument {a} is invalid.')
+    #         help = True
+    #         break
+    # elif '-s' in a.lower():
+    #     allBinaries = True
+    #     skipChecks = True
     elif '-h' in a.lower():
         help = True
     else:
@@ -228,21 +214,6 @@ if help:
                   that will be installed (from 500). Changes the space 
                   needed to install GSAS-II.
 
-    --binary=ver  Used when the Python interpreter used to install
-                  GSAS-II is not the same as the one that will be used
-                  to run GSAS-II. The ver value specifies a specific 
-                  numpy or numpy & python version to use in selecting 
-                  the binaries, using --binary=npver or 
-                  --binary=(npver,pyver). e.g., Use --binary=1.26 to 
-                  specify selection of the numpy 1.26 version and where the 
-                  version of Python is selected from the current interpreter.
-                  Or specify --binary=1.26,3.11 to use numpy 1.26 and 
-                  Python 3.11. Can also be specified as --binary=(1.26,3.11).
-                  Turns on --nocheck. 
-
-    --server      install all binary versions 
-                  Turns on --nocheck. 
-
     --noprogress  omit the progress counter when downloading GSAS-II files 
 
     --branch=git-branch  Causes the named branch to be installed rather
@@ -256,7 +227,7 @@ if help:
 
 Note that options may be abbreviated to the minumum number of letters 
 needed for uniqueness and one dash works the same as two 
-(e.g. -bi is equivalent to --binary, but -noc is needed for --nocheck).
+(e.g. -b is equivalent to --branch, but -noc is needed for --nocheck).
 ''')
     sys.exit()
 
