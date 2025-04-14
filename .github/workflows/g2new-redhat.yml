@@ -80,8 +80,7 @@ jobs:
         shell: bash
         run: |
           dfil="gsas2new-rhel-Latest-Linux-x86_64.sh"
-          curl -s -L -o /local/bht/tmp/${dfil} \
-               https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/download/v1.0.1/${dfil}
+          curl -s -L -o /local/bht/tmp/${dfil} https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/download/v1.0.1/${dfil}
           bash /local/bht/tmp/${dfil} -p /local/bht/tmp/gsas2new -b
           source /local/bht/tmp/gsas2new/bin/activate
           conda install --quiet -y pytest
