@@ -41,7 +41,7 @@ jobs:
           rm -rf /local/bht/py313-build
           source /local/bht/mf3/bin/activate
           conda create -p /local/bht/py313-build python=3.13 numpy=2.2 \
-            gitpython cython meson conda-build anaconda-client conda-token \
+            gitpython cython meson conda-build anaconda-client \
             constructor -y -c conda-forge --quiet
           source /local/bht/py313-build/bin/activate
           which python
