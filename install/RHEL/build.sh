@@ -4,7 +4,7 @@ echo '==================== running build.sh ===================='
 logfile=/tmp/conda_G2build_out.log
 #
 echo starting Build.sh > $logfile 2>&1
-cp $RECIPE_DIR/../../gitcompile.py $PREFIX/
+cp $RECIPE_DIR/../gitcompile.py $PREFIX/
 echo ls $PREFIX/ >> $logfile 2>&1
 echo git= >> $logfile 2>&1
 which git >> $logfile 2>&1

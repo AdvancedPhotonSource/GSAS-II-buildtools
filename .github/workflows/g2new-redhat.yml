@@ -65,10 +65,10 @@ jobs:
         run: |
           rm -rf /local/bht/conda-build
           source /local/bht/py313-build/bin/activate
-          cd /local/bht/buildtools/install/GSAS2new
-          # kludge build.sh
+          cd /local/bht/buildtools/install
           conda config --set anaconda_upload yes
           conda build RHEL --output-folder /local/bht/conda-build -c conda-forge
+          # how to get token here?
           #anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ~/build/*/*.conda --user briantoby  --token ${{ secrets.ANACONDA_TOKEN }}
 
   #     - name: create gsas2new self-installer

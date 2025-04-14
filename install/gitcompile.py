@@ -497,6 +497,7 @@ for f in copyList:
     shutil.copyfile(f,os.path.join(installLoc,os.path.split(f)[1]))
 with open(os.path.join(installLoc,'Build.notes.txt'),'w') as fp:
     fp.write(f'built locally with Python {platform.python_version()}\n')
+    import numpy
     fp.write(f'numpy version {numpy.__version__}\n')
     fp.write('gfortran info: ')
     fp.write(subprocess.run(["gfortran","-v"],capture_output=True).stderr.decode("utf-8"))
