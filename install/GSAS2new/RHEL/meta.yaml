@@ -1,0 +1,37 @@
+# written by makeBldFiles.py & modified manually
+#
+# Used to build a GSAS-II conda package that includes all GSAS-II files
+# including binaries matched to versions of Python and NumPy
+# this contains the packages that GSAS-II requires
+package: 
+  name: gsas2new-rhel
+  version: "5805"
+
+build:
+  number: 0
+
+about:
+  home: https://advancedphotonsource.github.io/GSAS-II-tutorials
+
+requirements:
+  run:
+    - python=3.12
+    - numpy=2.2
+    - matplotlib
+    - wxpython
+    - pyopengl
+    - scipy
+#    - git
+    - gitpython
+    - PyCifRW
+    - conda
+# useful, but not required packages are:
+    - pillow
+    - requests
+    - hdf5
+    - h5py
+    - imageio
+    - zarr
+    - xmltodict
+    - pybaselines
+    - seekpath
