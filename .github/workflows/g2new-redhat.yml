@@ -35,18 +35,18 @@ jobs:
       #     python -VV
 
       # works!
-      - name: create Python build environment
-        shell: bash -l {0}
-        run: |
-          rm -rf /local/bht/py313-build
-          source /local/bht/mf3/bin/activate
-          conda create -p /local/bht/py313-build python=3.13 numpy=2.2 \
-            gitpython cython meson conda-build anaconda-client \
-            constructor -y -c conda-forge --quiet
-          source /local/bht/py313-build/bin/activate
-          which python
-          which meson
-          python -VV
+      # - name: create Python build environment
+      #   shell: bash -l {0}
+      #   run: |
+      #     rm -rf /local/bht/py313-build
+      #     source /local/bht/mf3/bin/activate
+      #     conda create -p /local/bht/py313-build python=3.13 numpy=2.2 \
+      #       gitpython cython meson conda-build anaconda-client \
+      #       constructor -y -c conda-forge --quiet
+      #     source /local/bht/py313-build/bin/activate
+      #     which python
+      #     which meson
+      #     python -VV
 
       - name: clone build repo
         shell: bash -l {0}
@@ -74,13 +74,8 @@ jobs:
           conda build purge
           cd /local/bht/buildtools/install
           constructor RHEL
-
-      # Now have a gsas2new-rhel-####-<platform>.sh/.exe 
-      # file in install dir, dup with name as -Latest- 
-      - name: duplicate upload on Unixes
-        shell: bash -l {0}
-        run: |
-          cd install
+          # Now have a gsas2new-rhel-####-<platform>.sh/.exe 
+          # file in install dir, dup with name as -Latest- 
           cp -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-Latest-/`
 
       # Now have above and gsas2new-Latest-<platform>.sh/.exe 
