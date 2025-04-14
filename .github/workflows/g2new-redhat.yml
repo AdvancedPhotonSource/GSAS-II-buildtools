@@ -54,16 +54,16 @@ jobs:
       #     conda build RHEL --output-folder /local/bht/conda-build -c conda-forge
       #     anaconda upload /local/bht/conda-build/linux-64/*.conda --user briantoby --force
 
-      - name: create gsas2new self-installer
-        shell: bash -l {0}
-        run: |
-          source /local/bht/py313-build/bin/activate
-          conda build purge
-          cd /local/bht/buildtools/install
-          constructor RHEL
-          # Now have a gsas2new-rhel-####-<platform>.sh/.exe 
-          # file in install dir, dup with name as -Latest- 
-          cp -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-Latest-/`
+      # - name: create gsas2new self-installer
+      #   shell: bash -l {0}
+      #   run: |
+      #     source /local/bht/py313-build/bin/activate
+      #     conda build purge
+      #     cd /local/bht/buildtools/install
+      #     constructor RHEL
+      #     # Now have a gsas2new-rhel-####-<platform>.sh/.exe 
+      #     # file in install dir, dup with name as -Latest- 
+      #     cp -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-Latest-/`
 
       # Now have above and gsas2new-Latest-<platform>.sh/.exe 
       # file in install. Upload to the Assets area:
@@ -80,6 +80,7 @@ jobs:
         shell: bash
         run: |
           dfil="gsas2new-rhel-Latest-Linux-x86_64.sh"
+          mkdir /local/bht/tmp
           curl -s -L -o /local/bht/tmp/${dfil} https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/download/v1.0.1/${dfil}
           bash /local/bht/tmp/${dfil} -p /local/bht/tmp/gsas2new -b
           source /local/bht/tmp/gsas2new/bin/activate
