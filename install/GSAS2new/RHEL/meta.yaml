@@ -19,6 +19,8 @@ requirements:
     - numpy=2.2
     - scipy
     - gitpython
+    - cython
+    - meson
   run:
     - python=3.12
     - numpy=2.2
