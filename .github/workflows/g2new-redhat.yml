@@ -79,6 +79,7 @@ jobs:
       - name: download, install G2, pytest & test on unixes
         shell: bash
         run: |
+          rm -rf /local/bht/tmp
           dfil="gsas2new-rhel-Latest-Linux-x86_64.sh"
           mkdir /local/bht/tmp
           curl -s -L -o /local/bht/tmp/${dfil} https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/download/v1.0.1/${dfil}
