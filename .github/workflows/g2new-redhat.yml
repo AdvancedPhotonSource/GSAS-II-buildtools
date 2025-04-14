@@ -72,7 +72,7 @@ jobs:
       - name: Release on Unix
         uses: softprops/action-gh-release@v2
         with:
-          files: cd /local/bht/buildtools/install/*.sh
+          files: /local/bht/buildtools/install/*.sh
           tag_name: v1.0.1
 
       # download & test new install kit
