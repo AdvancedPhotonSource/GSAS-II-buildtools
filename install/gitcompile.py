@@ -486,15 +486,18 @@ if sys.platform.startswith('win'):
 else:
     exe = ''
     pyd = '*.so'
-copyList = []
+exeList = glob.glob(os.path.join(buildLoc,'sources','LATTIC'+exe))
+exeList += glob.glob(os.path.join(buildLoc,'sources','convcell'+exe))
+copyList = exeList[:]
 copyList += glob.glob(os.path.join(buildLoc,'sources',pyd))
 copyList += glob.glob(os.path.join(buildLoc,'sources','*',pyd))
-copyList += glob.glob(os.path.join(buildLoc,'sources','LATTIC'+exe))
-copyList += glob.glob(os.path.join(buildLoc,'sources','convcell'+exe))
 copyList += glob.glob(os.path.join(buildLoc,'sources','GSASIIversion.txt'))
 if not os.path.exists(installLoc): os.mkdir(installLoc)
 for f in copyList:
     shutil.copyfile(f,os.path.join(installLoc,os.path.split(f)[1]))
+for f in exeList:
+    print('chmod',join(installLoc,os.path.split(f)[1]),0o555)
+    os.chmod(join(installLoc,os.path.split(f)[1]),0o555)
 with open(os.path.join(installLoc,'Build.notes.txt'),'w') as fp:
     fp.write(f'built locally with Python {platform.python_version()}\n')
     import numpy
