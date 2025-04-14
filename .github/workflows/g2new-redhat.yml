@@ -21,7 +21,7 @@ jobs:
     runs-on: self-hosted
     steps:
 
-      # works!
+      # # works!
       # - name: create Python build environment
       #   shell: bash -l {0}
       #   run: |
@@ -41,7 +41,7 @@ jobs:
           rm -rf /local/bht/buildtools
           git clone https://github.com/AdvancedPhotonSource/GSAS-II-buildtools.git --depth 1 /local/bht/buildtools
 
-      # works!
+      # # works!
       # - name: create gsas2new conda package
       #   shell: bash -l {0}
       #   run: |
@@ -65,15 +65,15 @@ jobs:
       #     # file in install dir, dup with name as -Latest- 
       #     cp -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-Latest-/`
 
-      # Now have above and gsas2new-Latest-<platform>.sh/.exe 
-      # file in install. Upload to the Assets area:
-      #    https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest
-      #
-      - name: Release on Unix
-        uses: softprops/action-gh-release@v2
-        with:
-          files: /local/bht/buildtools/install/*.sh
-          tag_name: v1.0.1
+      # # Now have above and gsas2new-Latest-<platform>.sh/.exe 
+      # # file in install. Upload to the Assets area:
+      # #    https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest
+      # #
+      # - name: Release on Unix
+      #   uses: softprops/action-gh-release@v2
+      #   with:
+      #     files: /local/bht/buildtools/install/*.sh
+      #     tag_name: v1.0.1
 
       # download & test new install kit
       - name: download, install G2, pytest & test on unixes
@@ -97,6 +97,7 @@ jobs:
       #     rm -f  /local/bht/buildtools
       #     rm -rf /local/bht/conda-build 
 
+      #=========================================================================
       #=========================================================================
       # works, but not needed
       # - name: create Python run environment
