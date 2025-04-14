@@ -75,13 +75,7 @@ jobs:
           files: cd /local/bht/buildtools/install/*.sh
           tag_name: v1.0.1
 
-  # downlaod & testing new install kit
-  job2:
-    name: test on RHEL
-    needs: build
-    steps:
-
-      # GSAS-II install & test Linux/Mac
+      # download & test new install kit
       - name: download, install G2, pytest & test on unixes
         shell: bash
         run: |
