@@ -20,9 +20,11 @@ jobs:
     name: gsas2new build on RHEL
     runs-on: self-hosted
     steps:
+      # works!
       # - name: create Python run environment
       #   shell: bash -l {0}
       #   run: |
+      #     rm -rf /local/bht/py313-run
       #     source /local/bht/mf3/bin/activate
       #     conda create -p /local/bht/py313-run python=3.13 numpy=2.2 \
       #       wxpython pyopengl PyCifRW pillow gitpython matplotlib scipy \
@@ -32,9 +34,11 @@ jobs:
       #     which python
       #     python -VV
 
+      # works!
       # - name: create Python build environment
       #   shell: bash -l {0}
       #   run: |
+      #     rm -rf /local/bht/py313-build
       #     source /local/bht/mf3/bin/activate
       #     conda create -p /local/bht/py313-build python=3.13 numpy=2.2 \
       #       gitpython cython meson conda-build anaconda-client conda-token -y -c conda-forge --quiet
@@ -49,28 +53,18 @@ jobs:
           rm -rf /local/bht/buildtools
           git clone https://github.com/AdvancedPhotonSource/GSAS-II-buildtools.git --depth 1 /local/bht/buildtools
 
-      # skip this: builds GSAS-II but not of use for packaging
-      # - name: setup for build
+      # works!
+      # - name: create gsas2new conda package
       #   shell: bash -l {0}
       #   run: |
-      #     source /local/bht/py313/bin/activate
-      #     mkdir -p /local/bht/build-tmp
-      #     cd /local/bht/build-tmp
-      ##     curl -L -O https://raw.githubusercontent.com/AdvancedPhotonSource/GSAS-II-buildtools/refs/heads/main/install/gitcompile.py
-      #     cp /local/bht/buildtools/install/gitcompile.py .
-      #     python gitcompile.py --noshortcut --noprogress
-
-      - name: create gsas2new conda package
-        shell: bash -l {0}
-        run: |
-          rm -rf /local/bht/conda-build
-          source /local/bht/py313-build/bin/activate
-          conda build purge
-          cd /local/bht/buildtools/install
-          conda config --set anaconda_upload no
-          source ~/bin/anaconda-token           # get ananconda token
-          conda build RHEL --output-folder /local/bht/conda-build -c conda-forge
-          anaconda upload /local/bht/conda-build/linux-64/*.conda --user briantoby --force
+      #     rm -rf /local/bht/conda-build
+      #     source /local/bht/py313-build/bin/activate
+      #     conda build purge
+      #     cd /local/bht/buildtools/install
+      #     conda config --set anaconda_upload no
+      #     source ~/bin/anaconda-token           # get ananconda token
+      #     conda build RHEL --output-folder /local/bht/conda-build -c conda-forge
+      #     anaconda upload /local/bht/conda-build/linux-64/*.conda --user briantoby --force
 
       - name: create gsas2new self-installer
         shell: bash -l {0}
@@ -78,37 +72,26 @@ jobs:
           source /local/bht/py313-build/bin/activate
           conda build purge
           cd /local/bht/buildtools/install
-          cd install
           constructor RHEL
 
-  #     # Now have a gsas2new-####-<platform>.sh/.exe 
-  #     # file in install dir, dup with name as -Latest- 
-  #     - name: duplicate upload on Unixes
-  #       shell: bash -l {0}
-  #       if: inputs.os != 'windows-latest'
-  #       run: |
-  #         cd install
-  #         cp -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-Latest-/`
-  #     - name: duplicate on Windows
-  #       if: inputs.os == 'windows-latest'
-  #       run: copy install/*.exe install/gsas2new-Latest-Windows-x86_64.exe 
+      # Now have a gsas2new-rhel-####-<platform>.sh/.exe 
+      # file in install dir, dup with name as -Latest- 
+      - name: duplicate upload on Unixes
+        shell: bash -l {0}
+        run: |
+          cd install
+          cp -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-Latest-/`
 
-  #     # Now have above and gsas2new-Latest-<platform>.sh/.exe 
-  #     # file in install. Upload to the Assets area:
-  #     #    https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest
-  #     #
-  #     - name: Release on Unix
-  #       uses: softprops/action-gh-release@v2
-  #       if: inputs.os != 'windows-latest'
-  #       with:
-  #         files: install/*.sh
-  #         tag_name: v1.0.1
-  #     - name: Release on Windows
-  #       uses: softprops/action-gh-release@v2
-  #       if: inputs.os == 'windows-latest'
-  #       with:
-  #         files: install/*.exe
-  #         tag_name: v1.0.1
+      # Now have above and gsas2new-Latest-<platform>.sh/.exe 
+      # file in install. Upload to the Assets area:
+      #    https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest
+      #
+      - name: Release on Unix
+        uses: softprops/action-gh-release@v2
+        if: inputs.os != 'windows-latest'
+        with:
+          files: install/*.sh
+          tag_name: v1.0.1
 
   # # start testing 
   # job2:
@@ -162,3 +145,15 @@ jobs:
       #   shell: bash -l {0}
       #   run: |
       #     rm -rf /local/bht/build-tmp
+
+      # skip this: builds GSAS-II but not of use for packaging
+      # - name: setup for build
+      #   shell: bash -l {0}
+      #   run: |
+      #     source /local/bht/py313/bin/activate
+      #     mkdir -p /local/bht/build-tmp
+      #     cd /local/bht/build-tmp
+      ##     curl -L -O https://raw.githubusercontent.com/AdvancedPhotonSource/GSAS-II-buildtools/refs/heads/main/install/gitcompile.py
+      #     cp /local/bht/buildtools/install/gitcompile.py .
+      #     python gitcompile.py --noshortcut --noprogress
+
