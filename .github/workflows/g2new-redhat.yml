@@ -37,7 +37,7 @@ jobs:
       #   run: |
       #     source /local/bht/mf3/bin/activate
       #     conda create -p /local/bht/py313-build python=3.13 numpy=2.2 \
-      #       gitpython cython meson conda-build anaconda-client -y -c conda-forge --quiet
+      #       gitpython cython meson conda-build anaconda-client conda-token -y -c conda-forge --quiet
       #     source /local/bht/py313-build/bin/activate
       #     which python
       #     which meson
@@ -65,18 +65,21 @@ jobs:
         run: |
           rm -rf /local/bht/conda-build
           source /local/bht/py313-build/bin/activate
+          conda build purge
           cd /local/bht/buildtools/install
-          conda config --set anaconda_upload yes
+          conda config --set anaconda_upload no
+          source ~/bin/anaconda-token           # get ananconda token
           conda build RHEL --output-folder /local/bht/conda-build -c conda-forge
-          # how to get token here?
-          #anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ~/build/*/*.conda --user briantoby  --token ${{ secrets.ANACONDA_TOKEN }}
+          anaconda upload /local/bht/conda-build/linux-64/*.conda --user briantoby --force
 
-  #     - name: create gsas2new self-installer
-  #       shell: bash -l {0}
-  #       run: |
-  #         cd install
-  #         constructor GSAS2new
-  #         #conda list
+      - name: create gsas2new self-installer
+        shell: bash -l {0}
+        run: |
+          source /local/bht/py313-build/bin/activate
+          conda build purge
+          cd /local/bht/buildtools/install
+          cd install
+          constructor RHEL
 
   #     # Now have a gsas2new-####-<platform>.sh/.exe 
   #     # file in install dir, dup with name as -Latest- 

@@ -1,0 +1,46 @@
+#written by makeBldFiles.py and modified by hand
+
+name: gsas2new-rhel
+version: 5805
+
+channels:
+  - https://conda.anaconda.org/conda-forge
+
+conda_default_channels:
+  - https://conda.anaconda.org/conda-forge
+
+specs:
+    - python=3.12
+    - numpy=2.2
+    - matplotlib
+    - wxpython
+    - pyopengl
+    - scipy
+    - briantoby::gsas2new-rhel
+    - git
+    - gitpython
+    - PyCifRW
+    # following package are not required but are included anyway
+    - pillow
+    - conda
+    - requests
+    - hdf5
+    - h5py
+    - imageio
+    - zarr
+    - xmltodict
+    - pybaselines
+    - seekpath
+
+post_install: g2postinstall.sh
+
+license_file: EULA.txt
+
+welcome_image: gsas2-welcome.png
+icon_image: gsas2.png
+
+keep_pkgs: False
+register_python_default: False
+initialize_by_default: False
+company: Argonne National Laboratory
+write_condarc: True
