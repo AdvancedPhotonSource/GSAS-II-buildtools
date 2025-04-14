@@ -14,6 +14,11 @@ about:
   home: https://advancedphotonsource.github.io/GSAS-II-tutorials
 
 requirements:
+  build:
+    - python=3.12
+    - numpy=2.2
+    - scipy
+    - gitpython
   run:
     - python=3.12
     - numpy=2.2
@@ -21,17 +26,17 @@ requirements:
     - wxpython
     - pyopengl
     - scipy
-#    - git
     - gitpython
     - PyCifRW
     - conda
 # useful, but not required packages are:
-    - pillow
-    - requests
-    - hdf5
-    - h5py
-    - imageio
-    - zarr
-    - xmltodict
-    - pybaselines
-    - seekpath
+#    - git
+#    - pillow
+#    - requests
+#    - hdf5
+#    - h5py
+#    - imageio
+#    - zarr
+#    - xmltodict
+#    - pybaselines
+#    - seekpath
