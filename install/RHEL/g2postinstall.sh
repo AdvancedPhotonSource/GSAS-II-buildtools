@@ -1,7 +1,9 @@
 #!/bin/bash
+# this is run after the gsas2new...sh installer is run. It updates to the latest GSAS-II
+# version and creates shortcuts
 logfile=/tmp/g2post_out.log
-gitlog1=/tmp/gitcompile1.log
-gitlog2=/tmp/gitcompile2.log
+gitlog1=/tmp/gitcompile.log
+gitlog2=/tmp/gitcompile.log
 echo "Finish up GSAS-II installation"
 # update the GSAS-II package if possible, create shortcuts & byte-compile...
 echo "launching bootstrap process"
