@@ -495,8 +495,8 @@ if not skipCompile:
         exe = ''
         pyd = '*.so'
     exeList = []
-    exeList += glob.glob(os.path.join(buildLoc,'sources','LATTIC'+exe))
-    exeList += glob.glob(os.path.join(buildLoc,'sources','convcell'+exe))
+    #exeList += glob.glob(os.path.join(buildLoc,'sources','LATTIC'+exe))
+    #exeList += glob.glob(os.path.join(buildLoc,'sources','convcell'+exe))
     copyList = exeList[:]
     copyList += glob.glob(os.path.join(buildLoc,'sources',pyd))
     copyList += glob.glob(os.path.join(buildLoc,'sources','*',pyd))
