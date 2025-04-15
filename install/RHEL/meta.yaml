@@ -9,6 +9,9 @@ package:
 
 build:
   number: 0
+  missing_dso_whitelist:
+    - /lib64/libc.so.6
+    - /lib64/libm.so.6
 
 about:
   home: https://advancedphotonsource.github.io/GSAS-II-tutorials
@@ -31,6 +34,7 @@ requirements:
     - gitpython
     - PyCifRW
     - conda
+    - libgfortran5
 # useful, but not required packages are:
 #    - git
 #    - pillow

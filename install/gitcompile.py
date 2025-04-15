@@ -502,8 +502,8 @@ if not skipCompile:
     copyList += glob.glob(os.path.join(buildLoc,'sources','GSASIIversion.txt'))
     if not os.path.exists(installLoc): os.mkdir(installLoc)
     for f in copyList:
-        #shutil.copyfile(f,os.path.join(installLoc,os.path.split(f)[1]))
-        shutil.copy(f,installLoc)
+        shutil.copyfile(f,os.path.join(installLoc,os.path.split(f)[1]))
+        #shutil.copy(f,installLoc)
     # put +x back on executables
     #for f in exeList:
     #    print('chmod',os.path.split(f)[1],0o555)
