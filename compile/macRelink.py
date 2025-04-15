@@ -51,7 +51,7 @@ if __name__ == '__main__':
                 libs[lib] = []
             libs[lib].append(f)
             #print(lib)
-    print('Referenced libraries:',' '.join(libs.keys())
+    print('Referenced libraries:',' '.join(libs.keys()))
     #print(libs)
     for key in libs:
         newkey = os.path.join('@rpath',os.path.split(key)[1])
