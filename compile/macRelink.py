@@ -29,6 +29,7 @@ if __name__ == '__main__':
         s = subprocess.Popen(cmd,encoding='UTF-8',
                     stdout=subprocess.PIPE,stderr=subprocess.PIPE)
         out,err = s.communicate()
+        print(f,out)
         for i in out.split('\n')[1:]: 
             if not i: continue
             lib = i.split()[0]
@@ -46,6 +47,8 @@ if __name__ == '__main__':
             if lib not in libs:
                 libs[lib] = []
             libs[lib].append(f)
+            print(lib)
+    print(libs)
     for key in libs:
         newkey = os.path.join('@rpath',os.path.split(key)[1])
         print('Fixing',key,'to',newkey)

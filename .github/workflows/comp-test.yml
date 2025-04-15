@@ -99,7 +99,7 @@ jobs:
           elif [ "${{ inputs.python-version }}" == "3.11" ]; then
             npver=1.26
           fi
-          conda install python=${{ inputs.python-version }} numpy=${npver} scipy requests pytest git gitpython pycifrw -c conda-forge --override-channels --quiet
+          conda install python=${{ inputs.python-version }} numpy=${npver} scipy requests pytest git gitpython pycifrw seekpath -c conda-forge --override-channels --quiet
           #conda info
           #conda list
       - name: GSAS-II install
