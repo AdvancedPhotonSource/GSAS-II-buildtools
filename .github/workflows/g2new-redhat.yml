@@ -48,7 +48,7 @@ jobs:
           source /local/bht/py313-build/bin/activate
           conda build purge
           cd /local/bht/buildtools/install
-          conda config --set anaconda_upload no
+          #conda config --set anaconda_upload no
           source ~/bin/anaconda-token           # get ananconda token
           conda build RHEL --output-folder /local/bht/conda-build -c conda-forge
           anaconda -t $UPLOAD_TOKEN upload /local/bht/conda-build/linux-64/*.conda --user briantoby --force
