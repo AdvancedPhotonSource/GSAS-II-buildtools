@@ -492,6 +492,8 @@ copyList = exeList[:]
 copyList += glob.glob(os.path.join(buildLoc,'sources',pyd))
 copyList += glob.glob(os.path.join(buildLoc,'sources','*',pyd))
 copyList += glob.glob(os.path.join(buildLoc,'sources','GSASIIversion.txt'))
+print('exeList',exeList)
+print('copyList',copyList)
 if not os.path.exists(installLoc): os.mkdir(installLoc)
 for f in copyList:
     shutil.copyfile(f,os.path.join(installLoc,os.path.split(f)[1]))
