@@ -8,15 +8,15 @@ echo "Finish up GSAS-II installation"
 # update the GSAS-II package if possible, create shortcuts & byte-compile...
 echo "launching bootstrap process"
 # try to update to latest GSAS-II version (will fail if no network)
-#source $PREFIX/bin/activate
-#echo python $PREFIX/gitcompile.py --nocompile --nocheck --log=$gitlog1 --noshortcut >> $logfile 2>&1
-#     python $PREFIX/gitcompile.py --nocompile --nocheck --log=$gitlog1 --noshortcut >> $logfile 2>&1
-# finish installation
-#echo python $PREFIX/gitcompile.py --nocompile --nocheck --log=$gitlog2 --nodownload >> $logfile 2>&1
-#     python $PREFIX/gitcompile.py --nocompile --nocheck --log=$gitlog2 --nodownload >> $logfile 2>&1
+source $PREFIX/bin/activate
+echo python $PREFIX/gitcompile.py --nocompile --nocheck --log=$gitlog1 --noshortcut >> $logfile 2>&1
+     python $PREFIX/gitcompile.py --nocompile --nocheck --log=$gitlog1 --noshortcut >> $logfile 2>&1
+# finish installation by creating platform-specific shortcuts
+echo python $PREFIX/gitcompile.py --nocompile --nocheck --log=$gitlog2 --nodownload >> $logfile 2>&1
+     python $PREFIX/gitcompile.py --nocompile --nocheck --log=$gitlog2 --nodownload >> $logfile 2>&1
 #============================================================================
 #============================================================================
-# create scripts that might be of use for GSAS-II
+# create script shortcuts that might be of use
 #============================================================================
 # create bootstrap-reset script
 resetScript=$PREFIX/bin/reset-gsasII.sh
