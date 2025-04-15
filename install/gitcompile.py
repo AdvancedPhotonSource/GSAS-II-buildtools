@@ -500,14 +500,14 @@ if not skipCompile:
     copyList += glob.glob(os.path.join(buildLoc,'sources',pyd))
     copyList += glob.glob(os.path.join(buildLoc,'sources','*',pyd))
     copyList += glob.glob(os.path.join(buildLoc,'sources','GSASIIversion.txt'))
-    print('exeList',exeList)
-    print('copyList',copyList)
     if not os.path.exists(installLoc): os.mkdir(installLoc)
     for f in copyList:
-        shutil.copyfile(f,os.path.join(installLoc,os.path.split(f)[1]))
-    for f in exeList:
-        print('chmod',join(installLoc,os.path.split(f)[1]),0o555)
-        os.chmod(join(installLoc,os.path.split(f)[1]),0o555)
+        #shutil.copyfile(f,os.path.join(installLoc,os.path.split(f)[1]))
+        shutil.copy(f,installLoc)
+    # put +x back on executables
+    #for f in exeList:
+    #    print('chmod',os.path.split(f)[1],0o555)
+    #    os.chmod(os.path.join(installLoc,os.path.split(f)[1]),0o555)
     with open(os.path.join(installLoc,'Build.notes.txt'),'w') as fp:
         fp.write(f'built locally with Python {platform.python_version()}\n')
         import numpy
