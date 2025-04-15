@@ -42,17 +42,17 @@ jobs:
           git clone https://github.com/AdvancedPhotonSource/GSAS-II-buildtools.git --depth 1 /local/bht/buildtools
 
       # # works!
-      # - name: create gsas2new conda package
-      #   shell: bash -l {0}
-      #   run: |
-      #     rm -rf /local/bht/conda-build
-      #     source /local/bht/py313-build/bin/activate
-      #     conda build purge
-      #     cd /local/bht/buildtools/install
-      #     conda config --set anaconda_upload no
-      #     source ~/bin/anaconda-token           # get ananconda token
-      #     conda build RHEL --output-folder /local/bht/conda-build -c conda-forge
-      #     anaconda upload /local/bht/conda-build/linux-64/*.conda --user briantoby --force
+      - name: create gsas2new conda package
+        shell: bash -l {0}
+        run: |
+          rm -rf /local/bht/conda-build
+          source /local/bht/py313-build/bin/activate
+          conda build purge
+          cd /local/bht/buildtools/install
+          conda config --set anaconda_upload no
+          source ~/bin/anaconda-token           # get ananconda token
+          conda build RHEL --output-folder /local/bht/conda-build -c conda-forge
+          anaconda upload /local/bht/conda-build/linux-64/*.conda --user briantoby --force
 
       - name: create gsas2new self-installer
         shell: bash -l {0}

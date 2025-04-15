@@ -44,6 +44,9 @@ skipChecks = False         # False: checks are made that required Python
                            # packages are present.
                            # Use --nocheck to install without checks
                            
+skipCompile = False        # True: compilation (with meson) is skipped
+                           # Use --nocompile to prevent compilation
+                           
 skipShortcut = False       # if False, shortcuts are created after installing
                            # GSAS-II files.
                            # Use --noshortcut to run script without creating
@@ -97,8 +100,10 @@ for a in sys.argv[1:]:
         ProgressCnt = False
     elif '-nos' in a.lower():
         skipShortcut = True
-    elif '-noc' in a.lower():
+    elif '-noch' in a.lower():
         skipChecks = True
+    elif '-noco' in a.lower():
+        skipCompile = True
     elif '-nod' in a.lower():
         skipDownload = True
     elif '-w' in a.lower():
@@ -192,6 +197,8 @@ if help:
 
     --nocheck     do not check if required Python packages are present
 
+    --nocompile   do not attempt to compile binaries
+
     --noshortcut  skip post-install steps, such as creating run shortcuts
 
     --nodownload  skips downloading or updating GSAS-II from the web, 
@@ -227,7 +234,7 @@ if help:
 
 Note that options may be abbreviated to the minumum number of letters 
 needed for uniqueness and one dash works the same as two 
-(e.g. -b is equivalent to --branch, but -noc is needed for --nocheck).
+(e.g. -b is equivalent to --branch, but -noch is needed for --nocheck).
 ''')
     sys.exit()
 
@@ -472,45 +479,46 @@ if not skipDownload:
 
 
 # do compile of binaries
-installLoc = os.path.join(path2repo,'GSASII-bin')
-print ('Binary install location', installLoc)
-buildLoc = os.path.abspath(os.path.join('.','build'))
-print ('Binary build location', buildLoc)
-sourceLoc = os.path.abspath(os.path.join(path2GSAS2,'..'))
-print ('Source code location', sourceLoc)
-subprocess.run(["meson","setup",buildLoc],cwd=sourceLoc)
-subprocess.run(["meson","compile","-C",buildLoc])
-if sys.platform.startswith('win'):
-    exe = '.exe'
-    pyd = '*.pyd'
-else:
-    exe = ''
-    pyd = '*.so'
-exeList = glob.glob(os.path.join(buildLoc,'sources','LATTIC'+exe))
-exeList += glob.glob(os.path.join(buildLoc,'sources','convcell'+exe))
-copyList = exeList[:]
-copyList += glob.glob(os.path.join(buildLoc,'sources',pyd))
-copyList += glob.glob(os.path.join(buildLoc,'sources','*',pyd))
-copyList += glob.glob(os.path.join(buildLoc,'sources','GSASIIversion.txt'))
-print('exeList',exeList)
-print('copyList',copyList)
-if not os.path.exists(installLoc): os.mkdir(installLoc)
-for f in copyList:
-    shutil.copyfile(f,os.path.join(installLoc,os.path.split(f)[1]))
-for f in exeList:
-    print('chmod',join(installLoc,os.path.split(f)[1]),0o555)
-    os.chmod(join(installLoc,os.path.split(f)[1]),0o555)
-with open(os.path.join(installLoc,'Build.notes.txt'),'w') as fp:
-    fp.write(f'built locally with Python {platform.python_version()}\n')
-    import numpy
-    fp.write(f'numpy version {numpy.__version__}\n')
-    fp.write('gfortran info: ')
-    fp.write(subprocess.run(["gfortran","-v"],capture_output=True).stderr.decode("utf-8"))
-msg = f'Binaries created  in {installLoc} using meson\n'
-print(msg)
-logmsg(msg)
-shutil.rmtree(buildLoc)
-print ('Deleted Binary build location:', buildLoc)
+if not skipCompile:
+    installLoc = os.path.join(path2repo,'GSASII-bin')
+    print ('Binary install location', installLoc)
+    buildLoc = os.path.abspath(os.path.join('.','build'))
+    print ('Binary build location', buildLoc)
+    sourceLoc = os.path.abspath(os.path.join(path2GSAS2,'..'))
+    print ('Source code location', sourceLoc)
+    subprocess.run(["meson","setup",buildLoc],cwd=sourceLoc)
+    subprocess.run(["meson","compile","-C",buildLoc])
+    if sys.platform.startswith('win'):
+        exe = '.exe'
+        pyd = '*.pyd'
+    else:
+        exe = ''
+        pyd = '*.so'
+    exeList = glob.glob(os.path.join(buildLoc,'sources','LATTIC'+exe))
+    exeList += glob.glob(os.path.join(buildLoc,'sources','convcell'+exe))
+    copyList = exeList[:]
+    copyList += glob.glob(os.path.join(buildLoc,'sources',pyd))
+    copyList += glob.glob(os.path.join(buildLoc,'sources','*',pyd))
+    copyList += glob.glob(os.path.join(buildLoc,'sources','GSASIIversion.txt'))
+    print('exeList',exeList)
+    print('copyList',copyList)
+    if not os.path.exists(installLoc): os.mkdir(installLoc)
+    for f in copyList:
+        shutil.copyfile(f,os.path.join(installLoc,os.path.split(f)[1]))
+    for f in exeList:
+        print('chmod',join(installLoc,os.path.split(f)[1]),0o555)
+        os.chmod(join(installLoc,os.path.split(f)[1]),0o555)
+    with open(os.path.join(installLoc,'Build.notes.txt'),'w') as fp:
+        fp.write(f'built locally with Python {platform.python_version()}\n')
+        import numpy
+        fp.write(f'numpy version {numpy.__version__}\n')
+        fp.write('gfortran info: ')
+        fp.write(subprocess.run(["gfortran","-v"],capture_output=True).stderr.decode("utf-8"))
+    msg = f'Binaries created  in {installLoc} using meson\n'
+    print(msg)
+    logmsg(msg)
+    shutil.rmtree(buildLoc)
+    print ('Deleted Binary build location:', buildLoc)
 #===========================================================================
 # Create all the .pyc files here
 logmsg('Start byte-compile')
