@@ -495,16 +495,16 @@ if not skipCompile:
         exe = ''
         pyd = '*.so'
     exeList = []
-    exeList += glob.glob(os.path.join(buildLoc,'sources','LATTIC'+exe))
-    exeList += glob.glob(os.path.join(buildLoc,'sources','convcell'+exe))
+    #exeList += glob.glob(os.path.join(buildLoc,'sources','LATTIC'+exe))
+    #exeList += glob.glob(os.path.join(buildLoc,'sources','convcell'+exe))
     copyList = exeList[:]
     copyList += glob.glob(os.path.join(buildLoc,'sources',pyd))
     copyList += glob.glob(os.path.join(buildLoc,'sources','*',pyd))
     copyList += glob.glob(os.path.join(buildLoc,'sources','GSASIIversion.txt'))
     if not os.path.exists(installLoc): os.mkdir(installLoc)
     for f in copyList:
-        #shutil.copyfile(f,os.path.join(installLoc,os.path.split(f)[1]))
-        shutil.copy(f,installLoc)
+        shutil.copyfile(f,os.path.join(installLoc,os.path.split(f)[1]))
+        #shutil.copy(f,installLoc)
     # put +x back on executables
     #for f in exeList:
     #    print('chmod',os.path.split(f)[1],0o555)
