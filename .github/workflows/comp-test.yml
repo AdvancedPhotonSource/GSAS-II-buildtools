@@ -1,4 +1,4 @@
-name: Compile binaries and then test them.
+name: CALLED Compile binaries and then test them.
 # Called from .github/workflows/comp_test_matrix.yml
 
 permissions:

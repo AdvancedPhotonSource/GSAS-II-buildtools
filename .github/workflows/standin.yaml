@@ -4,7 +4,7 @@
 
 # this needs a personal access token, described in GH_token-gen.txt
 
-name: remote-triggered test workflow
+name: TEST remote-triggered test workflow
 on:
   #workflow_dispatch:   # nice for debugging
   repository_dispatch: # run from Web API

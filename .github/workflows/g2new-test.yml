@@ -1,4 +1,4 @@
-name: Build & test gsas2new self-installer on all platforms
+name: CALLED Build & test gsas2new self-installer on all platforms
 # Called from .github/workflows/G2new-test_matrix.yml
 
 permissions:

@@ -1,6 +1,6 @@
 # Build the gsas2full self-installer for all supported platforms
 #
-name: build gsas2full
+name: OLD build gsas2full
 
 permissions:
   contents: write
