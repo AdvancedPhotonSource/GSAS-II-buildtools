@@ -11,8 +11,8 @@ on:
     paths:                  # want this to run only when files relevant to
                             # package build change
       - install/gitcompile.py
-      - install/GSAS2new/*
-      
+      - install/RHEL/*
+
   #repository_dispatch: # TODO: launch from GSASII repo via Web API
 
 jobs:
@@ -41,7 +41,6 @@ jobs:
           rm -rf /local/bht/buildtools
           git clone https://github.com/AdvancedPhotonSource/GSAS-II-buildtools.git --depth 1 /local/bht/buildtools
 
-      # # works!
       - name: create gsas2new conda package
         shell: bash -l {0}
         run: |
@@ -52,7 +51,7 @@ jobs:
           conda config --set anaconda_upload no
           source ~/bin/anaconda-token           # get ananconda token
           conda build RHEL --output-folder /local/bht/conda-build -c conda-forge
-          anaconda upload -t $UPLOAD_TOKEN /local/bht/conda-build/linux-64/*.conda --user briantoby --force
+          anaconda -t $UPLOAD_TOKEN upload /local/bht/conda-build/linux-64/*.conda --user briantoby --force
 
       - name: create gsas2new self-installer
         shell: bash -l {0}
