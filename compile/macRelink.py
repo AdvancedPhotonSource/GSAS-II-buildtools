@@ -29,7 +29,7 @@ if __name__ == '__main__':
         s = subprocess.Popen(cmd,encoding='UTF-8',
                     stdout=subprocess.PIPE,stderr=subprocess.PIPE)
         out,err = s.communicate()
-        print(f,out)
+        print('\n\n',f,'\n',out)
         for i in out.split('\n')[1:]: 
             if not i: continue
             lib = i.split()[0]
@@ -44,6 +44,8 @@ if __name__ == '__main__':
                 ignorelist.append(lib)
                 print("ignoring ",lib)
                 continue
+            if os.path.split(lib)[1] == os.path.split(f)[1]:
+                continue  # don't act on reference to current file
             if lib not in libs:
                 libs[lib] = []
             libs[lib].append(f)
