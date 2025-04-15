@@ -24,12 +24,13 @@ if __name__ == '__main__':
     
     libs = {}
     ignorelist = []
+    print('Scanning for referenced libraries')
     for f in fileList:
         cmd = ['otool','-L',f]
         s = subprocess.Popen(cmd,encoding='UTF-8',
                     stdout=subprocess.PIPE,stderr=subprocess.PIPE)
         out,err = s.communicate()
-        print('\n\n',f,'\n',out)
+        #print('\n\n',f,'\n',out)
         for i in out.split('\n')[1:]: 
             if not i: continue
             lib = i.split()[0]
@@ -49,23 +50,24 @@ if __name__ == '__main__':
             if lib not in libs:
                 libs[lib] = []
             libs[lib].append(f)
-            print(lib)
-    print(libs)
+            #print(lib)
+    print('Referenced libraries:',' '.join(libs.keys())
+    #print(libs)
     for key in libs:
         newkey = os.path.join('@rpath',os.path.split(key)[1])
         print('Fixing',key,'to',newkey)
         if os.path.exists(key):
             shutil.copy(key,dirloc)
         else:
-            print('skipping copy of',key)
+            print('skipping copy of library',key)
         for f in libs[key]:
-            print('\t',os.path.split(f)[1])
+            print('\t in',os.path.split(f)[1])
             cmd = ["install_name_tool","-change",key,newkey,f]
-            print(' '.join(cmd))
             s = subprocess.Popen(cmd,encoding='UTF-8',
                                      stdout=subprocess.PIPE,
                                      stderr=subprocess.PIPE)
             out,err = s.communicate()
             if err:
+                print('error running',' '.join(cmd))
                 print(out)
                 print(err)
