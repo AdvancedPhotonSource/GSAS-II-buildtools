@@ -90,6 +90,9 @@ for a in sys.argv[1:]:
     if '-r' in a.lower():
         reset = True
         skipShortcut = True
+        print('Argument --reset is currently not working.')
+        help = True
+        break
     elif '-nop' in a.lower():
         ProgressCnt = False
     elif '-nos' in a.lower():
@@ -234,6 +237,7 @@ if help:
     --reset       Removes any locally-changed GSAS-II files and updates to 
                   the latest GSAS-II version. Useful when GSAS-II will not 
                   start. --noshortcut is set when --reset is used. 
+                  This option is currently broken.
 
     --help        shows this message
 
@@ -456,6 +460,9 @@ if not skipDownload:
         sys.exit()
         
     # do install of binaries
+    # TODO: this may fail currently if the binaries have already been installed
+    # and file protections are not set to allow overwrite.
+    # This should be handled more gracefully.
     installLoc = os.path.join(path2repo,'GSASII-bin')
     print ('Binary install location', installLoc)
     if allBinaries:
@@ -470,6 +477,7 @@ if not skipDownload:
         tar = bindir + '_n' + GSASIIpath.fmtver(inpver)        
         try:
             # lookup latest release
+            import requests
             URL = 'https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest'
             response = requests.get(URL, allow_redirects=False)
             if response.is_redirect or response.is_permanent_redirect:
@@ -477,13 +485,14 @@ if not skipDownload:
                 if not URL.endswith('/'): URL += '/'
                 tarURL = URL + tar + '.tgz'
             else:
-                raise Exception
+                raise Exception('Unexpected: no redirect on GitHub latest releases')
             GSASIIpath.InstallGitBinary(tarURL, installLoc, nameByVersion=True,
                                         verbose=True)
             tarURLs = []
-        except:
+        except Exception as msg:
+            print('exception:', msg)
             # exact match is not present, look something that is close
-            tarURLs = [GSASIIpath.getGitBinaryLoc(verbose=True,
+            tarURLs = [GSASIIpath.getGitBinaryLoc(verbose=True,debug=False,
                             npver=npVersion,pyver=pyVersion)]
     for tarURL in tarURLs:
         if not tarURL:
