@@ -462,10 +462,11 @@ if not skipDownload:
     else:
         tarURLs = [GSASIIpath.getGitBinaryLoc(verbose=True,
                         npver=npVersion,pyver=pyVersion)]
+    print('tarURLs=',tarURLs,npVersion,pyVersion)
     for tarURL in tarURLs:
         if not tarURL:
             print('no Binary URL found. Aborting installation') 
-            if not allBinaries: sys.exit()
+            if not allBinaries: sys.exit(1)
         GSASIIpath.InstallGitBinary(tarURL, installLoc, nameByVersion=True)
         msg = f'Binaries installed from {tarURL} to {installLoc}\n'
         print(msg)

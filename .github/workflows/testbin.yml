@@ -55,7 +55,7 @@ jobs:
         shell: bash -el {0}
         run: |
           curl -L -O https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/raw/main/install/gitstrap.py
-          python gitstrap.py --nocheck --noshortcut --branch=main
+          python gitstrap.py --nocheck --noshortcut --branch=main --noprogress
 
       - name: GSAS-II all tests
         shell: bash -el {0}
