@@ -261,7 +261,8 @@ try:
     import numpy as np
     msg += f"\nnumpy:      {np.__version__}"
 except:
-    pass
+    msg += "\nnumpy:      **not found!**"
+
 print(msg)
 if not logfile:
     logfile = os.path.normpath(os.path.join(path2repo,'..','gitstrap.log'))
@@ -460,9 +461,30 @@ if not skipDownload:
     if allBinaries:
         tarURLs = GSASIIpath.getGitBinaryReleases().values()
     else:
-        tarURLs = [GSASIIpath.getGitBinaryLoc(verbose=True,
-                        npver=npVersion,pyver=pyVersion)]
-    print('tarURLs=',tarURLs,npVersion,pyVersion)
+        # try to load the exact binary collection we want
+        bindir = GSASIIpath.GetBinaryPrefix(pyVersion)
+        if npVersion:
+            inpver = GSASIIpath.intver(npVersion)
+        else:
+            inpver = GSASIIpath.intver(np.__version__)
+        tar = bindir + '_n' + GSASIIpath.fmtver(inpver)        
+        try:
+            # lookup latest release
+            URL = 'https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest'
+            response = requests.get(URL, allow_redirects=False)
+            if response.is_redirect or response.is_permanent_redirect:
+                URL = response.headers.get('Location').replace('/tag/','/download/')
+                if not URL.endswith('/'): URL += '/'
+                tarURL = URL + tar + '.tgz'
+            else:
+                raise Exception
+            GSASIIpath.InstallGitBinary(tarURL, installLoc, nameByVersion=True,
+                                        verbose=True)
+            tarURLs = []
+        except:
+            # exact match is not present, look something that is close
+            tarURLs = [GSASIIpath.getGitBinaryLoc(verbose=True,
+                            npver=npVersion,pyver=pyVersion)]
     for tarURL in tarURLs:
         if not tarURL:
             print('no Binary URL found. Aborting installation') 
