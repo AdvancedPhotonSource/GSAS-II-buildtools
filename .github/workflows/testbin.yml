@@ -1,0 +1,65 @@
+name: CALLED Compile binaries and then test them.
+# Called from .github/workflows/comp_test_matrix.yml
+
+permissions:
+  contents: write
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        required: true
+        type: string
+      os:
+        required: true
+        type: string
+
+jobs:
+  test:
+    name: test w/ (py${{ inputs.python-version }}, on ${{ inputs.os }})  
+    runs-on: ${{ inputs.os }}
+    needs: build
+    steps:
+
+      # gfortran is here even without asking for it. Would prefer
+      # otherwise as I'd like to test if the binaries run w/o libraries
+      # installed
+      # - name: Test for compiler?
+      #   id: compile-step
+      #   shell: bash -l {0}
+      #   run: |
+      #     gfortran -v
+          
+      - name: Set up minimal conda
+        #uses: conda-incubator/setup-miniconda@v3.0.3
+        uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
+        with:
+          activate-environment: build
+          miniforge-version: latest
+          python-version: ${{ inputs.python-version }}
+
+      - name: Conda install
+        shell: bash -el {0}
+        run: |
+          # tailor the numpy version to match the GSAS-II binaries 
+          if [ "${{ inputs.python-version }}" == "3.13" ]; then
+            npver="2.2 python-gil"
+          elif [ "${{ inputs.python-version }}" == "3.12" ]; then
+            npver=2.2
+          elif [ "${{ inputs.python-version }}" == "3.11" ]; then
+            npver=1.26
+          fi
+          conda install python=${{ inputs.python-version }} numpy=${npver} scipy requests pytest git gitpython pycifrw seekpath -c conda-forge --override-channels --quiet
+          #conda info
+          #conda list
+      - name: GSAS-II install
+        shell: bash -el {0}
+        run: |
+          curl -L -O https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/raw/main/install/gitstrap.py
+          python gitstrap.py --nocheck --noshortcut --branch=main
+
+      - name: GSAS-II all tests
+        shell: bash -el {0}
+        run: |
+          cd GSAS-II
+          python -m pytest
