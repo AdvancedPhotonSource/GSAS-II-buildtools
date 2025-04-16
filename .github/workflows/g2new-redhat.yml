@@ -57,7 +57,7 @@ jobs:
         shell: bash -l {0}
         run: |
           source /local/bht/py313-build/bin/activate
-          rm -rf ~/.conda/constructor   # strange, why needed?
+          #rm -rf ~/.conda/constructor   # strange, why needed?
           cd /local/bht/buildtools/install
           constructor RHEL
           # Now have a gsas2new-rhel-####-<platform>.sh/.exe 
@@ -78,21 +78,21 @@ jobs:
       - name: download, install G2, pytest & test on unixes
         shell: bash
         run: |
-          rm -rf /local/bht/tmp
+          rm -rf /local/bht/tmp_no-rm
           dfil="gsas2new-rhel-Latest-Linux-x86_64.sh"
-          mkdir /local/bht/tmp
-          curl -s -L -o /local/bht/tmp/${dfil} https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/download/v1.0.1/${dfil}
-          bash /local/bht/tmp/${dfil} -p /local/bht/tmp/gsas2new -b
-          source /local/bht/tmp/gsas2new/bin/activate
+          mkdir /local/bht/tmp_no-rm
+          curl -s -L -o /local/bht/tmp_no-rm/${dfil} https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/download/v1.0.1/${dfil}
+          bash /local/bht/tmp_no-rm/${dfil} -p /local/bht/tmp_no-rm/gsas2new -b
+          source /local/bht/tmp_no-rm/gsas2new/bin/activate
           conda install --quiet -y pytest
-          source /local/bht/tmp/gsas2new/bin/activate
-          cd /local/bht/tmp/gsas2new/GSAS-II
+          source /local/bht/tmp_no-rm/gsas2new/bin/activate
+          cd /local/bht/tmp_no-rm/gsas2new/GSAS-II
           python -m pytest
   
       # - name: cleanup build area
       #   shell: bash -l {0}
       #   run: |
-      #     rm -rf /local/bht/tmp
+      #     rm -rf /local/bht/tmp_no-rm
       #     rm -rf /local/bht/py313-build
       #     rm -f  /local/bht/buildtools
       #     rm -rf /local/bht/conda-build 
