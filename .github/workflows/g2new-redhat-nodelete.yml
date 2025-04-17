@@ -56,7 +56,7 @@ jobs:
           #conda config --set anaconda_upload no
           source ~/bin/anaconda-token           # get ananconda token
           conda build RHEL --output-folder /local/bht/conda-build -c conda-forge
-      #     anaconda -t $UPLOAD_TOKEN upload /local/bht/conda-build/linux-64/*.conda --user briantoby --force
+          anaconda -t $UPLOAD_TOKEN upload /local/bht/conda-build/linux-64/*.conda --user briantoby --force
 
       - name: create gsas2new self-installer
         shell: bash -l {0}
