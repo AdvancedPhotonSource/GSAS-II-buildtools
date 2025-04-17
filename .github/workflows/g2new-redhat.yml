@@ -1,5 +1,11 @@
 name: Build & test (RHEL) gsas2new self-installer
 
+# this uses a self-hosted runner (on arecibo) that builds a RHEL version
+# of gsas2new, as a conda package, and then as a shell script self-installer.
+# For some reason, the previously downloaded conda package must be cleared
+# from the constructor package before running constructor or a bad
+# self-installer is created. 
+
 permissions:
   contents: write
 
@@ -60,10 +66,11 @@ jobs:
           rm -rf ~/.conda/constructor/linux-64/gsas2*   # strange, why needed?
           #rm -rf ~/.conda/constructor   # strange, why needed?
           cd /local/bht/buildtools/install
+          rm gsas2new*.sh
           constructor RHEL
           # Now have a gsas2new-rhel-####-<platform>.sh/.exe 
           # file in install dir, dup with name as -Latest- 
-          cp -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-Latest-/`
+          cp -v gsas2new*.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-Latest-/`
 
       # Now have above and gsas2new-Latest-<platform>.sh/.exe 
       # file in install. Upload to the Assets area:
@@ -72,7 +79,7 @@ jobs:
       - name: Release on Unix
         uses: softprops/action-gh-release@v2
         with:
-          files: /local/bht/buildtools/install/*.sh
+          files: /local/bht/buildtools/install/gsas2new*.sh
           tag_name: v1.0.1
 
       # download & test new install kit
