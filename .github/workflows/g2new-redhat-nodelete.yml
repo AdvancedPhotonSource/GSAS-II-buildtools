@@ -81,7 +81,7 @@ jobs:
       #     tag_name: v1.0.1
 
       # test new install kit (w/o download)
-      - name: download, install G2, pytest & test on unixes
+      - name: install G2, pytest & test on unixes
         shell: bash
         run: |
           rm -rf /local/bht/tmp_rm
