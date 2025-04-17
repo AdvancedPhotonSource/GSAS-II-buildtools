@@ -57,7 +57,8 @@ jobs:
         shell: bash -l {0}
         run: |
           source /local/bht/py313-build/bin/activate
-          rm -rf ~/.conda/constructor   # strange, why needed?
+          rm -rf ~/.conda/constructor/linux-64/gsas2*   # strange, why needed?
+          #rm -rf ~/.conda/constructor   # strange, why needed?
           cd /local/bht/buildtools/install
           constructor RHEL
           # Now have a gsas2new-rhel-####-<platform>.sh/.exe 
