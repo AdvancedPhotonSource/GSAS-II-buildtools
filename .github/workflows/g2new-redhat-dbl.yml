@@ -1,0 +1,126 @@
+name: TEST Build & test (RHEL) gsas2new self-installer
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:   # nice for debugging
+  
+  push:
+    branches: [ "main" ]
+    paths:                  # want this to run only when files relevant to
+                            # package build change
+      - install/gitcompile.py
+      - install/RHEL/*
+
+  #repository_dispatch: # TODO: launch from GSASII repo via Web API
+
+jobs:
+  build:
+    name: gsas2new build on RHEL
+    runs-on: self-hosted
+    steps:
+
+      # # works!
+      # - name: create Python build environment
+      #   shell: bash -l {0}
+      #   run: |
+      #     rm -rf /local/bht/py313-build
+      #     source /local/bht/mf3/bin/activate
+      #     conda create -p /local/bht/py313-build python=3.13 numpy=2.2 \
+      #       gitpython cython meson conda-build anaconda-client \
+      #       constructor -y -c conda-forge --quiet
+      #     source /local/bht/py313-build/bin/activate
+      #     which python
+      #     which meson
+      #     python -VV
+
+      - name: clone build repo
+        shell: bash -l {0}
+        run: |
+          rm -rf /local/bht/buildtools
+          git clone https://github.com/AdvancedPhotonSource/GSAS-II-buildtools.git --depth 1 /local/bht/buildtools
+
+      - name: create gsas2new conda package
+        shell: bash -l {0}
+        run: |
+          rm -rf /local/bht/conda-build
+          source /local/bht/py313-build/bin/activate
+          conda build purge
+          cd /local/bht/buildtools/install
+          #conda config --set anaconda_upload no
+          source ~/bin/anaconda-token           # get ananconda token
+          conda build RHEL --output-folder /local/bht/conda-build -c conda-forge
+          anaconda -t $UPLOAD_TOKEN upload /local/bht/conda-build/linux-64/*.conda --user briantoby --force
+
+      - name: create gsas2new self-installer
+        shell: bash -l {0}
+        run: |
+          source /local/bht/py313-build/bin/activate
+          rm -rf ~/.conda/constructor   # strange, why needed?
+          cd /local/bht/buildtools/install
+          # build twice and rename to keep separate
+          constructor RHEL
+          mv -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-trial-1st-/`
+          constructor RHEL
+          mv -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-trial-2nd-/`
+
+      # Upload to the Assets area:
+      #    https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest
+      #
+      - name: Unix release process
+        uses: softprops/action-gh-release@v2
+        with:
+          files: /local/bht/buildtools/install/*.sh
+          tag_name: v1.0.1
+
+      # download & test new install kit
+      - name: download, install G2, pytest & test on unixes
+        shell: bash
+        run: |
+          rm -rf /local/bht/tmp_rm
+          dfil="gsas2new-rhel-trial-2nd-Linux-x86_64.sh"
+          mkdir /local/bht/tmp_rm
+          curl -s -L -o /local/bht/tmp_rm/${dfil} https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/download/v1.0.1/${dfil}
+          bash /local/bht/tmp_rm/${dfil} -p /local/bht/tmp_rm/gsas2new -b
+          source /local/bht/tmp_rm/gsas2new/bin/activate
+          conda install --quiet -y pytest
+          source /local/bht/tmp_rm/gsas2new/bin/activate
+          cd /local/bht/tmp_rm/gsas2new/GSAS-II
+          python -m pytest
+  
+      # - name: cleanup build area
+      #   shell: bash -l {0}
+      #   run: |
+      #     rm -rf /local/bht/tmp_rm
+      #     rm -rf /local/bht/py313-build
+      #     rm -f  /local/bht/buildtools
+      #     rm -rf /local/bht/conda-build 
+
+      #=========================================================================
+      #=========================================================================
+      # works, but not needed
+      # - name: create Python run environment
+      #   shell: bash -l {0}
+      #   run: |
+      #     rm -rf /local/bht/py313-run
+      #     source /local/bht/mf3/bin/activate
+      #     conda create -p /local/bht/py313-run python=3.13 numpy=2.2 \
+      #       wxpython pyopengl PyCifRW pillow gitpython matplotlib scipy \
+      #       conda requests h5py imageio zarr xmltodict pybaselines seekpath \
+      #       meson cython -y -c conda-forge --quiet
+      #     source /local/bht/py313-run/bin/activate
+      #     which python
+      #     python -VV
+      
+      # skip this: builds GSAS-II but not of use for packaging
+      # - name: setup for build
+      #   shell: bash -l {0}
+      #   run: |
+      #     source /local/bht/py313-run/bin/activate
+      #     mkdir -p /local/bht/build-tmp
+      #     cd /local/bht/build-tmp
+      ##     curl -L -O https://raw.githubusercontent.com/AdvancedPhotonSource/GSAS-II-buildtools/refs/heads/main/install/gitcompile.py
+      #     cp /local/bht/buildtools/install/gitcompile.py .
+      #     python gitcompile.py --noshortcut --noprogress
+
