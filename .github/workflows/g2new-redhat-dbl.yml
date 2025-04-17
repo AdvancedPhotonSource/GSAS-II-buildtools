@@ -58,12 +58,13 @@ jobs:
         run: |
           source /local/bht/py313-build/bin/activate
           rm -rf ~/.conda/constructor   # strange, why needed?
+          rm *.sh
           cd /local/bht/buildtools/install
           # build twice and rename to keep separate
           constructor RHEL
-          mv -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-trial-1st-/`
+          mv -v gsas2new*.sh /tmp/`ls gsas2new-*.sh | sed -e s/-[0-9]*-/-trial-1st-/`
           constructor RHEL
-          mv -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-trial-2nd-/`
+          mv -v gsas2new*.sh /tmp/`ls gsas2new-*.sh | sed -e s/-[0-9]*-/-trial-2nd-/`
 
       # Upload to the Assets area:
       #    https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest
@@ -71,7 +72,7 @@ jobs:
       - name: Unix release process
         uses: softprops/action-gh-release@v2
         with:
-          files: /local/bht/buildtools/install/*.sh
+          files: /tmp/gsas2new*.sh
           tag_name: v1.0.1
 
       # download & test new install kit
@@ -89,10 +90,11 @@ jobs:
           cd /local/bht/tmp_rm/gsas2new/GSAS-II
           python -m pytest
   
-      # - name: cleanup build area
-      #   shell: bash -l {0}
-      #   run: |
-      #     rm -rf /local/bht/tmp_rm
+      - name: cleanup build area
+        shell: bash -l {0}
+        run: |
+          rm -v /tmp/gsas2new*.sh
+          rm -rf /local/bht/tmp_rm
       #     rm -rf /local/bht/py313-build
       #     rm -f  /local/bht/buildtools
       #     rm -rf /local/bht/conda-build 
