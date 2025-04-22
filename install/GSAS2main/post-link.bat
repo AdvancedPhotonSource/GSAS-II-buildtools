@@ -1,4 +1,4 @@
-set logfile=%PREFIX%\g2new_postlink.log
+set logfile=%PREFIX%\g2main_postlink.log
 echo Completing install of GSAS-II from conda package > %logfile%
 REM 
 REM ============= Restore the git repository file

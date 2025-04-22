@@ -15,7 +15,7 @@ on:
                             # package build change
       - install/gitstrap.py
       - install/GSAS2main/*
-      - .github/workflows/*g2new-test.yml
+      - .github/workflows/*g2main-test.yml
       
   #repository_dispatch: # TODO: launch from GSASII repo via Web API
 
@@ -34,7 +34,7 @@ jobs:
 #        os: [windows-latest,macos-14]
 #        os: [macos-13]
 
-    uses: ./.github/workflows/g2new-test.yml
+    uses: ./.github/workflows/g2main-test.yml
     with:
       os: ${{ matrix.os }}
     secrets: inherit

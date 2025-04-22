@@ -1,5 +1,5 @@
 name: CALLED Build & test gsas2main self-installer on all platforms
-# Called from .github/workflows/G2new-test_matrix.yml
+# Called from .github/workflows/G2main-test_matrix.yml
 
 permissions:
   contents: write
