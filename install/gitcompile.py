@@ -547,7 +547,7 @@ else:
 
 # G2script is not used here, but will be used in makeLinux.py (& makeBat.py?)
 G2script = os.path.join(path2GSAS2,'GSASII.py')
-if not os.path.exists(G2script): # B.B. GSASII.py will be replaced by G2.py
+if not os.path.exists(G2script): # N.B. GSASII.py will be replaced by G2.py
     G2script = os.path.join(path2GSAS2,'G2.py')
 
 # on a Mac, make an applescript

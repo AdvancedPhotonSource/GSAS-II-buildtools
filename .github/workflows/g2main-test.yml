@@ -1,4 +1,4 @@
-name: CALLED Build & test gsas2new self-installer on all platforms
+name: CALLED Build & test gsas2main self-installer on all platforms
 # Called from .github/workflows/G2new-test_matrix.yml
 
 permissions:
@@ -13,7 +13,7 @@ on:
 
 jobs:
   build:
-    name: gsas2new build on ${{ inputs.os }}
+    name: gsas2main build on ${{ inputs.os }}
     runs-on: ${{ inputs.os }}
     steps:
       - name: Checkout
@@ -24,7 +24,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 using hash for security
         with:
           activate-environment: build
-          environment-file: install/GSAS2new/conda-minbuild.yml
+          environment-file: install/GSAS2main/conda-minbuild.yml
           miniforge-version: latest
 
       - name: regress conda or conda-standalone on Windows
@@ -37,43 +37,43 @@ jobs:
           #conda install constructor=3.9
           conda install conda-standalone=24.9.2 # works with constructor 3.11.1
 
-      - name: create gsas2new conda package
+      - name: create gsas2main conda package
         shell: bash -l {0}
         run: |
           cd install
           if [ "$RUNNER_OS" == "Windows" ]; then
              echo "Windows build"
-             python GSAS2new/makeBldFiles.py
+             python GSAS2main/makeBldFiles.py
              conda config --set anaconda_upload yes
-             conda build GSAS2new --output-folder C:/tmp/builds --user briantoby  --token ${{ secrets.ANACONDA_TOKEN }}
+             conda build GSAS2main --output-folder C:/tmp/builds --user briantoby  --token ${{ secrets.ANACONDA_TOKEN }}
           else
              echo "Unix build"
-             python GSAS2new/makeBldFiles.py
-             conda build GSAS2new --output-folder ~/build # use below due to patch above
-             #conda build GSAS2new --output-folder ~/build --package-format .conda
+             python GSAS2main/makeBldFiles.py
+             conda build GSAS2main --output-folder ~/build # use below due to patch above
+             #conda build GSAS2main --output-folder ~/build --package-format .conda
              anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ~/build/*/*.conda --user briantoby --force
           fi
 
-      - name: create gsas2new self-installer
+      - name: create gsas2main self-installer
         shell: bash -l {0}
         run: |
           cd install
-          constructor GSAS2new
+          constructor GSAS2main
           #conda list
 
-      # Now have a gsas2new-####-<platform>.sh/.exe 
+      # Now have a gsas2main-####-<platform>.sh/.exe 
       # file in install dir, dup with name as -Latest- 
       - name: duplicate upload on Unixes
         shell: bash -l {0}
         if: inputs.os != 'windows-latest'
         run: |
           cd install
-          cp -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-Latest-/`
+          cp -v *.sh `ls gsas2main-*.sh | sed -e s/-[0-9]*-/-Latest-/`
       - name: duplicate on Windows
         if: inputs.os == 'windows-latest'
-        run: copy install/*.exe install/gsas2new-Latest-Windows-x86_64.exe 
+        run: copy install/*.exe install/gsas2main-Latest-Windows-x86_64.exe 
 
-      # Now have above and gsas2new-Latest-<platform>.sh/.exe 
+      # Now have above and gsas2main-Latest-<platform>.sh/.exe 
       # file in install. Upload to the Assets area:
       #    https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest
       #
@@ -101,20 +101,20 @@ jobs:
         if: runner.os == 'Windows'
         id: downloadfile
         with:
-          url: "https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/download/v1.0.1/gsas2new-Latest-Windows-x86_64.exe"
+          url: "https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/download/v1.0.1/gsas2main-Latest-Windows-x86_64.exe"
           #target: download/
       - name: GSAS-II install Windows
         if: runner.os == 'Windows'
         shell: pwsh
-        run: Start-Process -FilePath .\gsas2new-Latest-Windows-x86_64.exe -ArgumentList "/S /AddToPath=1 " -NoNewWindow -Wait
+        run: Start-Process -FilePath .\gsas2main-Latest-Windows-x86_64.exe -ArgumentList "/S /AddToPath=1 " -NoNewWindow -Wait
         
       - name: GSAS-II all tests, Windows
         if: runner.os == 'Windows'
         shell: cmd
         run: |
-          call C:\ProgramData\gsas2new\Scripts\activate
+          call C:\ProgramData\gsas2main\Scripts\activate
           call conda install --quiet -y pytest
-          python -m pytest C:/ProgramData/gsas2new/GSAS-II
+          python -m pytest C:/ProgramData/gsas2main/GSAS-II
 
       # GSAS-II install & test Linux/Mac
       - name: download, install G2, pytest & test on unixes
@@ -122,18 +122,18 @@ jobs:
         shell: bash
         run: |
           if [ "${{ inputs.os }}" == "ubuntu-latest" ]; then
-             dfil="gsas2new-Latest-Linux-x86_64.sh"
+             dfil="gsas2main-Latest-Linux-x86_64.sh"
           elif [ "${{ inputs.os }}" == "macos-13" ]; then
-             dfil="gsas2new-Latest-MacOSX-x86_64.sh"
+             dfil="gsas2main-Latest-MacOSX-x86_64.sh"
           elif [ "${{ inputs.os }}" == "macos-14" ]; then
-             dfil="gsas2new-Latest-MacOSX-arm64.sh"
+             dfil="gsas2main-Latest-MacOSX-arm64.sh"
           else
              dfil="?"
           fi
           curl -s -L -o /tmp/${dfil} https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/download/v1.0.1/${dfil}
-          bash /tmp/${dfil} -p /tmp/gsas2new -b
-          source /tmp/gsas2new/bin/activate
+          bash /tmp/${dfil} -p /tmp/gsas2main -b
+          source /tmp/gsas2main/bin/activate
           conda install --quiet -y pytest
-          source /tmp/gsas2new/bin/activate
-          cd /tmp/gsas2new/GSAS-II
+          source /tmp/gsas2main/bin/activate
+          cd /tmp/gsas2main/GSAS-II
           python -m pytest

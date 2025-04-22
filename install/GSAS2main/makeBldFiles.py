@@ -1,5 +1,5 @@
-# this creates the files needed to build the GSAS2new conda package
-# and the GSAS2new self-installer from the main branch
+# this creates the files needed to build the GSAS2main conda package
+# and the GSAS2main self-installer from the main branch
 
 import os
 import sys
@@ -220,7 +220,7 @@ def makeMetaYaml(Gver, pyver, npver, name='meta.yaml'):
 # including binaries matched to versions of Python and NumPy
 # this contains the packages that GSAS-II requires
 package: 
-  name: gsas2new
+  name: gsas2main
   version: "{Version}"
 
 build:
@@ -262,7 +262,7 @@ def makeConstructYaml(Gver, pyver, npver, name='construct.yaml'):
     '''Make the construct.yaml file for conda constructor (all platforms)
     '''
     construct_yaml='''
-name: gsas2new
+name: gsas2main
 version: {Version}
 
 channels:
@@ -278,7 +278,7 @@ specs:
     - wxpython
     - pyopengl
     - scipy
-    - briantoby::gsas2new
+    - briantoby::gsas2main
     - git
     - gitpython
     - PyCifRW

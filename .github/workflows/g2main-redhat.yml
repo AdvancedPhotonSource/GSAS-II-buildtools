@@ -1,8 +1,10 @@
-name: TEST Build & test (RHEL) gsas2new self-installer
+name: Build & test (RHEL) gsas2main self-installer
 
-# this is a test version that does not create the
-# conda package and also does not clear the constructor cache
-# or upload the created self-installer
+# this uses a self-hosted runner (on arecibo) that builds a RHEL version
+# of gsas2main, as a conda package, and then as a shell script self-installer.
+# For some reason, the previously downloaded conda package must be cleared
+# from the constructor package before running constructor or a bad
+# self-installer is created. 
 
 permissions:
   contents: write
@@ -21,11 +23,11 @@ on:
 
 jobs:
   build:
-    name: gsas2new build on RHEL
+    name: gsas2main build on RHEL
     runs-on: self-hosted
     steps:
 
-      # # works, but skip as no need to repeat
+      # # works!
       # - name: create Python build environment
       #   shell: bash -l {0}
       #   run: |
@@ -45,8 +47,7 @@ jobs:
           rm -rf /local/bht/buildtools
           git clone https://github.com/AdvancedPhotonSource/GSAS-II-buildtools.git --depth 1 /local/bht/buildtools
 
-      # test: no need to repeat
-      - name: create gsas2new conda package
+      - name: create gsas2main conda package
         shell: bash -l {0}
         run: |
           rm -rf /local/bht/conda-build
@@ -58,42 +59,42 @@ jobs:
           conda build RHEL --output-folder /local/bht/conda-build -c conda-forge
           anaconda -t $UPLOAD_TOKEN upload /local/bht/conda-build/linux-64/*.conda --user briantoby --force
 
-      - name: create gsas2new self-installer
+      - name: create gsas2main self-installer
         shell: bash -l {0}
         run: |
           source /local/bht/py313-build/bin/activate
-          #rm -rf ~/.conda/constructor/linux-64/gsas2*   # strange, why needed?
+          rm -rf ~/.conda/constructor/linux-64/gsas2*   # strange, why needed?
           #rm -rf ~/.conda/constructor   # strange, why needed?
           cd /local/bht/buildtools/install
+          rm gsas2main*.sh
           constructor RHEL
-          # Now have a gsas2new-rhel-####-<platform>.sh/.exe 
+          # Now have a gsas2main-rhel-####-<platform>.sh/.exe 
           # file in install dir, dup with name as -Latest- 
-          cp -v *.sh `ls gsas2new-*.sh | sed -e s/-[0-9]*-/-Latest-/`
+          cp -v gsas2main*.sh `ls gsas2main-*.sh | sed -e s/-[0-9]*-/-Latest-/`
 
-      # Now have above and gsas2new-Latest-<platform>.sh/.exe 
+      # Now have above and gsas2main-Latest-<platform>.sh/.exe 
       # file in install. Upload to the Assets area:
       #    https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/latest
       #
-      # - name: Release on Unix
-      #   uses: softprops/action-gh-release@v2
-      #   with:
-      #     files: /local/bht/buildtools/install/*.sh
-      #     tag_name: v1.0.1
+      - name: Release on Unix
+        uses: softprops/action-gh-release@v2
+        with:
+          files: /local/bht/buildtools/install/gsas2main*.sh
+          tag_name: v1.0.1
 
-      # test new install kit (w/o download)
-      - name: install G2, pytest & test on unixes
+      # download & test new install kit
+      - name: download, install G2, pytest & test on unixes
         shell: bash
         run: |
           rm -rf /local/bht/tmp_rm
-          dfil="gsas2new-rhel-Latest-Linux-x86_64.sh"
-          #mkdir /local/bht/tmp_rm
-          #curl -s -L -o /local/bht/tmp_rm/${dfil} https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/download/v1.0.1/${dfil}
-          #bash /local/bht/tmp_rm/${dfil} -p /local/bht/tmp_rm/gsas2new -b
-          bash /local/bht/buildtools/install/${dfil} -p /local/bht/tmp_rm/gsas2new -b
-          source /local/bht/tmp_rm/gsas2new/bin/activate
+          dfil="gsas2main-rhel-Latest-Linux-x86_64.sh"
+          mkdir /local/bht/tmp_rm
+          curl -s -L -o /local/bht/tmp_rm/${dfil} https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/download/v1.0.1/${dfil}
+          bash /local/bht/tmp_rm/${dfil} -p /local/bht/tmp_rm/gsas2main -b
+          source /local/bht/tmp_rm/gsas2main/bin/activate
           conda install --quiet -y pytest
-          source /local/bht/tmp_rm/gsas2new/bin/activate
-          cd /local/bht/tmp_rm/gsas2new/GSAS-II
+          source /local/bht/tmp_rm/gsas2main/bin/activate
+          cd /local/bht/tmp_rm/gsas2main/GSAS-II
           python -m pytest
   
       # - name: cleanup build area

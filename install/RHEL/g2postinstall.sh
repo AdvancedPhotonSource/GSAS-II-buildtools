@@ -1,5 +1,5 @@
 #!/bin/bash
-# this is run after the gsas2new...sh installer is run. It updates to the latest GSAS-II
+# this is run after the gsas2main...sh installer is run. It updates to the latest GSAS-II
 # version and creates shortcuts
 logfile=/tmp/g2post_out.log
 gitlog1=/tmp/gitcompile.log

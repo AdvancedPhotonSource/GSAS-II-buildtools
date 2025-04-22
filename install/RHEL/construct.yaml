@@ -1,6 +1,6 @@
 #written by makeBldFiles.py and modified by hand
 
-name: gsas2new-rhel
+name: gsas2main-rhel
 version: 5805
 
 channels:
@@ -16,7 +16,7 @@ specs:
     - wxpython
     - pyopengl
     - scipy
-    - briantoby::gsas2new-rhel
+    - briantoby::gsas2main-rhel
     - git
     - gitpython
     - PyCifRW

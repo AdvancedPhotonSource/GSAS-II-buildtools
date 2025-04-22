@@ -4,7 +4,7 @@
 # including binaries matched to versions of Python and NumPy
 # this contains the packages that GSAS-II requires
 package: 
-  name: gsas2new-rhel
+  name: gsas2main-rhel
   version: "5805"
 
 build:
