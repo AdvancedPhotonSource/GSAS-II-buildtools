@@ -8,3 +8,6 @@ channels:
 dependencies:
   - anaconda-client
   - conda-build
+  - gitpython
+  - git
+  - requests

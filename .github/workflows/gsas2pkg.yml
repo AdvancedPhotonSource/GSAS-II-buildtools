@@ -53,7 +53,9 @@ jobs:
         shell: bash -l {0}
         run: |
           cd install
-          conda build g2pkg -c conda-forge --numpy 1.26 --output-folder ../build
+          python gsas2pkg/makeBldFiles.py
+          #conda build g2pkg -c conda-forge --numpy 1.26 --output-folder ../build
+          conda build g2pkg -c conda-forge --output-folder ../build
           #if [ "$RUNNER_OS" == "macOS" ]; then
           #   conda convert ../build/osx-arm64/gsas2pkg-*.conda -p osx-64 -o ../build
              #ls -ltR ../build
