@@ -74,6 +74,6 @@ jobs:
         shell: bash -l {0}
         run: |
           conda activate ../testinstall
-          conda install pytest
-          cd ../testinstall/gsas2main/GSAS-II
+          conda install -y pytest -c conda-forge
+          cd ../testinstall/GSAS-II
           python -m pytest
