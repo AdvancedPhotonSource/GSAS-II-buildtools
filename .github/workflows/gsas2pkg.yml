@@ -27,16 +27,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
-#        os: [macos-latest]   # single-platform testing
+#        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+        os: [macos-latest]   # single-platform testing
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up conda
         uses: conda-incubator/setup-miniconda@v3
-        #uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 
-                                               # (using hash to protect secrets)
+        #uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3
+        
         with:
           #activate-environment: build
           environment-file: install/g2pkg/conda-build-env.yml
@@ -44,12 +44,12 @@ jobs:
           miniforge-version: latest
           auto-activate-base: true
 
-      - name: failure diagnostics
-        #if: failure()
-        shell: bash -l {0}
-        run: |
-          conda info
-          conda list
+      # - name: failure diagnostics
+      #   if: failure()
+      #   shell: bash -l {0}
+      #   run: |
+      #     conda info
+      #     conda list
 
       - name: build conda package and upload
         shell: bash -l {0}
@@ -64,3 +64,16 @@ jobs:
           #fi
           #ls -ltR ../build/*/*.conda
           anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ../build/*/*.conda --user briantoby --force
+
+      - name: install GSAS-II with conda package
+        shell: bash -l {0}
+        run: |
+          conda create -p ../testinstall briantoby::gsas2pkg
+
+      - name: test GSAS-II
+        shell: bash -l {0}
+        run: |
+          conda activate ../testinstall
+          conda install pytest
+          cd ../testinstall/gsas2main/GSAS-II
+          python -m pytest
