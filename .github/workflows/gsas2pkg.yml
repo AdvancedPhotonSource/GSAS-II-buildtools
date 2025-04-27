@@ -38,13 +38,14 @@ jobs:
         uses: conda-incubator/setup-miniconda@030178870c779d9e5e1b4e563269f3aa69b04081 # v3.0.3 
                                                # (using hash to protect secrets)
         with:
-          activate-environment: build
+          #activate-environment: build
           environment-file: install/g2pkg/conda-build-env.yml
-          python-version: 3.13
+          #python-version: 3.13
           miniforge-version: latest
+          auto-activate-base: false
 
       - name: failure diagnostics
-        if: failure()
+        #if: failure()
         shell: bash -l {0}
         run: |
           conda info
