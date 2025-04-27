@@ -40,7 +40,8 @@ jobs:
         with:
           activate-environment: build
           environment-file: install/g2pkg/conda-build-env.yml
-          #miniforge-version: latest
+          python-version: 3.13
+          miniforge-version: latest
 
       - name: failure diagnostics
         if: failure()
@@ -53,7 +54,7 @@ jobs:
         shell: bash -l {0}
         run: |
           cd install
-          python gsas2pkg/makeBldFiles.py
+          python g2pkg/makeBldFiles.py
           #conda build g2pkg -c conda-forge --numpy 1.26 --output-folder ../build
           conda build g2pkg -c conda-forge --output-folder ../build
           #if [ "$RUNNER_OS" == "macOS" ]; then
