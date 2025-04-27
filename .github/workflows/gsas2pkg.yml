@@ -39,7 +39,6 @@ jobs:
         with:
           activate-environment: build
           environment-file: install/g2pkg/conda-build-env.yml
-          python-version: 3.11
           miniforge-version: latest
 
       - name: failure diagnostics
