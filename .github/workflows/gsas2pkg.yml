@@ -1,15 +1,12 @@
 # Build the gsas2pkg conda package on Mac (Intel) & Linux
 #
-# Prerequisite: login to https://anaconda.org/briantoby/settings/access to 
-#   create an API token with "Allow read access to the API site" & "Allow 
-#   write access to the API site".
-# Then add the key as a Repository secret named ANACONDA_TOKEN using
-#   the Settings/Secrets.../Actions 
+# Prerequisite: upload access to Anaconda.org::briantoby
+# see ~/G2/notes_anaconda.rtfd 
 
 # TODO: could we build the Raspberry Pi-64 with Conda convert? (N.B. 
 #    must use pip install for wxpython rather than conda)
 #
-name: build gsas2pkg
+name: build & test gsas2pkg
 
 on:
   workflow_dispatch:   # nice for debugging
@@ -27,8 +24,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-#        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
-        os: [macos-latest]   # single-platform testing
+        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+#        os: [macos-latest]   # single-platform testing
     steps:
       - name: Checkout
         uses: actions/checkout@v4
