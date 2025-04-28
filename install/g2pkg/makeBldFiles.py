@@ -4,6 +4,7 @@ import os
 import sys
 import platform
 import git
+import requests
 
 BASE_HEADER = {'Accept': 'application/vnd.github+json',
                'X-GitHub-Api-Version': '2022-11-28'}
@@ -40,50 +41,76 @@ def GetBinaryPrefix():
         bits = '32'
     return '_'.join([prefix,bits])
 
-def getGitBinaryReleases():
+def getGitBinaryReleases(cache=False):
     '''Retrieves the binaries and download urls of the latest release
 
-    Based on similar routine in GSASIIpath
+    :param bool cache: when cache is True and the binaries file names
+       are retrieved (does not always succeed when done via GitHub
+       Actions), the results are saved in a file for reuse should the
+       retrieval fail. Default is False so the file is not changed.
 
-    :returns: a list of GSAS-II binary distributions found in the newest 
-      release in a GitHub repository. The repo location is defined in global 
+    :returns: a URL dict for GSAS-II binary distributions found in the newest
+      release in a GitHub repository. The repo location is defined in global
       `G2binURL`.
+
+      The dict keys are references to binary distributions, which are named
+      as f"{platform}_p{pver}_n{npver}" where platform is determined
+      in :func:`GSASIIpath.GetBinaryPrefix` (linux_64, mac_arm, win_64,...)
+      and where `pver` is the Python version (such as "3.10") and `npver` is
+      the numpy version (such as "1.26").
+
+      The value associated with each key contains the full URL to
+      download a tar containing that binary distribution.
     '''
-    # Get first page of releases
     try:
         import requests
     except:
         print('Unable to install binaries in getGitBinaryReleases():\n requests module not available')
         return
+    # Get first page of releases. (Could there be more than one?)
     releases = []
     tries = 0
     while tries < 5: # this has been known to fail, so retry
         tries += 1
         releases = requests.get(
-            url=f"{G2binURL}/releases", 
+            url=f"{G2binURL}/releases",
             headers=BASE_HEADER
         ).json()
-        try:        
-            # Get assets of latest release
-            assets = requests.get(
-                url=f"{G2binURL}/releases/{releases[-1]['id']}/assets",
-                headers=BASE_HEADER
-                ).json()
-
+        try:
+            # loop over assets of latest release (will [-1] always get this?)
             versions = []
-            #URLs = []
-            count = 0
-            for asset in assets:
-                if asset['name'].endswith('.tgz'):
-                    versions.append(asset['name'][:-4]) # Remove .tgz tail
-                    #URLs.append(asset['browser_download_url'])
-                    count += 1
+            URLs = []
+            for asset in releases[-1]['assets']:
+                if not asset['name'].endswith('.tgz'): continue
+                versions.append(asset['name'][:-4]) # Remove .tgz tail
+                URLs.append(asset['browser_download_url'])
+            count = len(versions)
+            # Cache the binary releases for later use in case GitHub
+            # prevents us from using a query to get them
+            if cache and count > 4:
+                fp = open(os.path.join(path2GSAS2,'inputs','BinariesCache.txt'),'w')
+                res = dict(zip(versions,URLs))
+                for key in res:
+                    fp.write(f'{key} : {res[key]}\n')
+                fp.close()
+            return dict(zip(versions,URLs))
         except:
-            print('Attempt to list GSAS-II binary releases failed, sleeping for 100 sec and then retrying')
+            print('Attempt to get GSAS-II binary releases/assets failed, sleeping for 10 sec and then retrying')
             import time
-            time.sleep(100)  # this does not seem to help when GitHub is not letting the queries through
-            continue
-        return versions
+            time.sleep(10)  # this does not seem to help when GitHub is not letting the queries through
+
+    print(f'Could not get releases from {G2binURL}. Using cache')
+    URL = 'https://raw.githubusercontent.com/AdvancedPhotonSource/GSAS-II/refs/heads/main/GSASII/inputs/BinariesCache.txt'
+    res = {}
+    try:
+        r = requests.get(URL, allow_redirects=True)
+        for line in r.text.split('\n'):
+            key,val = line.split(':',1)[:2]
+            res[key.strip()] = val.strip()
+        fp.close()
+        return res
+    except:
+        raise IOError('Cache read of releases failed too.')
 
 def getNewestVersions():
     '''get the latest Python & numpy versions with supplied binaries, 
@@ -105,7 +132,7 @@ def getNewestVersions():
     # these command gets the latest numerical tag in most recent entries in the branch
     import os,tempfile,shutil
     tpath = os.path.join(tempfile.gettempdir(),'git-tmp')
-    r = git.Repo.clone_from(G2url,branch=branch,depth=500,to_path=tpath)
+    r = git.Repo.clone_from(G2url,branch=branch,depth=100,to_path=tpath)
     tags = [tag.name for tag in r.tags] # get all the tags
     r.close() # clean up
     try:
