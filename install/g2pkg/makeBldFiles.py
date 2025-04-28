@@ -105,7 +105,7 @@ def getGitBinaryReleases(cache=False):
     try:
         r = requests.get(URL, allow_redirects=True)
         for line in r.text.split('\n'):
-            print(line)
+            print(line) # debug
             key,val = line.split(':',1)[:2]
             res[key.strip()] = val.strip()
         fp.close()
