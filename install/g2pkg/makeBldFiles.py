@@ -105,12 +105,14 @@ def getGitBinaryReleases(cache=False):
     try:
         r = requests.get(URL, allow_redirects=True)
         for line in r.text.split('\n'):
+            print(line)
             key,val = line.split(':',1)[:2]
             res[key.strip()] = val.strip()
         fp.close()
         return res
     except:
-        raise IOError('Cache read of releases failed too.')
+        print('Cache read of releases failed too.')
+        return None
 
 def getNewestVersions():
     '''get the latest Python & numpy versions with supplied binaries, 
