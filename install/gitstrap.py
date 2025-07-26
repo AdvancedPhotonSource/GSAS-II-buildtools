@@ -90,9 +90,6 @@ for a in sys.argv[1:]:
     if '-r' in a.lower():
         reset = True
         skipShortcut = True
-        print('Argument --reset is currently not working.')
-        help = True
-        break
     elif '-nop' in a.lower():
         ProgressCnt = False
     elif '-nos' in a.lower():
@@ -237,7 +234,6 @@ if help:
     --reset       Removes any locally-changed GSAS-II files and updates to 
                   the latest GSAS-II version. Useful when GSAS-II will not 
                   start. --noshortcut is set when --reset is used. 
-                  This option is currently broken.
 
     --help        shows this message
 
