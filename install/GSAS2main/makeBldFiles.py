@@ -262,7 +262,7 @@ requirements:
   run:
     - python={pyversion}
     - numpy={npversion}
-    - matplotlib
+    - matplotlib-base
     - wxpython
     - pyopengl
     - scipy
@@ -303,7 +303,7 @@ conda_default_channels:
 specs:
     - python={pyversion}
     - numpy={npversion}
-    - matplotlib
+    - matplotlib-base
     - wxpython
     - pyopengl
     - scipy
