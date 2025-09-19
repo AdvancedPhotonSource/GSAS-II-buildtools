@@ -506,6 +506,14 @@ print(f'Byte-compiling all .py files in {path2GSAS2!r}... ',end='')
 import compileall
 compileall.compile_dir(path2GSAS2,quiet=True)
 print('done')
+# import the PyCifRW package. This creates the .pyc files. A warning is
+# generated in versions <5.0, but avoids an error in pytest due to that
+# warning.
+try:
+    import CifFile
+except:
+    print('Import of PyCifRW failed, GSAS-II will run but will not read CIFs')
+    logmsg('Import of PyCifRW failed, GSAS-II will run but will not read CIFs')
 logmsg('byte-compile done')
 #===========================================================================
 #===========================================================================
