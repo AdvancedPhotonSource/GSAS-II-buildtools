@@ -10,7 +10,7 @@ g2URL = "https://github.com/AdvancedPhotonSource/GSAS-II.git"
 scriptpath = os.path.dirname(os.path.abspath(os.path.expanduser(__file__)))
 # Python packages needed to compile
 # in addition git, gfortran, gcc or clang are needed, which can be installed via conda or not
-CompilePackages = ['cython', 'numpy', 'meson']
+CompilePackages = ['cython', 'numpy', 'mesonbuild']
 # packages that GSAS-II needs to run
 RunReqPackages = ['git','numpy','matplotlib','wx','OpenGL','scipy','CifFile', 'conda']
 # packages that are optional but should be present for GSAS-II
