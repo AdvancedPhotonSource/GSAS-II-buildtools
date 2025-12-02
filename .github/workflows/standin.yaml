@@ -6,7 +6,7 @@
 
 name: TEST remote-triggered test workflow
 on:
-  #workflow_dispatch:   # nice for debugging
+  workflow_dispatch:   # nice for debugging
   #repository_dispatch: # run from Web API
 
 jobs:
