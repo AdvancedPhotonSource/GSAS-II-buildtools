@@ -1,5 +1,9 @@
 name: CALLED Compile binaries and then test them.
+#
 # Called from .github/workflows/comp_test_matrix.yml
+# 
+# This uses scripts in .github/actions/meson-*/action.yml to actually
+# run meson and create the binaries, which are uploaded as tar files.
 
 permissions:
   contents: write

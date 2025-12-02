@@ -221,8 +221,6 @@ if help:
                   that will be installed (from 500). Changes the space 
                   needed to install GSAS-II.
 
-    --noprogress  omit the progress counter when downloading GSAS-II files 
-
     --branch=git-branch  Causes the named branch to be installed rather
                   than main
 

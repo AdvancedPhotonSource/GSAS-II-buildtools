@@ -1,5 +1,11 @@
 name: CALLED Build & test gsas2main self-installer on all platforms
+#
 # Called from .github/workflows/G2main-test_matrix.yml
+#
+# This creates a GSAS2main conda package that is then incorporated into
+# a self installer. The GSAS2main conda package will have the GSAS-II files
+# installed as well as binaries from the release area. (Binaries are created
+# with comp_test_matrix.yml)
 
 permissions:
   contents: write
