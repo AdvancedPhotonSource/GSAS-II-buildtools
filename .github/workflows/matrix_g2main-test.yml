@@ -8,7 +8,8 @@ permissions:
 
 on:
   workflow_dispatch:   # nice for debugging
-  
+  repository_dispatch:
+    types: [new-version-tag]  # Launch when a new version is created  
   push:
     branches: [ "main" ]
     paths:                  # want this to run only when files relevant to
@@ -16,8 +17,6 @@ on:
       - install/gitstrap.py
       - install/GSAS2main/*
       - .github/workflows/*g2main-test.yml
-      
-  #repository_dispatch: # TODO: launch from GSASII repo via Web API
 
 jobs:
   version-matrix:
