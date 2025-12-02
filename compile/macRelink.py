@@ -12,6 +12,7 @@ def Usage():
     sys.exit()
 
 if __name__ == '__main__':
+    print('Running macRelink to resolve .dylib references')
     if len(sys.argv) == 2:
         dirloc = os.path.abspath(sys.argv[1])
     else:
@@ -30,10 +31,11 @@ if __name__ == '__main__':
         s = subprocess.Popen(cmd,encoding='UTF-8',
                     stdout=subprocess.PIPE,stderr=subprocess.PIPE)
         out,err = s.communicate()
-        #print('\n\n',f,'\n',out)
+        print('\n\n',f,'\n',out)   ##########
         for i in out.split('\n')[1:]: 
             if not i: continue
             lib = i.split()[0]
+            print(lib)
             if os.path.split(lib)[0] == "/usr/lib": # ignore items in system library (usually libSystem.B.dylib)
                 if "libSystem" not in lib: print("ignoring ",lib)
                 continue
@@ -50,8 +52,8 @@ if __name__ == '__main__':
             if lib not in libs:
                 libs[lib] = []
             libs[lib].append(f)
-            #print(lib)
-    print('Referenced libraries:',' '.join(libs.keys()))
+            print(lib,f,'added')
+    print('Referenced libraries:',', '.join(libs.keys()))
     #print(libs)
     for key in libs:
         newkey = os.path.join('@rpath',os.path.split(key)[1])
