@@ -55,9 +55,9 @@ if __name__ == '__main__':
                 print('copying')
                 libs[lib] = []
                 if os.path.exists(lib):
-                    print('library copied',lib,'to',newname)
                     newname = os.path.join(dirloc,os.path.split(lib)[1])
                     shutil.copy(key,newname)
+                    print('library copied',lib,'to',newname)
                     filelist.append(newname)
                 else:
                     print('library not found',lib)
