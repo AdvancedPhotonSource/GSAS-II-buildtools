@@ -26,33 +26,42 @@ if __name__ == '__main__':
     libs = {}
     ignorelist = []
     print('Scanning for referenced libraries')
-    for f in fileList:
+    while fileList:
+        f = fileList.pop(0)
+#    for f in fileList:
         cmd = ['otool','-L',f]
         s = subprocess.Popen(cmd,encoding='UTF-8',
                     stdout=subprocess.PIPE,stderr=subprocess.PIPE)
         out,err = s.communicate()
-        print('\n\n',f,'\n',out)   ##########
+        print('\n\nprocessing=',f,'\nout=',out,'\n')   ##########
         for i in out.split('\n')[1:]: 
             if not i: continue
             lib = i.split()[0]
-            print(lib)
+            print('library=',lib)
             if os.path.split(lib)[0] == "/usr/lib": # ignore items in system library (usually libSystem.B.dylib)
                 if "libSystem" not in lib: print("ignoring ",lib)
                 continue
             if "@rpath" in lib and lib not in ignorelist:
                 ignorelist.append(lib)
-                print("ignoring ",lib)
+                print("@rpath ignoring ")
                 continue
             elif "/" not in lib and lib not in ignorelist:
                 ignorelist.append(lib)
-                print("ignoring ",lib)
+                print("no / ignoring ")
                 continue
             if os.path.split(lib)[1] == os.path.split(f)[1]:
                 continue  # don't act on reference to current file
             if lib not in libs:
+                print('copying')
                 libs[lib] = []
-            libs[lib].append(f)
-            print(lib,f,'added')
+                if os.path.exists(lib):
+                    print('library copied',lib,'to',newname)
+                    newname = os.path.join(dirloc,os.path.split(lib)[1])
+                    shutil.copy(key,newname)
+                    filelist.append(newname)
+                else:
+                    print('library not found',lib)
+                libs[lib].append(f)
     print('Referenced libraries:',', '.join(libs.keys()))
     #print(libs)
     for key in libs:
