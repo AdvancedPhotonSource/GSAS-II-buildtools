@@ -128,9 +128,9 @@ jobs:
         run: |
           if [ "${{ inputs.os }}" == "ubuntu-latest" ]; then
              dfil="gsas2main-Latest-Linux-x86_64.sh"
-          elif [ "${{ inputs.os }}" == "macos-13" ]; then
+          elif [ "${{ inputs.os }}" == "macos-15-intel" ]; then
              dfil="gsas2main-Latest-MacOSX-x86_64.sh"
-          elif [ "${{ inputs.os }}" == "macos-14" ]; then
+          elif [ "${{ inputs.os }}" == "macos-15" ]; then
              dfil="gsas2main-Latest-MacOSX-arm64.sh"
           else
              dfil="?"
