@@ -26,8 +26,8 @@ jobs:
         os: [windows-latest]
 #        os: [macos-14, macos-13]
 
-        python-version: ["3.12", "3.13"]
-#        python-version: ["3.13"]
+#        python-version: ["3.12", "3.13"]
+        python-version: ["3.13"]
 
     uses: ./.github/workflows/comp-test.yml
     with:
