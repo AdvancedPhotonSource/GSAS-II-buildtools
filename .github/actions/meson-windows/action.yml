@@ -22,7 +22,6 @@ runs:
         id: compile-step
         shell: bash -l {0}
         run: |
-          ls -l "C:\mingw64\bin"
           cd _gsas2
           OUTDIR=/tmp/outfiles
           TARNAME=`python ../compile/nameTar.py`
@@ -40,6 +39,10 @@ runs:
           cp -v ${BLDDIR}/sources/*.exe ${OUTDIR}/
           cp -v ${BLDDIR}/sources/GSAS*.txt ${OUTDIR}/
 
+          ntldd ${OUTDIR}/*.pyd
+          ntldd ${OUTDIR}/*.exe
+          ntldd ${OUTDIR}/*.dll
+          
           # TODO: better to modify the meson.build to not use
           #   shared libraries (-static-libgfortran -static-libgcc)
           #   on platforms where this is possible. For now -- on Windows -- 
