@@ -51,7 +51,7 @@ runs:
           # cp "C:\mingw64\bin\libgcc_s_seh-1.dll" ${OUTDIR}
           # cp "C:\mingw64\bin\libwinpthread-1.dll" ${OUTDIR}
           #ls -l "C:\ProgramData\Chocolatey\bin"
-          ls -l "C:\Program Files\Git\mingw64\bin"
+          #ls -l "C:\Program Files\Git\mingw64\bin"
           cp "C:\ProgramData\Chocolatey\bin\libgfortran-5.dll" ${OUTDIR}
           ntldd ${OUTDIR}/*.dll
           cp "C:\Strawberry\c\bin\libquadmath-0.dll" ${OUTDIR}
