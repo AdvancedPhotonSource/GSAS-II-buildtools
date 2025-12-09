@@ -58,7 +58,12 @@ if __name__ == '__main__':
                     fileList.append(newname)
                     if 'libgfortran' in lib:
                         # libquadmath needed by libgfortran
-                        g = os.path.join(os.path.split(lib)[0],'*libquadmath*dylib')
+                        g = os.path.join(os.path.split(lib)[0],'*libquadmath*.*.dylib')
+                        for f1 in glob.glob(g):
+                            shutil.copy(f1,dirloc)
+                            print('library copied',f1,'to',dirloc)
+                        # libgcc needed by libgfortran
+                        g = os.path.join(os.path.split(lib)[0],'*libgcc*.*.*.dylib')
                         for f1 in glob.glob(g):
                             shutil.copy(f1,dirloc)
                             print('library copied',f1,'to',dirloc)
