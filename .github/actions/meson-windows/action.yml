@@ -41,7 +41,6 @@ runs:
 
           ntldd ${OUTDIR}/*.pyd
           ntldd ${OUTDIR}/*.exe
-          ntldd ${OUTDIR}/*.dll
           
           # TODO: better to modify the meson.build to not use
           #   shared libraries (-static-libgfortran -static-libgcc)
@@ -51,12 +50,14 @@ runs:
           # cp "C:\mingw64\bin\libquadmath-0.dll" ${OUTDIR}
           # cp "C:\mingw64\bin\libgcc_s_seh-1.dll" ${OUTDIR}
           # cp "C:\mingw64\bin\libwinpthread-1.dll" ${OUTDIR}
-          ls -l "C:\ProgramData\Chocolatey\bin\"
+          ls -l "C:\ProgramData\Chocolatey\bin"
           cp "C:\ProgramData\Chocolatey\bin\libgfortran-*.dll" ${OUTDIR}
+          ntldd ${OUTDIR}/*.dll
           cp "C:\ProgramData\Chocolatey\bin\bin\libquadmath-*.dll" ${OUTDIR}
           cp "C:\ProgramData\Chocolatey\bin\libgcc_s_seh-*.dll" ${OUTDIR}
           cp "C:\ProgramData\Chocolatey\bin\libwinpthread-*.dll" ${OUTDIR}
           ls -l ${OUTDIR}
+          ntldd ${OUTDIR}/*.dll
 
           # document build  
           echo "Built from G2 version `git log HEAD --oneline | head -1`" >> ${OUTDIR}/Build.notes.txt
