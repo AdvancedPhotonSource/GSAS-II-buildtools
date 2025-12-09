@@ -61,8 +61,8 @@ runs:
           echo creating $TARFILE
           tar cvzf $TARFILE *
 
-      # - name: Release
-      #   uses: softprops/action-gh-release@v2
-      #   with:
-      #     files: ${{ steps.compile-step.outputs.tarname }}
-      #     tag_name: v1.0.1
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.compile-step.outputs.tarname }}
+          tag_name: v1.0.1
