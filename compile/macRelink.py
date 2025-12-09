@@ -64,7 +64,7 @@ if __name__ == '__main__':
                             print('library copied',f1,'to',dirloc)
                 else:
                     print('library not found',lib)
-                libs[lib].append(f)
+            libs[lib].append(f)
     print('Referenced libraries:',', '.join(libs.keys()))
     #print(libs)
     for key in libs:
