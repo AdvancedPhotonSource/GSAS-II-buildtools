@@ -36,7 +36,7 @@ runs:
           cp -v ./tmp/meson_build/sources/GSAS*.txt ${OUTDIR}/
           ls -l ${OUTDIR}/
 
-          # fix dylib naming
+          # fix dylib naming & add .dylib files
           python ../compile/macRelink.py ${OUTDIR}
           ls -lt ${OUTDIR}
 
