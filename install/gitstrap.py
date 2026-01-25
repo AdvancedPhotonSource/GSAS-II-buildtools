@@ -78,8 +78,7 @@ logfile=None               # name of log file used by this script. If
                            # installed. Override this with --log
 
 branch=None                # name of git branch to install. None (default)
-                           # causes the default (currently "master")
-                           # to be used
+                           # causes the default ("main") to be used
 
 # option not yet implemented (not sure yet how to handle proxy settings)
                            
@@ -90,6 +89,7 @@ for a in sys.argv[1:]:
     if '-r' in a.lower():
         reset = True
         skipShortcut = True
+        break
     elif '-nop' in a.lower():
         ProgressCnt = False
     elif '-nos' in a.lower():
@@ -234,6 +234,8 @@ if help:
     --reset       Removes any locally-changed GSAS-II files and updates to 
                   the latest GSAS-II version. Useful when GSAS-II will not 
                   start. --noshortcut is set when --reset is used. 
+                  This option needs more testing. 
+                  Contact Brian if it seems to fail.
 
     --help        shows this message
 
@@ -312,7 +314,7 @@ def gitInstallGSASII(repo_URL,repo_path,depth=500,forceupdate=False,verbose=True
     is raised.
 
     If a .git repostory is found at the location, the GSAS-II files 
-    will be updated to the latest version in the master repository, unless 
+    will be updated to the latest version in the main repository, unless 
     locally made changes have been made to those files. If changes have 
     been made then `forceupdate` must be set as True for the update to 
     be applied, otherwise a UserWarning Exception is generated. 
@@ -394,7 +396,7 @@ def gitResetGSASII(repo_path,verbose=True):
       if no repository is at that location.
     '''
     if os.path.exists(os.path.join(repo_path,'.git')): 
-        git.Repo(repo_path).git.reset('--hard','origin/master')
+        git.Repo(repo_path).git.reset('--hard','origin/main')
         return True
     else:
         if verbose: print(f'Warning: Repository {repo_path} not found')
@@ -438,14 +440,16 @@ if reset:
     if gitResetGSASII(path2repo):
         print('git reset performed')
     else:
-        print('reset failed')
+        msg = 'git reset failed'
+        BailOut(msg)
 
 if not skipDownload:
     try:
         gitInstallGSASII(g2URL,path2repo,depth=depth,branch=branch) # forceupdate=False
     except UserWarning:
-        print('\n***Unable to update due to changes that have been made locally to GSAS-II files')
-        print('If an update must be done from inside this script, use --reset')
+        msg = '\n***Unable to update due to changes that have been made locally to GSAS-II files'
+        msg += '\nIf an update must be done from inside this script, use --reset'
+        BailOut(msg)
 
     # GSAS-II files now present, start on binary installation
     sys.path.insert(0,path2GSAS2)
@@ -454,7 +458,7 @@ if not skipDownload:
     except:
         print('import of GSASIIpath failed, why?')
         sys.exit()
-        
+
     # do install of binaries
     # TODO: this may fail currently if the binaries have already been installed
     # and file protections are not set to allow overwrite.
@@ -507,7 +511,7 @@ import compileall
 compileall.compile_dir(path2GSAS2,quiet=True)
 print('done')
 # import the PyCifRW package. This creates the .pyc files. A warning is
-# generated in versions <5.0, but avoids an error in pytest due to that
+# generated in versions <5.0, but avoids a pytest error due to that
 # warning.
 try:
     import CifFile
