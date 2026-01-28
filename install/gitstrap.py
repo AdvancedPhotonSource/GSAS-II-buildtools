@@ -4,7 +4,7 @@
 from __future__ import division, print_function
 import os, stat, sys, platform, subprocess, datetime
 
-version = "gitstrap.py from February 17, 2025"
+version = "gitstrap.py from January 27, 2026"
 g2URL = "https://github.com/AdvancedPhotonSource/GSAS-II.git"
 scriptpath = os.path.dirname(os.path.abspath(os.path.expanduser(__file__)))
 # This installs GSAS-II files in a directory called GSAS-II which
@@ -234,8 +234,6 @@ if help:
     --reset       Removes any locally-changed GSAS-II files and updates to 
                   the latest GSAS-II version. Useful when GSAS-II will not 
                   start. --noshortcut is set when --reset is used. 
-                  This option needs more testing. 
-                  Contact Brian if it seems to fail.
 
     --help        shows this message
 
