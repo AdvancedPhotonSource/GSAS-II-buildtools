@@ -203,7 +203,7 @@ requirements:
     - matplotlib
     - pyopengl
     - requests
-    - wxpython != 4.2.5                 #   [osx]
+    - wxpython !=4.2.5                  #   [osx]
     - wxpython                          #   [not osx]
     - PyCifRW
     - git
