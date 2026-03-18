@@ -304,7 +304,8 @@ specs:
     - python={pyversion}
     - numpy={npversion}
     - matplotlib-base
-    - wxpython
+    - wxpython !=4.2.5                  #   [osx]
+    - wxpython                          #   [not osx]
     - pyopengl
     - scipy
     - briantoby::gsas2main
@@ -322,7 +323,7 @@ specs:
     - xmltodict
     - pybaselines
     - seekpath
-    - pywin32                              [win]
+    - pywin32               #            [win]
 
 post_install: g2postinstall.sh           [unix]
 post_install: g2postinstall.bat           [win]
