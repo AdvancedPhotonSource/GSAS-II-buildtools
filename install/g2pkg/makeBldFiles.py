@@ -203,11 +203,12 @@ requirements:
     - matplotlib
     - pyopengl
     - requests
-    - wxpython
+    - wxpython != 4.2.5                 #   [osx]
+    - wxpython                          #   [not osx]
     - PyCifRW
     - git
     - gitpython
-    - pywin32                              [win]
+    - pywin32                           #   [win]
     # recommended packages
     - pillow        # kind of big, perhaps make this optional?
     - hdf5
