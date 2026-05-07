@@ -46,7 +46,8 @@ jobs:
       - name: create gsas2main conda package
         shell: bash -l {0}
         run: |
-          conda activate conda
+          conda envs --list 
+          conda activate test
           cd install
           python GSAS2main/makeBldFiles.py
           if [ "$RUNNER_OS" == "Windows" ]; then
