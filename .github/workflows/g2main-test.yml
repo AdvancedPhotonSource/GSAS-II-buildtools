@@ -59,12 +59,7 @@ jobs:
           else
              echo "Unix build"
              #conda build GSAS2main --output-folder ~/build # use below due to patch above
-             python - <<'PY'
-             import os
-             import conda_build.api
-             out = os.path.expanduser("~/build")
-             conda_build.api.build("GSAS2main", output_folder=out)
-             PY 
+             python -c "import os, conda_build.api; conda_build.api.build('GSAS2main', output_folder=os.path.expanduser('~/build'))"
              #conda build GSAS2main --output-folder ~/build --package-format .conda
              anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ~/build/*/*.conda --user briantoby --force
           fi
