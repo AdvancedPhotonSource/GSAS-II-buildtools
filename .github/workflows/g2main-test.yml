@@ -46,7 +46,7 @@ jobs:
       - name: create gsas2main conda package
         shell: bash -l {0}
         run: |
-          conda env --list 
+          conda env list 
           conda activate test
           cd install
           python GSAS2main/makeBldFiles.py
