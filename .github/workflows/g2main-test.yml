@@ -55,7 +55,8 @@ jobs:
           if [ "$RUNNER_OS" == "Windows" ]; then
              echo "Windows build"
              conda config --set anaconda_upload yes
-             conda build GSAS2main --output-folder C:/tmp/builds --user briantoby  --token ${{ secrets.ANACONDA_TOKEN }}
+             #conda build GSAS2main --output-folder C:/tmp/builds --user briantoby  --token ${{ secrets.ANACONDA_TOKEN }}
+             python -c "import os, conda_build.api; conda_build.api.build('GSAS2main', output_folder='C:/tmp/builds', user='briantoby', token='${{ secrets.ANACONDA_TOKEN }}')"
           else
              echo "Unix build"
              #conda build GSAS2main --output-folder ~/build # use below due to patch above
