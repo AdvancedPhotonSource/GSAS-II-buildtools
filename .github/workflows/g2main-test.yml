@@ -52,17 +52,6 @@ jobs:
           conda activate test
           #conda list
           conda list conda-build
-          ##### test conda as per CoPilot
-          which conda
-          conda --version
-          python --version
-          conda info
-          conda env list
-          conda list | grep -E 'conda|conda-build'
-          python -c "import conda_build; print(conda_build.__version__)"
-          python -m conda_build --help
-          conda build --help
-          ##### END test conda as per CoPilot
           if [ "$RUNNER_OS" == "Windows" ]; then
              echo "Windows build"
              conda config --set anaconda_upload yes
@@ -70,7 +59,12 @@ jobs:
           else
              echo "Unix build"
              #conda build GSAS2main --output-folder ~/build # use below due to patch above
-             python -m conda_build.api build GSAS2main --output-folder ~/build
+             python - <<'PY'
+             import os
+             import conda_build.api
+             out = os.path.expanduser("~/build")
+             conda_build.api.build("GSAS2main", output_folder=out)
+             PY 
              #conda build GSAS2main --output-folder ~/build --package-format .conda
              anaconda -t ${{ secrets.ANACONDA_TOKEN }} upload ~/build/*/*.conda --user briantoby --force
           fi
