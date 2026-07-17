@@ -274,6 +274,7 @@ requirements:
 #    - pillow
 #    - requests
 #    - hdf5
+#    - hdf5plugin
 #    - h5py
 #    - imageio
 #    - zarr
@@ -318,6 +319,7 @@ specs:
     - requests
     - hdf5
     - h5py
+    - hdf5plugin
     - imageio
     - zarr
     - xmltodict
