@@ -76,15 +76,15 @@ jobs:
           OMP_NUM_THREADS: "1"
           GSAS_QUERY_DATA_DIR: ${{ github.workspace }}/query-gsas-ii/ci_data
         run: |
-          cmd="python ingest.py --html-only"
+          args=(--html-only)
           if [ "${{ steps.options.outputs.include_book }}" = "true" ]; then
-            cmd="$cmd --book"
+            args+=(--book)
           fi
           if [ "${{ steps.options.outputs.include_manual }}" = "true" ]; then
-            cmd="$cmd --manual"
+            args+=(--manual)
           fi
-          echo "Running: $cmd"
-          eval "$cmd"
+          echo "Running: python ingest.py ${args[*]}"
+          python ingest.py "${args[@]}"
 
       - name: Show index stats
         working-directory: query-gsas-ii
