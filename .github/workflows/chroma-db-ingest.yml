@@ -1,0 +1,124 @@
+name: Build ChromaDB index
+# This builds a ChromaDB index of the GSAS-II documentation (sourced from
+# the AdvancedPhotonSource/Query-GSAS-II repository) and publishes it as a
+# downloadable release asset here:
+# https://github.com/<owner>/<repo>/releases/download/latest-chroma-db/chroma_db_latest.zip
+# (as well as a workflow artifact).
+#
+# Based on: https://github.com/AdvancedPhotonSource/Query-GSAS-II/blob/main/.github/workflows/ingest.yml
+
+on:
+  schedule:
+    # Runs once a week, Sunday at 03:00 UTC.
+    - cron: "0 3 * * 0"
+  workflow_dispatch:
+    inputs:
+      include_book:
+        description: "Include Book HTML contents"
+        type: boolean
+        default: false
+      include_manual:
+        description: "Include Programmers' Manual"
+        type: boolean
+        default: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write   # needed to create/update release/tag
+
+    steps:
+      - name: Checkout GSAS-II-buildtools
+        uses: actions/checkout@v4
+
+      - name: Checkout Query-GSAS-II
+        uses: actions/checkout@v4
+        with:
+          repository: AdvancedPhotonSource/Query-GSAS-II
+          path: query-gsas-ii
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-ingest-${{ hashFiles('query-gsas-ii/pyproject.toml') }}
+
+      # Embeddings use chromadb's built-in ONNX runtime (all-MiniLM-L6-v2)
+      # so PyTorch and sentence-transformers are not required.
+      - name: Install gsas_query package
+        working-directory: query-gsas-ii
+        run: pip install -e ".[dev]"
+
+      - name: Resolve include options
+        id: options
+        run: |
+          # Scheduled (weekly) runs always build the full, production index.
+          # Manual runs default to the fast, book/manual-free debugging index
+          # unless the caller opts in via workflow_dispatch inputs.
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "include_book=true" >> "$GITHUB_OUTPUT"
+            echo "include_manual=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "include_book=${{ inputs.include_book }}" >> "$GITHUB_OUTPUT"
+            echo "include_manual=${{ inputs.include_manual }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build ChromaDB index (HTML only, contents by options)
+        working-directory: query-gsas-ii
+        env:
+          TOKENIZERS_PARALLELISM: "false"
+          OMP_NUM_THREADS: "1"
+          GSAS_QUERY_DATA_DIR: ${{ github.workspace }}/query-gsas-ii/ci_data
+        run: |
+          args=(--html-only)
+          if [ "${{ steps.options.outputs.include_book }}" = "true" ]; then
+            args+=(--book)
+          fi
+          if [ "${{ steps.options.outputs.include_manual }}" = "true" ]; then
+            args+=(--manual)
+          fi
+          echo "Running: python ingest.py ${args[*]}"
+          python ingest.py "${args[@]}"
+
+      - name: Show index stats
+        working-directory: query-gsas-ii
+        env:
+          GSAS_QUERY_DATA_DIR: ${{ github.workspace }}/query-gsas-ii/ci_data
+        run: |
+          python -c "
+          import chromadb, os
+          path = os.path.join(os.environ['GSAS_QUERY_DATA_DIR'], 'chroma_db')
+          c = chromadb.PersistentClient(path=path)
+          col = c.get_collection('gsasii_docs')
+          print(f'Chunks in index: {col.count()}')
+          "
+
+      - name: Upload chroma_db artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chroma_db
+          path: query-gsas-ii/ci_data/chroma_db/
+          retention-days: 90
+
+      - name: Package chroma_db as zip
+        run: |
+          cd query-gsas-ii/ci_data
+          zip -r "${{ github.workspace }}/chroma_db_latest.zip" chroma_db
+
+      - name: Create/Update stable release and upload asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest-chroma-db
+          name: Latest ChromaDB Index
+          body: Auto-updated ChromaDB index artifact from ingest workflow.
+          files: chroma_db_latest.zip
+          overwrite_files: true
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
