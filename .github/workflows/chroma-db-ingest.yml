@@ -25,7 +25,7 @@ on:
 jobs:
   ingest:
     runs-on: ubuntu-latest
-    timeout-minutes: 120  # 1st try took about 80, but leave some extra time
+    timeout-minutes: 240  # 1st try took about 80, 2nd failed after 120. Leave some extra time
     permissions:
       contents: write   # needed to upload asset to release
 
