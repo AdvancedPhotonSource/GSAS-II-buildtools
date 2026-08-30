@@ -1,8 +1,8 @@
 name: Build ChromaDB index
 # This builds a ChromaDB index of the GSAS-II documentation (sourced from
 # the AdvancedPhotonSource/Query-GSAS-II repository) and publishes it as a
-# downloadable release asset here:
-# https://github.com/<owner>/<repo>/releases/download/latest-chroma-db/chroma_db_latest.zip
+# downloadable release asset on this repository's current "Latest" release:
+# https://github.com/<owner>/<repo>/releases/download/<latest-release-tag>/chroma_db_latest.zip
 # (as well as a workflow artifact).
 #
 # Based on: https://github.com/AdvancedPhotonSource/Query-GSAS-II/blob/main/.github/workflows/ingest.yml
@@ -25,9 +25,9 @@ on:
 jobs:
   ingest:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 120  # 1st try took about 80, but leave some extra time
     permissions:
-      contents: write   # needed to create/update release/tag
+      contents: write   # needed to upload asset to release
 
     steps:
       - name: Checkout GSAS-II-buildtools
@@ -111,11 +111,17 @@ jobs:
           cd query-gsas-ii/ci_data
           zip -r "${{ github.workspace }}/chroma_db_latest.zip" chroma_db
 
-      - name: Create/Update stable release and upload asset
+      - name: Show current Latest release tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="$(gh api repos/${{ github.repository }}/releases/latest --jq .tag_name)"
+          echo "Current Latest release tag: ${tag}"
+
+      - name: Upload asset to Latest release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest-chroma-db
-          name: Latest ChromaDB Index
+          name: Latest ChromaDB Index Asset Update
           body: Auto-updated ChromaDB index artifact from ingest workflow.
           files: chroma_db_latest.zip
           overwrite_files: true
