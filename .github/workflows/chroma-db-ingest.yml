@@ -16,16 +16,16 @@ on:
       include_book:
         description: "Include Book HTML contents"
         type: boolean
-        default: false
+        default: true
       include_manual:
         description: "Include Programmers' Manual"
         type: boolean
-        default: false
+        default: true
 
 jobs:
   ingest:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 120
     permissions:
       contents: write   # needed to create/update release/tag
 
