@@ -49,11 +49,18 @@ jobs:
           path: ~/.cache/pip
           key: pip-ingest-${{ hashFiles('query-gsas-ii/pyproject.toml') }}
 
-      # Embeddings use chromadb's built-in ONNX runtime (all-MiniLM-L6-v2)
-      # so PyTorch and sentence-transformers are not required.
+      - name: Cache fastembed ONNX model
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/fastembed
+          key: fastembed-bge-base-en-v1.5
+
       - name: Install gsas_query package
         working-directory: query-gsas-ii
         run: pip install -e ".[dev]"
+
+      - name: Warm up fastembed model (populates cache if cold)
+        run: python -c "from fastembed import TextEmbedding; TextEmbedding('BAAI/bge-base-en-v1.5')"
 
       - name: Resolve include options
         id: options
@@ -117,14 +124,16 @@ jobs:
         run: |
           tag="$(gh api repos/${{ github.repository }}/releases/latest --jq .tag_name)"
           echo "Current Latest release tag: ${tag}"
+          echo "LATEST_TAG=${tag}" >> "$GITHUB_ENV"
 
       - name: Upload asset to Latest release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.LATEST_TAG }}
           name: Latest ChromaDB Index Asset Update
           body: Auto-updated ChromaDB index artifact from ingest workflow.
           files: chroma_db_latest.zip
           overwrite_files: true
-          make_latest: true
+          make_latest: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
