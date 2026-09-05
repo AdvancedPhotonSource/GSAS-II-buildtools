@@ -52,15 +52,17 @@ jobs:
       - name: Cache fastembed ONNX model
         uses: actions/cache@v4
         with:
-          path: ~/.cache/fastembed
-          key: fastembed-bge-base-en-v1.5
+          path: ${{ github.workspace }}/ci_data/models
+          key: bge-base-en-v1.5-onnx-quantized
 
       - name: Install gsas_query package
         working-directory: query-gsas-ii
         run: pip install -e ".[dev]"
 
-      - name: Warm up fastembed model (populates cache if cold)
-        run: python -c "from fastembed import TextEmbedding; TextEmbedding('BAAI/bge-base-en-v1.5')"
+      - name: Warm up embedding model (downloads to cache if cold)
+        env:
+          GSAS_QUERY_DATA_DIR: ${{ github.workspace }}/ci_data
+        run: python -c "from gsas_query._embed import get_embedding_function; get_embedding_function()"
 
       - name: Resolve include options
         id: options
