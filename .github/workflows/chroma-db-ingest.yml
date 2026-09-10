@@ -150,7 +150,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.LATEST_TAG }}
-          name: Latest ChromaDB Index Asset Update
           files: chroma_db_latest.zip
           overwrite_files: true
           make_latest: false
