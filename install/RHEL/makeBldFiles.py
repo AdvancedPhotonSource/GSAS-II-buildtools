@@ -179,7 +179,6 @@ def makeMetaYaml(Gver, pyver, npver, name='meta.yaml'):
     '''Make the meta.yaml file for conda-build (all platforms)
     '''
     meta_yaml = f'''
-# written by makeBldFiles.py & modified manually
 #
 # Used to build a GSAS-II conda package that includes all GSAS-II files
 # including binaries matched to versions of Python and NumPy
@@ -238,7 +237,6 @@ def makeConstructYaml(Gver, pyver, npver, name='construct.yaml'):
     '''Make the construct.yaml file for conda constructor (all platforms)
     '''
     construct_yaml=f'''
-#written by RHEL/makeBldFiles.py
 
 name: gsas2main-rhel
 version: {Gver}
