@@ -56,6 +56,7 @@ jobs:
           conda build purge
           cd /local/G2bld/buildtools/install
           #conda config --set anaconda_upload no
+          python RHEL/makeBldFiles.py
           source ~/bin/anaconda-token           # get ananconda token
           conda build RHEL --output-folder /local/G2bld/conda-build -c conda-forge
           anaconda -t $UPLOAD_TOKEN upload /local/G2bld/conda-build/linux-64/*.conda --user briantoby --force
