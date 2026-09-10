@@ -151,7 +151,6 @@ jobs:
         with:
           tag_name: ${{ env.LATEST_TAG }}
           name: Latest ChromaDB Index Asset Update
-          body: Auto-updated ChromaDB index artifact from ingest workflow.
           files: chroma_db_latest.zip
           overwrite_files: true
           make_latest: false
