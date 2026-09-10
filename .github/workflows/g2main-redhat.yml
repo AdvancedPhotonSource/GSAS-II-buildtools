@@ -31,12 +31,12 @@ jobs:
       # - name: create Python build environment
       #   shell: bash -l {0}
       #   run: |
-      #     rm -rf /local/bht/py313-build
-      #     source /local/bht/mf3/bin/activate
-      #     conda create -p /local/bht/py313-build python=3.13 numpy=2.2 \
+      #     rm -rf /local/G2bld/py313-build
+      #     source /local/G2bld/mf3/bin/activate
+      #     conda create -p /local/G2bld/py313-build python=3.13 numpy=2.2 \
       #       gitpython cython meson conda-build anaconda-client \
       #       constructor -y -c conda-forge --quiet
-      #     source /local/bht/py313-build/bin/activate
+      #     source /local/G2bld/py313-build/bin/activate
       #     which python
       #     which meson
       #     python -VV
@@ -44,28 +44,28 @@ jobs:
       - name: clone build repo
         shell: bash -l {0}
         run: |
-          rm -rf /local/bht/buildtools
-          git clone https://github.com/AdvancedPhotonSource/GSAS-II-buildtools.git --depth 1 /local/bht/buildtools
+          rm -rf /local/G2bld/buildtools
+          git clone https://github.com/AdvancedPhotonSource/GSAS-II-buildtools.git --depth 1 /local/G2bld/buildtools
 
       - name: create gsas2main conda package
         shell: bash -l {0}
         run: |
-          rm -rf /local/bht/conda-build
-          source /local/bht/py313-build/bin/activate
+          rm -rf /local/G2bld/conda-build
+          source /local/G2bld/py313-build/bin/activate
           conda build purge
-          cd /local/bht/buildtools/install
+          cd /local/G2bld/buildtools/install
           #conda config --set anaconda_upload no
           source ~/bin/anaconda-token           # get ananconda token
-          conda build RHEL --output-folder /local/bht/conda-build -c conda-forge
-          anaconda -t $UPLOAD_TOKEN upload /local/bht/conda-build/linux-64/*.conda --user briantoby --force
+          conda build RHEL --output-folder /local/G2bld/conda-build -c conda-forge
+          anaconda -t $UPLOAD_TOKEN upload /local/G2bld/conda-build/linux-64/*.conda --user briantoby --force
 
       - name: create gsas2main self-installer
         shell: bash -l {0}
         run: |
-          source /local/bht/py313-build/bin/activate
+          source /local/G2bld/py313-build/bin/activate
           rm -rf ~/.conda/constructor/linux-64/gsas2*   # strange, why needed?
           #rm -rf ~/.conda/constructor   # strange, why needed?
-          cd /local/bht/buildtools/install
+          cd /local/G2bld/buildtools/install
           rm gsas2main*.sh
           constructor RHEL
           # Now have a gsas2main-rhel-####-<platform>.sh/.exe 
@@ -79,31 +79,31 @@ jobs:
       - name: Release on Unix
         uses: softprops/action-gh-release@v2
         with:
-          files: /local/bht/buildtools/install/gsas2main*.sh
+          files: /local/G2bld/buildtools/install/gsas2main*.sh
           tag_name: v1.0.1
 
       # download & test new install kit
       - name: download, install G2, pytest & test on unixes
         shell: bash
         run: |
-          rm -rf /local/bht/tmp_rm
+          rm -rf /local/G2bld/tmp_rm
           dfil="gsas2main-rhel-Latest-Linux-x86_64.sh"
-          mkdir /local/bht/tmp_rm
-          curl -s -L -o /local/bht/tmp_rm/${dfil} https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/download/v1.0.1/${dfil}
-          bash /local/bht/tmp_rm/${dfil} -p /local/bht/tmp_rm/gsas2main -b
-          source /local/bht/tmp_rm/gsas2main/bin/activate
+          mkdir /local/G2bld/tmp_rm
+          curl -s -L -o /local/G2bld/tmp_rm/${dfil} https://github.com/AdvancedPhotonSource/GSAS-II-buildtools/releases/download/v1.0.1/${dfil}
+          bash /local/G2bld/tmp_rm/${dfil} -p /local/G2bld/tmp_rm/gsas2main -b
+          source /local/G2bld/tmp_rm/gsas2main/bin/activate
           conda install --quiet -y pytest
-          source /local/bht/tmp_rm/gsas2main/bin/activate
-          cd /local/bht/tmp_rm/gsas2main/GSAS-II
+          source /local/G2bld/tmp_rm/gsas2main/bin/activate
+          cd /local/G2bld/tmp_rm/gsas2main/GSAS-II
           python -m pytest
   
       # - name: cleanup build area
       #   shell: bash -l {0}
       #   run: |
-      #     rm -rf /local/bht/tmp_rm
-      #     rm -rf /local/bht/py313-build
-      #     rm -f  /local/bht/buildtools
-      #     rm -rf /local/bht/conda-build 
+      #     rm -rf /local/G2bld/tmp_rm
+      #     rm -rf /local/G2bld/py313-build
+      #     rm -f  /local/G2bld/buildtools
+      #     rm -rf /local/G2bld/conda-build 
 
       #=========================================================================
       #=========================================================================
@@ -111,13 +111,13 @@ jobs:
       # - name: create Python run environment
       #   shell: bash -l {0}
       #   run: |
-      #     rm -rf /local/bht/py313-run
-      #     source /local/bht/mf3/bin/activate
-      #     conda create -p /local/bht/py313-run python=3.13 numpy=2.2 \
+      #     rm -rf /local/G2bld/py313-run
+      #     source /local/G2bld/mf3/bin/activate
+      #     conda create -p /local/G2bld/py313-run python=3.13 numpy=2.2 \
       #       wxpython pyopengl PyCifRW pillow gitpython matplotlib scipy \
       #       conda requests h5py imageio zarr xmltodict pybaselines seekpath \
       #       meson cython -y -c conda-forge --quiet
-      #     source /local/bht/py313-run/bin/activate
+      #     source /local/G2bld/py313-run/bin/activate
       #     which python
       #     python -VV
       
@@ -125,10 +125,10 @@ jobs:
       # - name: setup for build
       #   shell: bash -l {0}
       #   run: |
-      #     source /local/bht/py313-run/bin/activate
-      #     mkdir -p /local/bht/build-tmp
-      #     cd /local/bht/build-tmp
+      #     source /local/G2bld/py313-run/bin/activate
+      #     mkdir -p /local/G2bld/build-tmp
+      #     cd /local/G2bld/build-tmp
       ##     curl -L -O https://raw.githubusercontent.com/AdvancedPhotonSource/GSAS-II-buildtools/refs/heads/main/install/gitcompile.py
-      #     cp /local/bht/buildtools/install/gitcompile.py .
+      #     cp /local/G2bld/buildtools/install/gitcompile.py .
       #     python gitcompile.py --noshortcut --noprogress
 
