@@ -27,19 +27,18 @@ jobs:
     runs-on: self-hosted
     steps:
 
-      # # works!
-      # - name: create Python build environment
-      #   shell: bash -l {0}
-      #   run: |
-      #     rm -rf /local/G2bld/py313-build
-      #     source /local/G2bld/mf3/bin/activate
-      #     conda create -p /local/G2bld/py313-build python=3.13 numpy=2.2 \
-      #       gitpython cython meson conda-build anaconda-client \
-      #       constructor -y -c conda-forge --quiet
-      #     source /local/G2bld/py313-build/bin/activate
-      #     which python
-      #     which meson
-      #     python -VV
+      - name: create Python build environment
+        shell: bash -l {0}
+        run: |
+          rm -rf /local/G2bld/py313-build
+          source /local/G2bld/mf3/bin/activate
+          conda create -p /local/G2bld/py313-build python=3.13 numpy=2.2 \
+            gitpython cython meson conda-build anaconda-client \
+            constructor -y -c conda-forge --quiet
+          source /local/G2bld/py313-build/bin/activate
+          which python
+          which meson
+          python -VV
 
       - name: clone build repo
         shell: bash -l {0}
