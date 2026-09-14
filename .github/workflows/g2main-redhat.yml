@@ -11,7 +11,8 @@ permissions:
 
 on:
   workflow_dispatch:   # nice for debugging
-  
+  repository_dispatch:
+    types: [new-version-tag]  # Launch when a new version is created  
   push:
     branches: [ "main" ]
     paths:                  # want this to run only when files relevant to
@@ -19,20 +20,18 @@ on:
       - install/gitcompile.py
       - install/RHEL/*
 
-  #repository_dispatch: # TODO: launch from GSASII repo via Web API
-
 jobs:
   build:
     name: gsas2main build on RHEL
     runs-on: self-hosted
     steps:
 
-# do this once, not uses conda from some other location
+# Do this once to build Python for builds. Note, uses conda from some other location
 #      - name: create Python build environment
 #        shell: bash -l {0}
 #        run: |
 #          rm -rf /local/G2bld/py313-build
-#          source /local/bht/mf3/bin/activate
+#          #source /local/bht/mf3/bin/activate
 #          source ~toby/mf/bin/activate
 #          conda create -p /local/G2bld/py313-build python=3.13 numpy=2.2 \
 #            gitpython cython meson conda-build anaconda-client \
