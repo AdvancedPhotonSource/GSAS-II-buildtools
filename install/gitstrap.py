@@ -352,7 +352,8 @@ def gitInstallGSASII(repo_URL,repo_path,depth=500,forceupdate=False,verbose=True
                     logmsg(msg)
                     print(msg)
                 if not forceupdate: raise UserWarning(msg)            
-            g2repo.remotes.origin.pull(f'--depth={depth}')
+            #g2repo.remotes.origin.pull(f'--depth={depth}')  # replaced with following, as recommended by copilot
+            g2repo.git.pull('origin', depth=depth)
             return True
         elif os.listdir(repo_path):
             msg = f'directory {repo_path} is not empty and is not used by git'
