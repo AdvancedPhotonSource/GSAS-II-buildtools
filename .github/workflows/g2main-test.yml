@@ -124,8 +124,8 @@ jobs:
         shell: cmd
         run: |
           call C:\ProgramData\gsas2main\Scripts\activate
-          call conda install --quiet -y conda-launchers
-          call conda install --quiet -y pytest
+          #call conda install --quiet -y pytest # stopped working, replaced with pip:
+          python -m pip install --quiet pytest
           python -m pytest C:/ProgramData/gsas2main/GSAS-II
 
       # GSAS-II install & test Linux/Mac
