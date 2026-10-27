@@ -1,0 +1,26 @@
+name: Runner watchdog
+# Detects an offline self-hosted runner before a queued job waits 24h for it.
+# NOTE: RUNNER_ADMIN_TOKEN must be a PAT (or GitHub App token) with permission
+# to read runner status (repo "Administration: read"); GITHUB_TOKEN cannot.
+
+on:
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+
+jobs:
+  check-runner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if no self-hosted Linux runner is online
+        env:
+          GH_TOKEN: ${{ secrets.RUNNER_ADMIN_TOKEN }}
+        run: |
+          echo "Querying runners for ${{ github.repository }}"
+          online=$(gh api "repos/${{ github.repository }}/actions/runners" --paginate \
+            --jq '.runners[] | select(.status=="online") | select(any(.labels[]; .name=="Linux" or .name=="linux")) | .name' | wc -l)
+          echo "Online self-hosted Linux runners: $online"
+          if [ "$online" -eq 0 ]; then
+            echo "::error::No self-hosted Linux runner is online; ingest jobs will stay queued."
+            exit 1
+          fi
