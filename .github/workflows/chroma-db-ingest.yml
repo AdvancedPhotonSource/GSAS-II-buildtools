@@ -9,7 +9,7 @@ name: Build ChromaDB index
 
 on:
   push:
-    branches: ["ci"]
+    branches: ["main"]
   schedule:
     # Runs once a week, Sunday at 03:00 UTC.
     - cron: "0 3 * * 0"
@@ -155,3 +155,22 @@ jobs:
           make_latest: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  notify_problem:
+    name: Notify on failure or cancellation
+    runs-on: ubuntu-latest
+    needs: [ingest]
+    permissions: {}
+    if: ${{ always() && (needs.ingest.result == 'failure' || needs.ingest.result == 'cancelled') }}
+    steps:
+      - name: Send Slack alert
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          WORKFLOW: ${{ github.workflow }}
+          RESULT: ${{ needs.ingest.result }}
+          REPO: ${{ github.repository }}
+          RUN_NUMBER: ${{ github.run_number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          payload=$(jq -n --arg t "'$WORKFLOW' $RESULT in $REPO (run #$RUN_NUMBER): $RUN_URL" '{text: $t}')
+          curl -sS -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
