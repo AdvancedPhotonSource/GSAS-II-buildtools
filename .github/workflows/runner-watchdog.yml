@@ -11,6 +11,7 @@ on:
 jobs:
   check-runner:
     runs-on: ubuntu-latest
+    permissions: {}
     steps:
       - name: Fail if no self-hosted Linux runner is online
         env:

@@ -160,6 +160,7 @@ jobs:
     name: Notify on failure or cancellation
     runs-on: ubuntu-latest
     needs: [ingest]
+    permissions: {}
     if: ${{ always() && (needs.ingest.result == 'failure' || needs.ingest.result == 'cancelled') }}
     steps:
       - name: Send Slack alert
