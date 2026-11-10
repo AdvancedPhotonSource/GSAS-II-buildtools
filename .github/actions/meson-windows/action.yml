@@ -1,6 +1,7 @@
 # Compile the GSAS-II binary files on Windows using meson and then upload
 # them to the releases area. Uses GH outputs capability to move the
 # output name between steps.
+# updated 10 Nov 2026 for locations of needed .DLL's
 
 name: Compile Windows w/Meson
 description: compile GSAS-II binaries on Windows
@@ -39,6 +40,7 @@ runs:
           cp -v ${BLDDIR}/sources/*.exe ${OUTDIR}/
           cp -v ${BLDDIR}/sources/GSAS*.txt ${OUTDIR}/
 
+          echo "Requirements from GSAS-II files"
           ntldd ${OUTDIR}/*.pyd
           ntldd ${OUTDIR}/*.exe
           
@@ -46,17 +48,15 @@ runs:
           #   shared libraries (-static-libgfortran -static-libgcc)
           #   on platforms where this is possible. For now -- on Windows -- 
           #   just copy the files we do need
-          # cp "C:\mingw64\bin\libgfortran-5.dll" ${OUTDIR}
-          # cp "C:\mingw64\bin\libquadmath-0.dll" ${OUTDIR}
-          # cp "C:\mingw64\bin\libgcc_s_seh-1.dll" ${OUTDIR}
-          # cp "C:\mingw64\bin\libwinpthread-1.dll" ${OUTDIR}
-          #ls -l "C:\ProgramData\Chocolatey\bin"
-          #ls -l "C:\Program Files\Git\mingw64\bin"
           cp "C:\ProgramData\Chocolatey\bin\libgfortran-5.dll" ${OUTDIR}
+          echo "Requirements from libgfortran"
           ntldd ${OUTDIR}/*.dll
+          echo "Copy over needed .DLLs not in Windows (listed above)"
           cp "C:\Strawberry\c\bin\libquadmath-0.dll" ${OUTDIR}
-          cp "C:\Program Files\Git\mingw64\bin\libgcc_s_seh-1.dll" ${OUTDIR}
-          cp "C:\Program Files\Git\mingw64\bin\libwinpthread-1.dll" ${OUTDIR}
+          #cp "C:\Program Files\Git\mingw64\bin\libgcc_s_seh-1.dll" ${OUTDIR}
+          cp "C:\Program Files\Git\ucrt64\bin\libgcc_s_seh-1.dll" ${OUTDIR}
+          #cp "C:\Program Files\Git\mingw64\bin\libwinpthread-1.dll" ${OUTDIR}
+          cp "C:\Program Files\Git\ucrt64\bin\libwinpthread-1.dll" ${OUTDIR}
           ls -l ${OUTDIR}
 
           # document build  
