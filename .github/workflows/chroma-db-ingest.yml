@@ -8,8 +8,6 @@ name: Build ChromaDB index
 # Based on: https://github.com/AdvancedPhotonSource/Query-GSAS-II/blob/main/.github/workflows/ingest.yml
 
 on:
-  push:
-    branches: ["main"]
   schedule:
     # Runs once a week, Sunday at 03:00 UTC.
     - cron: "0 3 * * 0"
@@ -69,7 +67,7 @@ jobs:
       - name: Resolve include options
         id: options
         run: |
-          # Scheduled and push runs always build the full, production index.
+          # Scheduled runs always build the full, production index.
           # Manual runs default to the fast, book/manual-free debugging index
           # unless the caller opts in via workflow_dispatch inputs.
           if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
