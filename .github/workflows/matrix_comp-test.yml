@@ -3,6 +3,8 @@ name: compile & test binaries (meson)
 # this passes on the matrix settings to another workflow (comp-test.yml)
 # that compiles the binaries and tests them.
 #
+# This uses the workflows/comp-test.yml file which in turn uses the
+# actions/meson-*/action.yml files.
 
 permissions:
   contents: write
