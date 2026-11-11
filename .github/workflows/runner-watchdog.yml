@@ -1,27 +1,41 @@
 name: Runner watchdog
-# Detects an offline self-hosted runner before a queued job waits 24h for it.
+# Detects if the self-hosted runner on Arecibo is offline. This is run before/with 
+# the "Build & test (RHEL) gsas2main self-installer" (g2main-redhat.yml) or the
+# "Build ChromaDB index" (chroma-db-ingest.yml) workflows are run automatically.
+# Fails with an error if there is no runner available (which generates an e-mail) 
+# because if those jobs cannot be run due to lack of a runner, they fail silently,
+# but only after the queued job waits 24h for the runner to be available.
+#
 # NOTE: RUNNER_ADMIN_TOKEN must be a PAT (or GitHub App token) with permission
 # to read runner status (repo "Administration: read"); GITHUB_TOKEN cannot.
 
 on:
-  schedule:
-    - cron: "0 1 * * *"
+  schedule:  # Runs once a week, Sunday at 02:45 UTC.
+    - cron: "45 2 * * *" # schedule for chroma-db-ingest.yml
   workflow_dispatch:
+  repository_dispatch: # trigger for g2main-redhat.yml
+    types: [new-version-tag]  # Test when a new G2 version is created  
+  push:                # also trigger for g2main-redhat.yml
+    branches: [ "main" ]
+    paths:                  # want this to run only when files relevant to
+                            # package build change
+      - install/gitcompile.py
+      - install/RHEL/*
 
 jobs:
   check-runner:
     runs-on: ubuntu-latest
     permissions: {}
     steps:
-      - name: Fail if no self-hosted Linux runner is online
+      - name: Fail if self-hosted Linux runner is offline
         env:
           GH_TOKEN: ${{ secrets.RUNNER_ADMIN_TOKEN }}
         run: |
-          echo "Querying runners for ${{ github.repository }}"
+          echo "Querying Arecibo runner for ${{ github.repository }}"
           online=$(gh api "repos/${{ github.repository }}/actions/runners" --paginate \
             --jq '.runners[] | select(.status=="online") | select(any(.labels[]; .name=="Linux" or .name=="linux")) | .name' | wc -l)
-          echo "Online self-hosted Linux runners: $online"
+          echo "Number of online self-hosted Linux runners: $online"
           if [ "$online" -eq 0 ]; then
-            echo "::error::No self-hosted Linux runner is online; ingest jobs will stay queued."
+            echo "::error::No self-hosted Linux runner is online; Check Arecibo ."
             exit 1
           fi
