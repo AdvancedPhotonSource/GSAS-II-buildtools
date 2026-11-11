@@ -1,4 +1,4 @@
-name: Runner watchdog
+name: Arecibo watchdog (automatic)
 # Detects if the self-hosted runner on Arecibo is offline. This is run before/with 
 # the "Build & test (RHEL) gsas2main self-installer" (g2main-redhat.yml) or the
 # "Build ChromaDB index" (chroma-db-ingest.yml) workflows are run automatically.
